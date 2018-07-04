@@ -1,0 +1,7 @@
+version: '3.6'
+
+services:
+  api:
+    command: ["npm", "run", "start"]
+    environment:
+      - ENV=dev

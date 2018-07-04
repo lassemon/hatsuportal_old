@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "arrow-parens": false,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "max-line-length": [
+      120
+    ],
+    "no-unused-expression": false,
+    "no-shadowed-variable": false,
+    "interface-name": [
+      "never-prefix"
+    ],
+    "member-ordering": [
+      false
+    ],
+    "max-classes-per-file": [
+      false
+    ],
+    "no-reference": false,
+    "no-namespace": [
+      false
+    ],
+    "no-console": false,
+    "no-var-requires": false
+  }
+}
