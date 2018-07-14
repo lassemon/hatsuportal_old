@@ -17,7 +17,7 @@
    * Use plugin TSLint https://marketplace.visualstudio.com/items?itemName=eg2.tslint
    * Set your VSCode settings to `"tslint.autoFixOnSave": true`
 
-## docker cheatsheet
+## Docker cheatsheet
   - `docker ps` lists all running docker containers
   - `docker image ls` lists all downloaded images
   - `docker build -t <friendlyname>` builds a docker image with specified name
@@ -29,4 +29,9 @@
     - _on windows, remember to share the drive that you are developing on, with docker_
   - `docker-compose down` stops all running containers
 
+
+## Troubleshooting
+$ docker-volume-watcher \
+`WARNING:root:No mounts match container name pattern * and host directory pattern *`
+- SOLUTION: you have not started docker-compose with `docker-compose up`
 
