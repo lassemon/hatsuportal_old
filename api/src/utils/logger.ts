@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 const DATE_FORMAT = 'DD-MM-YYYY HH:mm:ssZ';
 
-class Logger {
+export default class Logger {
   public name: string;
   constructor(name: string) {
     this.name = name;
@@ -21,12 +21,10 @@ class Logger {
   }
 
   private formatMessage(message: string, level: string) {
-    return this.getTimestamp() + ' ' + level + ' ' + message;
+    return this.name + ' ' + this.getTimestamp() + ' ' + level + ' ' + message;
   }
 
   private getTimestamp() {
     return moment().format(DATE_FORMAT);
   }
 }
-
-export default Logger;

@@ -2,6 +2,8 @@
 
 
 ## Development environment installation (Windows)
+- Install Git for windows (https://gitforwindows.org/)
+  - _use recommended options during installation_
 - Install docker (https://www.docker.com/get-docker)
   - _You'll need to create a Docker ID_
 - Install node and npm for windows (https://nodejs.org/en/download/current/)
@@ -9,6 +11,7 @@
 - Install Visual Code Studio (https://code.visualstudio.com/download)
   - _Use plugin TSLint https://marketplace.visualstudio.com/items?itemName=eg2.tslint_
   - _Set your VSCode settings to `"tslint.autoFixOnSave": true`_
+  - _Please also use `"editor.tabSize": 2` and `"editor.detectIndentation": false`_ to always force indentation with 2 spaces
 
 ## Running development environment
 - navigate to project root
@@ -16,6 +19,7 @@
 - run `docker-compose up -d`
 - (on windows run `docker-volume-watcher`, see http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html for more info)
 - `http://localhost/api/docs/` should now answer with swagger documentation
+- DISCLAIMER: note that in the API project, nodemon only updates dependency changes trough the ./src/server.ts inclusion hierarchy (_see nodemon.json file_), but does not run for example commands like `tsoa swagger` or `tsoa routes`. To make sure all changes are deployed to server, run `npm run build`, `docker-compose down` and `docker-compose up` commands to generate all files.
 
 ## Docker cheatsheet
 - `docker ps` lists all running docker containers

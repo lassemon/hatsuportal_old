@@ -3,11 +3,12 @@
     "tslint:recommended"
   ],
   "rules": {
+    "indent": [true, "spaces", 2],
     "arrow-parens": false,
     "trailing-comma": [
       true,
       {
-        "multiline": "always",
+        "multiline": "never",
         "singleline": "never"
       }
     ],
@@ -34,6 +35,7 @@
       false
     ],
     "no-console": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "object-literal-sort-keys": false
   }
 }

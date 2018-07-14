@@ -1,6 +1,8 @@
 /* tslint:disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { PingController } from './controllers/pingController';
+import { UserController } from './controllers/userController';
+import { ItemController } from './controllers/itemController';
 
 const models: TsoaRoute.Models = {
 };
@@ -22,6 +24,42 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.ping.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/users',
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.users.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/items',
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new ItemController();
+
+
+      const promise = controller.users.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
 
