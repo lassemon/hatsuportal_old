@@ -20,6 +20,12 @@
 ## Docker cheatsheet
 - `docker ps` lists all running docker containers
 - `docker image ls` lists all downloaded images
+- `docker volume ls` lists all the volumes
+- `docker rm <container id>` deletes a container
+- `docker rmi <image id>` deletes an image
+- `docker kill $(docker ps -q)` kills all running containers
+- `docker rm $(docker ps -a -q)` deletes all stopped containers
+- `docker rmi $(docker images -q)` deletes all images
 - `docker build -t <friendlyname>` builds a docker image with specified name
 - `docker run -p <hostport>:<containerport> <friendlyname>` run a docker image and publish a port to host
 - `docker stop <container ID>` stops the container (_find the id with `docker ps`_)
