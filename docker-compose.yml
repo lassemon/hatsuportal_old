@@ -18,14 +18,17 @@ services:
     volumes:
       - ./api:/usr/src/app
     environment:
-      - ENV=prod
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=hatsurebals
+      ENV: prod
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: hatsurebals
   db:
     image: postgres
     restart: always
+    volumes:
+    - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: hatsurebals
+      POSTGRES_USER: hatsurebals
+      POSTGRES_PASSWORD: hatsurebals123
+      POSTGRES_DB: hatsuportal
