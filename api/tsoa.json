@@ -1,11 +1,11 @@
 {
-    "swagger": {
-        "basePath": "/api",
-        "outputDirectory": "./dist",
-        "entryFile": "./src/app.ts"
-    },
-    "routes": {
-        "entryFile": "./src/app.ts",
-        "routesDir": "./src"
-    }
+  "swagger": {
+      "basePath": "/api",
+      "outputDirectory": "./dist",
+      "entryFile": "./src/app.ts"
+  },
+  "routes": {
+      "entryFile": "./src/app.ts",
+      "routesDir": "./src"
+  }
 }

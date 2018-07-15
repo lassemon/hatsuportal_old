@@ -1,8 +1,8 @@
-import * as Knex from 'knex';
 import * as _ from 'lodash';
 import UserService from 'models/userService';
 import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/logger';
+import SerializerService from 'utils/serializerService';
 
 const log = new Logger('UserController');
 
@@ -10,15 +10,17 @@ const log = new Logger('UserController');
 export class UserController extends Controller {
 
   private userService: UserService;
+  private serializerService: SerializerService;
 
   constructor() {
     super();
     this.userService = new UserService();
+    this.serializerService = new SerializerService();
   }
 
   @Tags('user')
   @Get()
-  public getAll(): Promise<any> {
+  public async getAll(): Promise<any[]> {
     return this.userService.getAll();
   }
 
@@ -26,7 +28,7 @@ export class UserController extends Controller {
   @Get('{id}')
   @Response('404', 'Not Found')
   @SuccessResponse('200', 'Ok')
-  public get(id: number): Promise<any> {
+  public async get(id: number): Promise<any> {
     return new Promise((resolve, reject) => {
       this.userService.findById(id).then((result) => {
         if (!result || _.isEmpty(result)) {

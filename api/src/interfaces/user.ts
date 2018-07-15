@@ -1,6 +1,9 @@
+/**
+ * @tsoaModel
+ */
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    created: Date;
+  id: number;
+  name: string;
+  email: string;
+  created: Date;
 }

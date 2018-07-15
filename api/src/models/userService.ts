@@ -1,6 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
 import connection from 'database/connection';
-import { User } from 'interfaces/user';
 import Logger from 'utils/logger';
 
 const log = new Logger('UserService');
@@ -34,35 +33,35 @@ export default class UserService {
     this.User = new UserModel(opts);
   }
 
-  public getAll(): Promise<any> {
+  public getAll(): Promise<object[]> {
     return this.User.getAll();
   }
 
-  public find() {
-    return this.User.find.apply(this, arguments);
+  public find(filter): Promise<object[]> {
+    return this.User.find(filter);
   }
 
-  public findById(id: number) {
+  public findById(id: number): Promise<object> {
     return this.User.findById(id);
   }
 
   public count() {
-    return this.User.count.apply(this, arguments);
+    return this.User.count();
   }
 
-  public insert() {
-    return this.User.insert.apply(this, arguments);
+  public insert(user): Promise<object> {
+    return this.User.insert(user);
   }
 
-  public update() {
-    return this.User.update.apply(this, arguments);
+  public update(user): Promise<object> {
+    return this.User.update(user);
   }
 
-  public upsert() {
-    return this.User.upsert.apply(this, arguments);
+  public upsert(user): Promise<object> {
+    return this.User.upsert(user);
   }
 
-  public remove() {
-    return this.User.remove.apply(this, arguments);
+  public remove(id: number): Promise<boolean> {
+    return this.User.remove(id);
   }
 }
