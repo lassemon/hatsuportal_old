@@ -35,6 +35,7 @@
       false
     ],
     "no-console": false,
+    "no-empty": false,
     "no-var-requires": false,
     "object-literal-sort-keys": false
   }

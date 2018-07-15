@@ -7,14 +7,24 @@ export default class Logger {
   constructor(name: string) {
     this.name = name;
   }
+
+  public debug(message: string) {
+    if (process.env.LOG_LEVEL === 'DEBUG') {
+      const formatted = this.formatMessage(message, 'DEBUG');
+      console.log(formatted);
+    }
+  }
+
   public info(message: string) {
     const formatted = this.formatMessage(message, 'INFO');
     console.log(formatted);
   }
+
   public warn(message: string) {
     const formatted = this.formatMessage(message, 'WARN');
     console.warn(formatted);
   }
+
   public error(message: string) {
     const formatted = this.formatMessage(message, 'ERROR');
     console.error(formatted);

@@ -1,4 +1,4 @@
-import Connector from 'utils/connector';
+import connection from 'database/connection';
 import Logger from 'utils/logger';
 
 const log = new Logger('ItemService');
@@ -8,11 +8,11 @@ export default class UserService {
   private connector;
 
   constructor() {
-      this.connector = new Connector().getKnex();
+      this.connector = connection;
   }
 
   public getItems() {
     log.info('Getting users in service');
-    return this.connector.select('*').from('items');
+    return this.connector('items').select('*');
   }
 }

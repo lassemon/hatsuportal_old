@@ -5,6 +5,7 @@ services:
     command: ["npm", "run", "start"]
     environment:
       ENV: dev
+      LOG_LEVEL: DEBUG
   db:
     volumes:
     - ./db/init_dev.sql:/docker-entrypoint-initdb.d/init.sql

@@ -41,7 +41,26 @@ export function RegisterRoutes(app: any) {
       const controller = new UserController();
 
 
-      const promise = controller.users.apply(controller, validatedArgs);
+      const promise = controller.getAll.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/users/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/v1/items',

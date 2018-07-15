@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 
-export default class Connector {
+export class Connection {
   private knexConnector: Knex;
 
   constructor() {
@@ -19,3 +19,5 @@ export default class Connector {
     return this.knexConnector;
   }
 }
+
+export default new Connection().getKnex();
