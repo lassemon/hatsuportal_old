@@ -1,9 +1,9 @@
 import 'jest';
 import {instance, mock, when} from 'ts-mockito-2/lib/ts-mockito';
-import { UserController } from '../../src/controllers/userController';
+import { UserController } from '../../src/controllers/UserController';
 import ApiError from '../../src/errors/ApiError';
 import { User } from '../../src/interfaces/user';
-import UserService from '../../src/services/userService';
+import UserService from '../../src/services/UserService';
 
 describe('UserController', () => {
 

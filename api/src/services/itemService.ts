@@ -3,7 +3,7 @@ import Logger from 'utils/logger';
 
 const log = new Logger('ItemService');
 
-export default class UserService {
+export default class ItemService {
 
   private connector;
 

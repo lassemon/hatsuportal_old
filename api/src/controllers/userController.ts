@@ -1,6 +1,4 @@
-import ApiError from 'errors/ApiError';
-import * as _ from 'lodash';
-import UserService from 'services/userService';
+import UserService from 'services/UserService';
 import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/logger';
 

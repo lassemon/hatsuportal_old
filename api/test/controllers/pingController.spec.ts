@@ -1,5 +1,5 @@
 import 'jest';
-import { PingController } from '../../src/controllers/pingController';
+import { PingController } from '../../src/controllers/PingController';
 
 describe('Controller/Ping', () => {
   describe('ping', () => {
