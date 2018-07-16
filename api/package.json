@@ -4,11 +4,11 @@
   "description": "API Service for HatsuPortal Application",
   "main": "server.js",
   "scripts": {
-    "build": "npm run clean && npm run lint && npm run swagger-gen && npm run routes-gen && npm run tsc && npm run copy-swagger-ui",
+    "build": "npm run clean && npm run lint && npm run test && npm run swagger-gen && npm run routes-gen && npm run tsc && npm run copy-swagger-ui",
     "coverage": "npm run test-cov && npm run test-remap",
     "postinstall": "npm run build",
     "lint": "tslint ./*.ts ./lib/*.ts ./src/**/*.ts ./test/**/*.ts",
-    "test": "jest ./test",
+    "test": "jest --config jest.json --no-cache",
     "tsc": "tsc --project tsconfig.json",
     "tsc:watch": "tsc -w",
     "start": "nodemon",
@@ -19,20 +19,6 @@
     "copy-swagger-ui": "mkdirp ./dist/docs && ncp ./src/swagger-ui ./dist/docs/swagger-ui",
     "tsoa": "tsoa"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$",
-    "moduleDirectories": [
-      "node_modules",
-      "src"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ]
-  },
   "keywords": [
     "api"
   ],
@@ -40,6 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
+    "@types/api-error-handler": "^1.0.31",
     "@types/express": "^4.16.0",
     "@types/jest": "^23.1.6",
     "@types/node": "^10.5.2",

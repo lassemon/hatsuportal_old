@@ -1,5 +1,7 @@
 import Model from '@ruanmartinelli/knex-model';
 import connection from 'database/connection';
+import ApiError from 'errors/ApiError';
+import { User } from 'interfaces/user';
 import Logger from 'utils/logger';
 
 const log = new Logger('UserService');
@@ -33,35 +35,88 @@ export default class UserService {
     this.User = new UserModel(opts);
   }
 
-  public getAll(): Promise<object[]> {
-    return this.User.getAll();
+  public async getAll(): Promise<User[]> {
+    try {
+      const users = await this.User.getAll();
+      return this.convertAll(users);
+    } catch (error) {
+      throw new ApiError('UserNotFound', 404, 'Users not found');
+    }
   }
 
-  public find(filter): Promise<object[]> {
-    return this.User.find(filter);
+  public async find(filter): Promise<User[]> {
+    try {
+      const users = await this.User.find(filter);
+      return this.convertAll(users);
+    } catch (error) {
+      throw new ApiError('UserNotFound', 404, 'Users not found');
+    }
   }
 
-  public findById(id: number): Promise<object> {
-    return this.User.findById(id);
+  public async findById(id: number): Promise<User> {
+    try {
+      const user = await this.User.findById(id);
+      return this.convert(user);
+    } catch (error) {
+      throw new ApiError('UserNotFound', 404, 'User not found with id: ' + id);
+    }
   }
 
-  public count() {
-    return this.User.count();
+  public count(): Promise<any> {
+    try {
+      return this.User.count();
+    } catch (error) {
+      throw new ApiError('BadRequest', 400, 'User count failed');
+    }
   }
 
-  public insert(user): Promise<object> {
-    return this.User.insert(user);
+  public async insert(userInsert: User): Promise<User> {
+    try {
+      const user = await this.User.insert(userInsert);
+      return this.convert(user);
+    } catch (error) {
+      throw new ApiError('BadRequest', 400, 'User insert failed');
+    }
   }
 
-  public update(user): Promise<object> {
-    return this.User.update(user);
+  public async update(userUpdate: User): Promise<User> {
+    try {
+      const user = await this.User.update(userUpdate);
+      return this.convert(user);
+    } catch (error) {
+      throw new ApiError('BadRequest', 400, 'User update failed');
+    }
   }
 
-  public upsert(user): Promise<object> {
-    return this.User.upsert(user);
+  public async upsert(userUpdate: User): Promise<User> {
+    try {
+      const user = await this.User.upsert(userUpdate);
+      return this.convert(user);
+    } catch (error) {
+      throw new ApiError('BadRequest', 400, 'User update failed');
+    }
   }
 
   public remove(id: number): Promise<boolean> {
-    return this.User.remove(id);
+    try {
+      return this.User.remove(id);
+    } catch (error) {
+      throw new ApiError('BadRequest', 400, 'User remove failed');
+    }
+  }
+
+  private convert(user: any): User {
+    const converted: User = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        created: user.created
+      };
+
+    return converted;
+  }
+
+  private convertAll(users: any[]): User[] {
+    return users.map(this.convert);
   }
 }

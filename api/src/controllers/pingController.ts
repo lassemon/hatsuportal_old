@@ -9,7 +9,6 @@ export class PingController extends Controller {
   @Get()
   @Tags('test')
   public async ping(): Promise<string> {
-    log.info('Responding to Ping...');
     return 'Pong!';
   }
 }
