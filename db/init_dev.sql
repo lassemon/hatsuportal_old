@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS item_tag(
 );
 
 INSERT INTO users VALUES
-  (69,  'jykajee', 'jykajee@jee.fi', '2018-06-24 20:39:14'),
-  (420, 'Mister Thane', 'mrthane@thanelandia.fi', '2018-06-22 20:39:14');
+  (69,  'jykajee', 'jykajee@jee.fi', '2018-06-24T05:39:00.000Z'),
+  (420, 'Mister Thane', 'mrthane@thanelandia.fi', '2016-06-20T02:22:00.000Z');
 
 INSERT INTO items VALUES
-  (123, 'article', 'Jykän paras resepti', 'Tällä pääsee hekumaan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar. Cras rutrum nisl a metus aliquet convallis. Vivamus ultrices luctus dolor at luctus.', '2018-06-24 20:39:14', 69),
-  (420, 'video', 'Hyvä biisi', 'Kato loppuun asti', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar.', '2018-06-24 20:39:14', 666);
+  (123, 'article', 'Jykän paras resepti', 'Tällä pääsee hekumaan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar. Cras rutrum nisl a metus aliquet convallis. Vivamus ultrices luctus dolor at luctus.', '2014-06-20T02:22:00.000Z', 69),
+  (420, 'video', 'Hyvä biisi', 'Kato loppuun asti', 'https://www.youtube.com/watch?v=N9cml2D8VU0', '2013-06-20T02:22:00.000Z', 666);

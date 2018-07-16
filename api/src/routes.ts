@@ -78,7 +78,7 @@ export function RegisterRoutes(app: any) {
       const controller = new ItemController();
 
 
-      const promise = controller.users.apply(controller, validatedArgs);
+      const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
 

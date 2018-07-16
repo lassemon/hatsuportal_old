@@ -1,16 +1,26 @@
 import ItemService from 'services/ItemService';
 import { Controller, Example, Get, Route, Tags } from 'tsoa';
-import Logger from 'utils/logger';
+import Logger from 'utils/Logger';
 
 const log = new Logger('ItemController');
-const service = new ItemService();
 
 @Route('v1/items')
 export class ItemController extends Controller {
 
-  @Get()
+  private itemService: ItemService;
+
+  constructor() {
+    super();
+    this.itemService = new ItemService();
+  }
+
   @Tags('items')
-  public async users(): Promise<string> {
-    return service.getItems();
+  @Get()
+  public async getAll(): Promise<any[]> {
+    return this.itemService.getAll();
+  }
+
+  public setService(service: ItemService) {
+    this.itemService = service;
   }
 }

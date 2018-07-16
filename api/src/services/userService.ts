@@ -92,7 +92,7 @@ export default class UserService {
         id: user.id,
         name: user.name,
         email: user.email,
-        created: user.created
+        created: new Date(user.created)
       };
 
     return converted;
