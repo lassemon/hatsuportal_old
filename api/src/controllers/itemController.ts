@@ -1,4 +1,4 @@
-import ItemService from 'models/itemService';
+import ItemService from 'services/itemService';
 import { Controller, Example, Get, Route, Tags } from 'tsoa';
 import Logger from 'utils/logger';
 

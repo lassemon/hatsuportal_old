@@ -1,38 +1,20 @@
-import Model from '@ruanmartinelli/knex-model';
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { User } from 'interfaces/user';
+import UserModel from 'models/UserModel';
 import Logger from 'utils/logger';
 
 const log = new Logger('UserService');
-
-const opts = {
-  tableName: 'users',
-  connection
-};
-
-class UserModel extends Model {
-  constructor(options) {
-    super(options);
-  }
-
-  public getAll(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.knex('users').select('*').then((result) => {
-        resolve(result);
-      }).catch(error => {
-        reject(error);
-      });
-    });
-  }
-}
 
 export default class UserService {
 
   private User: UserModel;
 
   constructor() {
-    this.User = new UserModel(opts);
+    this.User = new UserModel({
+      tableName: 'users',
+      connection
+    });
   }
 
   public async getAll(): Promise<User[]> {
