@@ -18,7 +18,9 @@ describe('UserController', () => {
       description: 'Tällä pääsee hekumaan',
       content: 'test',
       created: new Date(),
-      authorId: 69
+      authorId: 69,
+      authorName: 'jykajee',
+      tags: []
     },
     {
       id: 420,
@@ -27,7 +29,9 @@ describe('UserController', () => {
       description: 'Kato loppuun asti',
       content: 'https://www.youtube.com/watch?v=N9cml2D8VU0',
       created: new Date(),
-      authorId: 69
+      authorId: 69,
+      authorName: 'Mister Thane',
+      tags: []
     }
   ];
 

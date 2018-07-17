@@ -13,15 +13,24 @@ export default class ItemService {
   constructor() {
     this.Item = new ItemModel({
       tableName: 'items',
-      connection
+      connection,
+      columns: [
+        'items.*',
+        'users.id as author_id',
+        'users.name as author_name'
+      ],
+      joins: [
+        { table: 'users', first: 'users.id', second: 'items.author_id' }
+      ]
     });
   }
 
   public async getAll(): Promise<Item[]> {
     try {
-      const items = await this.Item.getAll();
+      const items = await this.Item.findAll();
       return this.convertAll(items);
     } catch (error) {
+      log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Items not found');
     }
   }
@@ -31,6 +40,7 @@ export default class ItemService {
       const items = await this.Item.find(filter);
       return this.convertAll(items);
     } catch (error) {
+      log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Items not found');
     }
   }
@@ -38,8 +48,10 @@ export default class ItemService {
   public async findById(id: number): Promise<Item> {
     try {
       const item = await this.Item.findById(id);
-      return this.convert(item);
+      const tags = [];
+      return this.convert(item, tags);
     } catch (error) {
+      log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Item not found with id: ' + id);
     }
   }
@@ -48,6 +60,7 @@ export default class ItemService {
     try {
       return this.Item.count();
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'Item count failed');
     }
   }
@@ -55,8 +68,10 @@ export default class ItemService {
   public async insert(itemInsert: Item): Promise<Item> {
     try {
       const item = await this.Item.insert(itemInsert);
-      return this.convert(item);
+      const tags = [];
+      return this.convert(item, tags);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'Item insert failed');
     }
   }
@@ -64,8 +79,10 @@ export default class ItemService {
   public async update(itemUpdate: Item): Promise<Item> {
     try {
       const item = await this.Item.update(itemUpdate);
-      return this.convert(item);
+      const tags = [];
+      return this.convert(item, tags);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'Item update failed');
     }
   }
@@ -73,8 +90,10 @@ export default class ItemService {
   public async upsert(itemUpdate: Item): Promise<Item> {
     try {
       const item = await this.Item.upsert(itemUpdate);
-      return this.convert(item);
+      const tags = [];
+      return this.convert(item, tags);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'Item update failed');
     }
   }
@@ -83,11 +102,12 @@ export default class ItemService {
     try {
       return this.Item.remove(id);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'Item remove failed');
     }
   }
 
-  private convert(item: any): Item {
+  private convert(item: any, tags: any[]): Item {
     const converted: Item = {
         id: item.id,
         type: item.type,
@@ -95,13 +115,18 @@ export default class ItemService {
         description: item.description,
         content: item.content,
         created: new Date(item.created),
-        authorId: item.authod_id
+        authorId: item.author_id,
+        authorName: item.author_name,
+        tags
       };
 
     return converted;
   }
 
   private convertAll(items: any[]): Item[] {
-    return items.map(this.convert);
+    return items.map((item) => {
+      const tags = [];
+      return this.convert(item, tags);
+    });
   }
 }

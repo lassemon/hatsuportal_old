@@ -6,6 +6,7 @@ export class Connection {
   constructor() {
     this.knexConnector = Knex({
       client: 'pg',
+      debug: process.env.LOG_LEVEL === 'DEBUG',
       connection: {
         host: process.env.DATABASE_HOST || 'db',
         user: process.env.DATABASE_USER || '',

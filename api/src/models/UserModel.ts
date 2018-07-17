@@ -5,7 +5,7 @@ export default class UserModel extends Model {
     super(options);
   }
 
-  public getAll(): Promise<any> {
+  public findAll(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.knex('users').select('*').then((result) => {
         resolve(result);

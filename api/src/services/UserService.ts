@@ -19,9 +19,10 @@ export default class UserService {
 
   public async getAll(): Promise<User[]> {
     try {
-      const users = await this.User.getAll();
+      const users = await this.User.findAll();
       return this.convertAll(users);
     } catch (error) {
+      log.error(error);
       throw new ApiError('UserNotFound', 404, 'Users not found');
     }
   }
@@ -31,6 +32,7 @@ export default class UserService {
       const users = await this.User.find(filter);
       return this.convertAll(users);
     } catch (error) {
+      log.error(error);
       throw new ApiError('UserNotFound', 404, 'Users not found');
     }
   }
@@ -40,6 +42,7 @@ export default class UserService {
       const user = await this.User.findById(id);
       return this.convert(user);
     } catch (error) {
+      log.error(error);
       throw new ApiError('UserNotFound', 404, 'User not found with id: ' + id);
     }
   }
@@ -48,6 +51,7 @@ export default class UserService {
     try {
       return this.User.count();
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'User count failed');
     }
   }
@@ -57,6 +61,7 @@ export default class UserService {
       const user = await this.User.insert(userInsert);
       return this.convert(user);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'User insert failed');
     }
   }
@@ -66,6 +71,7 @@ export default class UserService {
       const user = await this.User.update(userUpdate);
       return this.convert(user);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'User update failed');
     }
   }
@@ -75,6 +81,7 @@ export default class UserService {
       const user = await this.User.upsert(userUpdate);
       return this.convert(user);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'User update failed');
     }
   }
@@ -83,6 +90,7 @@ export default class UserService {
     try {
       return this.User.remove(id);
     } catch (error) {
+      log.error(error);
       throw new ApiError('BadRequest', 400, 'User remove failed');
     }
   }

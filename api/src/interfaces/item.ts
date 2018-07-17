@@ -9,4 +9,6 @@ export interface Item {
   content: string;
   created: Date;
   authorId: number;
+  authorName: string;
+  tags: any[];
 }
