@@ -31,6 +31,8 @@ describe('UserController', () => {
     }
   ];
 
+  const TEST_ERROR_MESSAGE = new ApiError('ItemNotFound', 404, 'Item not found');
+
   beforeEach(() => {
     itemService = mock(ItemService);
   });
@@ -42,4 +44,28 @@ describe('UserController', () => {
 
     await expect(controller.getAll()).resolves.toBe(TEST_ITEM_LIST);
   });
+
+  it('should return an item by id', async () => {
+    expect.assertions(1);
+    when(itemService.findById(123)).thenReturn(Promise.resolve(TEST_ITEM_LIST[0]));
+    controller.setService(instance(itemService));
+
+    await expect(controller.get(123)).resolves.toBe(TEST_ITEM_LIST[0]);
+  });
+
+  it('should fail', async () => {
+    expect.assertions(2);
+    const rejectPromise = Promise.reject(TEST_ERROR_MESSAGE);
+    rejectPromise.catch(() => {}); // to suppress UnhandledPromiseRejectionWarning
+    when(itemService.findById(456)).thenReturn(rejectPromise);
+    controller.setService(instance(itemService));
+
+    try {
+      const result = await controller.get(456);
+    } catch (error) {
+      expect(error.getMessage()).toBe('Item not found');
+      expect(error.getStatus()).toBe(404);
+    }
+  });
+
 });

@@ -15,8 +15,6 @@ describe('UserController', () => {
     {id: 456, name: 'test2', email: 'test2', created: new Date()}
   ];
 
-  const TEST_EMPTY_RESPONSE: User[] = [];
-
   const TEST_ERROR_MESSAGE = new ApiError('UserNotFound', 404, 'User not found');
 
   beforeEach(() => {
