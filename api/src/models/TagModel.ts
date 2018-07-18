@@ -1,5 +1,4 @@
 import Model from '@ruanmartinelli/knex-model';
-import * as _ from 'lodash';
 
 export default class TagModel extends Model {
   constructor(options) {

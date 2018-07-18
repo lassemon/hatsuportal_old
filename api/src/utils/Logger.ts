@@ -1,11 +1,13 @@
 import * as moment from 'moment';
 
-const DATE_FORMAT = 'DD-MM-YYYY HH:mm:ssZ';
-
 export default class Logger {
+
+  public DATE_FORMAT = 'DD-MM-YYYY HH:mm:ssZ';
+
   public name: string;
-  constructor(name: string) {
+  constructor(name: string, dateFormat?: string) {
     this.name = name;
+    this.DATE_FORMAT = dateFormat;
   }
 
   public debug(message: string) {
@@ -39,6 +41,6 @@ export default class Logger {
   }
 
   private getTimestamp() {
-    return moment().format(DATE_FORMAT);
+    return moment().format(this.DATE_FORMAT);
   }
 }

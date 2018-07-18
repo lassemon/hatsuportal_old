@@ -1,8 +1,6 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { Item } from 'interfaces/item';
-import { Tag } from 'interfaces/tag';
-import {each} from 'lodash';
 import ItemModel from 'models/ItemModel';
 import TagService from 'services/TagService';
 import Logger from 'utils/logger';

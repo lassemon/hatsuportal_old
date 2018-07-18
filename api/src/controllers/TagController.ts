@@ -1,8 +1,5 @@
 import TagService from 'services/TagService';
 import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
-import Logger from 'utils/Logger';
-
-const log = new Logger('TagController');
 
 @Route('v1/tags')
 export class TagController extends Controller {

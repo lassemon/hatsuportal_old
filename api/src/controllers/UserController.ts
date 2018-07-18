@@ -1,8 +1,5 @@
 import UserService from 'services/UserService';
 import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
-import Logger from 'utils/Logger';
-
-const log = new Logger('UserController');
 
 @Route('v1/users')
 export class UserController extends Controller {

@@ -1,5 +1,4 @@
 import Model from '@ruanmartinelli/knex-model';
-import * as _ from 'lodash';
 
 export default class ItemModel extends Model {
   constructor(options) {
