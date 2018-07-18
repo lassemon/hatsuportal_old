@@ -10,5 +10,5 @@ export interface Item {
   created: Date;
   authorId: number;
   authorName: string;
-  tags: any[];
+  tags?: any[];
 }

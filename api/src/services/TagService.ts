@@ -47,6 +47,16 @@ export default class TagService {
     }
   }
 
+  public async findByItem(itemId: number): Promise<Tag[]> {
+    try {
+      const tags = await this.Tag.findByItemId(itemId);
+      return this.convertAll(tags);
+    } catch (error) {
+      log.error(error);
+      return Promise.resolve([]);
+    }
+  }
+
   public count(): Promise<any> {
     try {
       return this.Tag.count();

@@ -1,7 +1,10 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { Item } from 'interfaces/item';
+import { Tag } from 'interfaces/tag';
+import {each} from 'lodash';
 import ItemModel from 'models/ItemModel';
+import TagService from 'services/TagService';
 import Logger from 'utils/logger';
 
 const log = new Logger('ItemService');
@@ -9,6 +12,7 @@ const log = new Logger('ItemService');
 export default class ItemService {
 
   private Item: ItemModel;
+  private tagService: TagService;
 
   constructor() {
     this.Item = new ItemModel({
@@ -23,12 +27,16 @@ export default class ItemService {
         { table: 'users', first: 'users.id', second: 'items.author_id' }
       ]
     });
+
+    this.tagService = new TagService();
   }
 
   public async getAll(): Promise<Item[]> {
     try {
-      const items = await this.Item.findAll();
-      return this.convertAll(items);
+      const dbItems = await this.Item.findAll();
+      let items: Item[] = this.convertAll(dbItems);
+      items = await this.addTagsToAll(items);
+      return items;
     } catch (error) {
       log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Items not found');
@@ -37,8 +45,10 @@ export default class ItemService {
 
   public async find(filter): Promise<Item[]> {
     try {
-      const items = await this.Item.find(filter);
-      return this.convertAll(items);
+      const dbItems = await this.Item.find(filter);
+      let items: Item[] = this.convertAll(dbItems);
+      items = await this.addTagsToAll(items);
+      return items;
     } catch (error) {
       log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Items not found');
@@ -47,9 +57,10 @@ export default class ItemService {
 
   public async findById(id: number): Promise<Item> {
     try {
-      const item = await this.Item.findById(id);
-      const tags = [];
-      return this.convert(item, tags);
+      const dbItem = await this.Item.findById(id);
+      let item: Item = this.convert(dbItem);
+      item = await this.addTags(item);
+      return item;
     } catch (error) {
       log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Item not found with id: ' + id);
@@ -67,9 +78,10 @@ export default class ItemService {
 
   public async insert(itemInsert: Item): Promise<Item> {
     try {
-      const item = await this.Item.insert(itemInsert);
-      const tags = [];
-      return this.convert(item, tags);
+      const dbItem = await this.Item.insert(itemInsert);
+      let item: Item = this.convert(dbItem);
+      item = await this.addTags(item);
+      return item;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item insert failed');
@@ -78,9 +90,10 @@ export default class ItemService {
 
   public async update(itemUpdate: Item): Promise<Item> {
     try {
-      const item = await this.Item.update(itemUpdate);
-      const tags = [];
-      return this.convert(item, tags);
+      const dbItem = await this.Item.update(itemUpdate);
+      let item: Item = this.convert(dbItem);
+      item = await this.addTags(item);
+      return item;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item update failed');
@@ -89,9 +102,10 @@ export default class ItemService {
 
   public async upsert(itemUpdate: Item): Promise<Item> {
     try {
-      const item = await this.Item.upsert(itemUpdate);
-      const tags = [];
-      return this.convert(item, tags);
+      const dbItem = await this.Item.upsert(itemUpdate);
+      let item: Item = this.convert(dbItem);
+      item = await this.addTags(item);
+      return item;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item update failed');
@@ -107,7 +121,7 @@ export default class ItemService {
     }
   }
 
-  private convert(item: any, tags: any[]): Item {
+  private convert(item: any): Item {
     const converted: Item = {
         id: item.id,
         type: item.type,
@@ -116,8 +130,7 @@ export default class ItemService {
         content: item.content,
         created: new Date(item.created),
         authorId: item.author_id,
-        authorName: item.author_name,
-        tags
+        authorName: item.author_name
       };
 
     return converted;
@@ -126,7 +139,19 @@ export default class ItemService {
   private convertAll(items: any[]): Item[] {
     return items.map((item) => {
       const tags = [];
-      return this.convert(item, tags);
+      return this.convert(item);
     });
+  }
+
+  private async addTags(item: Item): Promise<Item> {
+    const tags = await this.tagService.findByItem(item.id);
+    item.tags = tags;
+    return item;
+  }
+
+  private async addTagsToAll(items: Item[]): Promise<Item[]> {
+    const promises = items.map(this.addTags, this);
+    await Promise.all(promises);
+    return items;
   }
 }
