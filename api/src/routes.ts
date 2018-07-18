@@ -3,6 +3,7 @@ import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from
 import { PingController } from './controllers/pingController';
 import { UserController } from './controllers/userController';
 import { ItemController } from './controllers/itemController';
+import { TagController } from './controllers/TagController';
 
 const models: TsoaRoute.Models = {
 };
@@ -95,6 +96,43 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new ItemController();
+
+
+      const promise = controller.get.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/tags',
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
+
+
+      const promise = controller.getAll.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/tags/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
 
 
       const promise = controller.get.apply(controller, validatedArgs);

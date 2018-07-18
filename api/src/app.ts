@@ -3,9 +3,10 @@ import * as express from 'express';
 import { RegisterRoutes } from './routes';
 
 // controllers need to be referenced in order to get crawled by the generator
-import './controllers/itemController';
-import './controllers/pingController';
-import './controllers/userController';
+import './controllers/ItemController';
+import './controllers/PingController';
+import './controllers/TagController';
+import './controllers/UserController';
 
 const app = express();
 
