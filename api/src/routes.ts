@@ -1,69 +1,46 @@
 /* tslint:disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
-import { PingController } from './controllers/pingController';
-import { UserController } from './controllers/userController';
-import { ItemController } from './controllers/itemController';
+import { ItemController } from './controllers/ItemController';
+import { PingController } from './controllers/PingController';
 import { TagController } from './controllers/TagController';
+import { UserController } from './controllers/UserController';
 
 const models: TsoaRoute.Models = {
+  "Item": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
+      "type": { "dataType": "string", "required": true },
+      "title": { "dataType": "string", "required": true },
+      "description": { "dataType": "string", "required": true },
+      "content": { "dataType": "string", "required": true },
+      "created": { "dataType": "datetime", "required": true },
+      "authorId": { "dataType": "double", "required": true },
+      "authorName": { "dataType": "string", "required": true },
+      "tags": { "dataType": "array", "array": { "dataType": "any" } },
+    },
+  },
+  "Tag": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
+      "name": { "dataType": "string", "required": true },
+    },
+  },
+  "TagCreateRequest": {
+    "properties": {
+      "name": { "dataType": "string", "required": true },
+    },
+  },
+  "User": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
+      "name": { "dataType": "string", "required": true },
+      "email": { "dataType": "string", "required": true },
+      "created": { "dataType": "datetime", "required": true },
+    },
+  },
 };
 
 export function RegisterRoutes(app: any) {
-  app.get('/v1/ping',
-    function(request: any, response: any, next: any) {
-      const args = {
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new PingController();
-
-
-      const promise = controller.ping.apply(controller, validatedArgs);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/v1/users',
-    function(request: any, response: any, next: any) {
-      const args = {
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new UserController();
-
-
-      const promise = controller.getAll.apply(controller, validatedArgs);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/v1/users/:id',
-    function(request: any, response: any, next: any) {
-      const args = {
-        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new UserController();
-
-
-      const promise = controller.get.apply(controller, validatedArgs);
-      promiseHandler(controller, promise, response, next);
-    });
   app.get('/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
@@ -101,6 +78,24 @@ export function RegisterRoutes(app: any) {
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
+  app.get('/v1/ping',
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new PingController();
+
+
+      const promise = controller.ping.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
   app.get('/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
@@ -133,6 +128,62 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new TagController();
+
+
+      const promise = controller.get.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.post('/v1/tags',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "TagCreateRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
+
+
+      const promise = controller.add.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/users',
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.getAll.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/v1/users/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
 
 
       const promise = controller.get.apply(controller, validatedArgs);

@@ -20,7 +20,7 @@
 - (on windows run `docker-volume-watcher`, see http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html for more info)
 - `http://localhost/api/docs/` should now answer with swagger documentation
 - `http://localhost:8080/` should now answer with PostgreSQL Adminer. (_see credentials from docker-compose.yml_)
-- DISCLAIMER: note that in the API project, nodemon only updates dependency changes trough the ./src/server.ts inclusion hierarchy (_see nodemon.json file_), but does not run for example commands like `tsoa swagger` or `tsoa routes`. To make sure all changes are deployed to server, run `npm run build`, `docker-compose down` and `docker-compose up` commands to generate all files.
+- DISCLAIMER: note that in the API project, nodemon only updates dependency changes trough the ./src/server.ts inclusion hierarchy (_see nodemon.json file_), but does not run for example commands like `tsoa swagger` or `tsoa routes`. To make sure all changes are deployed to server, run `npm run build`, `docker-compose down` and finally `docker-compose up` to generate all files and deploy them to the server.
 
 ## Docker cheatsheet
 - `docker ps` lists all running docker containers

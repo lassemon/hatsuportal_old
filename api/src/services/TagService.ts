@@ -1,6 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { Tag } from 'interfaces/tag';
+import { find, head, toLower } from 'lodash';
 import TagModel from 'models/TagModel';
 import Logger from 'utils/Logger';
 
@@ -67,9 +68,13 @@ export default class TagService {
   }
 
   public async insert(tagInsert: Tag): Promise<Tag> {
+    if (await this.tagExists(tagInsert)) {
+      throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
+    }
+
     try {
       const tag = await this.Tag.insert(tagInsert);
-      return this.convert(tag);
+      return this.convert(head(tag));
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Tag insert failed');
@@ -107,9 +112,9 @@ export default class TagService {
 
   private convert(tag: any): Tag {
     const converted: Tag = {
-        id: tag.id,
-        name: tag.name
-      };
+      id: tag.id,
+      name: tag.name
+    };
 
     return converted;
   }
@@ -118,5 +123,12 @@ export default class TagService {
     return tags.map((tag) => {
       return this.convert(tag);
     });
+  }
+
+  private async tagExists(tag: Tag): Promise<boolean> {
+    const currentTags = await this.Tag.findAll();
+    const CurrentTagsLower = currentTags.map((tag) => ( {id: tag.id, name: toLower(tag.name)} ));
+    const tagExists = !!find(CurrentTagsLower, ['name', toLower(tag.name)]);
+    return tagExists;
   }
 }

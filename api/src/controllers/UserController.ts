@@ -1,5 +1,9 @@
 import UserService from 'services/UserService';
-import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Controller, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import Logger from 'utils/Logger';
+import { User } from '../interfaces/user';
+
+const log = new Logger('UserController');
 
 @Route('v1/users')
 export class UserController extends Controller {
@@ -13,7 +17,8 @@ export class UserController extends Controller {
 
   @Tags('users')
   @Get()
-  public async getAll(): Promise<any[]> {
+  public async getAll(): Promise<User[]> {
+    log.debug('getting all users');
     return this.userService.getAll();
   }
 
@@ -21,7 +26,8 @@ export class UserController extends Controller {
   @Get('{id}')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async get(id: number): Promise<any> {
+  public async get(id: number): Promise<User> {
+    log.debug('getting user with id: ' + id);
     return this.userService.findById(id);
   }
 

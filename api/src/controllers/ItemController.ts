@@ -1,6 +1,7 @@
 import ItemService from 'services/ItemService';
-import { Controller, Example, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Controller, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
+import { Item } from '../interfaces/item';
 
 const log = new Logger('ItemController');
 
@@ -16,7 +17,8 @@ export class ItemController extends Controller {
 
   @Tags('items')
   @Get()
-  public async getAll(): Promise<any[]> {
+  public async getAll(): Promise<Item[]> {
+    log.debug('getting all items');
     return this.itemService.getAll();
   }
 
@@ -24,7 +26,8 @@ export class ItemController extends Controller {
   @Get('{id}')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async get(id: number): Promise<any> {
+  public async get(id: number): Promise<Item> {
+    log.debug('getting item with id: ' + id);
     return this.itemService.findById(id);
   }
 
