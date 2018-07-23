@@ -58,4 +58,28 @@ describe('UserController', () => {
     }
   });
 
+  it('should add a tag', async () => {
+    expect.assertions(1);
+    when(tagService.insert(TEST_TAG_LIST[0])).thenReturn(Promise.resolve(TEST_TAG_LIST[0]));
+    controller.setService(instance(tagService));
+
+    await expect(controller.add(TEST_TAG_LIST[0])).resolves.toBe(TEST_TAG_LIST[0]);
+  });
+
+  it('should delete a tag', async () => {
+    expect.assertions(1);
+    when(tagService.remove(123)).thenReturn(Promise.resolve(true));
+    controller.setService(instance(tagService));
+
+    await expect(controller.delete(123)).resolves.toBe(true);
+  });
+
+  it('should update a tag', async () => {
+    expect.assertions(1);
+    when(tagService.update(TEST_TAG_LIST[0])).thenReturn(Promise.resolve(TEST_TAG_LIST[0]));
+    controller.setService(instance(tagService));
+
+    await expect(controller.put(TEST_TAG_LIST[0])).resolves.toBe(TEST_TAG_LIST[0]);
+  });
+
 });
