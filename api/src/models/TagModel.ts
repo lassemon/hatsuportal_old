@@ -1,4 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
+import { Tag } from 'interfaces/tag';
 
 export default class TagModel extends Model {
   constructor(options) {
@@ -16,8 +17,16 @@ export default class TagModel extends Model {
       .where('item_tag.item_id', itemId);
   }
 
-  public insert(tag: any): Promise<any> {
+  public insert(tag: Tag): Promise<any> {
     return this.knex('tags').insert(tag, '*');
+  }
+
+  public remove(tagId: number): Promise<boolean> {
+    return this.knex('tags')
+      .where('id', tagId)
+      .del().then((result) => {
+        return !!result;
+      });
   }
 
 }

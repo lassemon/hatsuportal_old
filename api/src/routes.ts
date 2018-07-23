@@ -152,6 +152,44 @@ export function RegisterRoutes(app: any) {
       const promise = controller.add.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
+  app.delete('/v1/tags/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
+
+
+      const promise = controller.delete.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.put('/v1/tags',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "Tag" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
+
+
+      const promise = controller.put.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
   app.get('/v1/users',
     function(request: any, response: any, next: any) {
       const args = {

@@ -1,5 +1,5 @@
 import TagService from 'services/TagService';
-import { Body, Controller, Get, Post, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { Tag, TagCreateRequest } from '../interfaces/tag';
 
@@ -39,6 +39,24 @@ export class TagController extends Controller {
   public async add(@Body() request: TagCreateRequest): Promise<Tag> {
     log.debug('inserting tag: ' + JSON.stringify(request));
     return this.tagService.insert(request as Tag);
+  }
+
+  @Tags('tags')
+  @Delete('{id}')
+  @Response(404, 'Not Found')
+  @SuccessResponse(200, 'Ok')
+  public async delete(id: number): Promise<boolean> {
+    log.debug('removing tag with id: ' + id);
+    return this.tagService.remove(id);
+  }
+
+  @Tags('tags')
+  @Put()
+  @Response(404, 'Not Found')
+  @SuccessResponse(200, 'Ok')
+  public async put(@Body() request: Tag): Promise<Tag> {
+    log.debug('updating tag with id: ' + request.id + ' to ' + request.name);
+    return this.tagService.update(request);
   }
 
   public setService(service: TagService) {

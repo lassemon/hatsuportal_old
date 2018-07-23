@@ -68,14 +68,16 @@ export default class TagService {
   }
 
   public async insert(tagInsert: Tag): Promise<Tag> {
-    if (await this.tagExists(tagInsert)) {
-      throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
-    }
-
     try {
+      if (await this.tagExists(tagInsert)) {
+        throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
+      }
       const tag = await this.Tag.insert(tagInsert);
       return this.convert(head(tag));
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Tag insert failed');
     }
@@ -101,10 +103,19 @@ export default class TagService {
     }
   }
 
-  public remove(id: number): Promise<boolean> {
+  public async remove(id: number): Promise<boolean> {
     try {
-      return this.Tag.remove(id);
+      const success = await this.Tag.remove(id);
+
+      if (!success) {
+        throw new ApiError('NotFound', 404, 'Tag remove failed');
+      }
+
+      return success;
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Tag remove failed');
     }
