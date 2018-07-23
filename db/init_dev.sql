@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS tags(
 
 CREATE TABLE IF NOT EXISTS item_tag(
   item_id        INT                         NOT NULL,
-  tag_id         INT                         NOT NULL
+  tag_id         INT                         NOT NULL    REFERENCES    tags(id)
 );
 
 INSERT INTO users (name, email, created) VALUES
