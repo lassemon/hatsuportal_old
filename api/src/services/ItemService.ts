@@ -1,6 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { Item } from 'interfaces/item';
+import { Item, ItemCreateRequest, ItemInsert } from 'interfaces/item';
+import { head } from 'lodash';
 import ItemModel from 'models/ItemModel';
 import TagService from 'services/TagService';
 import Logger from 'utils/logger';
@@ -9,11 +10,11 @@ const log = new Logger('ItemService');
 
 export default class ItemService {
 
-  private Item: ItemModel;
+  private itemModel: ItemModel;
   private tagService: TagService;
 
   constructor() {
-    this.Item = new ItemModel({
+    this.itemModel = new ItemModel({
       tableName: 'items',
       connection,
       columns: [
@@ -31,7 +32,7 @@ export default class ItemService {
 
   public async getAll(): Promise<Item[]> {
     try {
-      const dbItems = await this.Item.findAll();
+      const dbItems = await this.itemModel.findAll();
       let items: Item[] = this.convertAll(dbItems);
       items = await this.addTagsToAll(items);
       return items;
@@ -43,7 +44,7 @@ export default class ItemService {
 
   public async find(filter): Promise<Item[]> {
     try {
-      const dbItems = await this.Item.find(filter);
+      const dbItems = await this.itemModel.find(filter);
       let items: Item[] = this.convertAll(dbItems);
       items = await this.addTagsToAll(items);
       return items;
@@ -55,7 +56,7 @@ export default class ItemService {
 
   public async findById(id: number): Promise<Item> {
     try {
-      const dbItem = await this.Item.findById(id);
+      const dbItem = await this.itemModel.findById(id);
       let item: Item = this.convert(dbItem);
       item = await this.addTags(item);
       return item;
@@ -67,20 +68,39 @@ export default class ItemService {
 
   public count(): Promise<any> {
     try {
-      return this.Item.count();
+      return this.itemModel.count();
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item count failed');
     }
   }
 
-  public async insert(itemInsert: Item): Promise<Item> {
+  public async insert(itemInsert: ItemCreateRequest): Promise<Item> {
     try {
-      const dbItem = await this.Item.insert(itemInsert);
-      let item: Item = this.convert(dbItem);
+      const tagsExist = await this.tagService.checkThatTagsExist(itemInsert.tags);
+      if (!tagsExist) {
+        throw new ApiError('BadRequest', 400, 'Attempted to add tags that do not exist');
+      }
+
+      const dbItem = await this.itemModel.insert({
+        type: itemInsert.type,
+        title: itemInsert.title,
+        description: itemInsert.description,
+        content: itemInsert.content,
+        created: new Date(),
+        author_id: 1 // TODO GET AUTHORIZED USER
+      });
+      let item: Item = this.convert(head(dbItem));
+
+      await this.tagService.addTagsToItem({itemId: item.id, tags: itemInsert.tags});
+
       item = await this.addTags(item);
+
       return item;
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item insert failed');
     }
@@ -88,19 +108,7 @@ export default class ItemService {
 
   public async update(itemUpdate: Item): Promise<Item> {
     try {
-      const dbItem = await this.Item.update(itemUpdate);
-      let item: Item = this.convert(dbItem);
-      item = await this.addTags(item);
-      return item;
-    } catch (error) {
-      log.error(error);
-      throw new ApiError('BadRequest', 400, 'Item update failed');
-    }
-  }
-
-  public async upsert(itemUpdate: Item): Promise<Item> {
-    try {
-      const dbItem = await this.Item.upsert(itemUpdate);
+      const dbItem = await this.itemModel.update(itemUpdate);
       let item: Item = this.convert(dbItem);
       item = await this.addTags(item);
       return item;
@@ -112,7 +120,7 @@ export default class ItemService {
 
   public remove(id: number): Promise<boolean> {
     try {
-      return this.Item.remove(id);
+      return this.itemModel.remove(id);
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item remove failed');
@@ -128,7 +136,8 @@ export default class ItemService {
         content: item.content,
         created: new Date(item.created),
         authorId: item.author_id,
-        authorName: item.author_name
+        authorName: item.author_name,
+        tags: []
       };
 
     return converted;

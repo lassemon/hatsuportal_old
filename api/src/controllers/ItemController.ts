@@ -1,7 +1,8 @@
 import ItemService from 'services/ItemService';
-import { Controller, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import TagService from 'services/TagService';
+import { Body, Controller, Get, Post, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { Item } from '../interfaces/item';
+import { Item, ItemCreateRequest, ItemInsert } from '../interfaces/item';
 
 const log = new Logger('ItemController');
 
@@ -9,10 +10,12 @@ const log = new Logger('ItemController');
 export class ItemController extends Controller {
 
   private itemService: ItemService;
+  private tagService: TagService;
 
   constructor() {
     super();
     this.itemService = new ItemService();
+    this.tagService = new TagService();
   }
 
   @Tags('items')
@@ -29,6 +32,15 @@ export class ItemController extends Controller {
   public async get(id: number): Promise<Item> {
     log.debug('getting item with id: ' + id);
     return this.itemService.findById(id);
+  }
+
+  @Tags('items')
+  @Post()
+  @Response(400, 'Bad Request')
+  @SuccessResponse(200, 'Ok')
+  public async add(@Body() request: ItemCreateRequest): Promise<Item> {
+    log.debug('inserting item: ' + JSON. stringify(request));
+    return await this.itemService.insert(request);
   }
 
   public setService(service: ItemService) {

@@ -1,7 +1,7 @@
 import TagService from 'services/TagService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { Tag, TagCreateRequest } from '../interfaces/tag';
+import { Tag, TagCreateRequest, TagInsert } from '../interfaces/tag';
 
 const log = new Logger('TagController');
 
@@ -38,7 +38,7 @@ export class TagController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async add(@Body() request: TagCreateRequest): Promise<Tag> {
     log.debug('inserting tag: ' + JSON.stringify(request));
-    return this.tagService.insert(request as Tag);
+    return this.tagService.insert(request as TagInsert);
   }
 
   @Tags('tags')

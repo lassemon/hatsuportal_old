@@ -8,10 +8,10 @@ const log = new Logger('UserService');
 
 export default class UserService {
 
-  private User: UserModel;
+  private userModel: UserModel;
 
   constructor() {
-    this.User = new UserModel({
+    this.userModel = new UserModel({
       tableName: 'users',
       connection
     });
@@ -19,7 +19,7 @@ export default class UserService {
 
   public async getAll(): Promise<User[]> {
     try {
-      const users = await this.User.findAll();
+      const users = await this.userModel.findAll();
       return this.convertAll(users);
     } catch (error) {
       log.error(error);
@@ -29,7 +29,7 @@ export default class UserService {
 
   public async find(filter): Promise<User[]> {
     try {
-      const users = await this.User.find(filter);
+      const users = await this.userModel.find(filter);
       return this.convertAll(users);
     } catch (error) {
       log.error(error);
@@ -39,7 +39,7 @@ export default class UserService {
 
   public async findById(id: number): Promise<User> {
     try {
-      const user = await this.User.findById(id);
+      const user = await this.userModel.findById(id);
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -49,7 +49,7 @@ export default class UserService {
 
   public count(): Promise<any> {
     try {
-      return this.User.count();
+      return this.userModel.count();
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'User count failed');
@@ -58,7 +58,7 @@ export default class UserService {
 
   public async insert(userInsert: User): Promise<User> {
     try {
-      const user = await this.User.insert(userInsert);
+      const user = await this.userModel.insert(userInsert);
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -68,17 +68,7 @@ export default class UserService {
 
   public async update(userUpdate: User): Promise<User> {
     try {
-      const user = await this.User.update(userUpdate);
-      return this.convert(user);
-    } catch (error) {
-      log.error(error);
-      throw new ApiError('BadRequest', 400, 'User update failed');
-    }
-  }
-
-  public async upsert(userUpdate: User): Promise<User> {
-    try {
-      const user = await this.User.upsert(userUpdate);
+      const user = await this.userModel.update(userUpdate);
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -88,7 +78,7 @@ export default class UserService {
 
   public remove(id: number): Promise<boolean> {
     try {
-      return this.User.remove(id);
+      return this.userModel.remove(id);
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'User remove failed');

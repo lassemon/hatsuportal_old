@@ -6,6 +6,12 @@ import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
 
 const models: TsoaRoute.Models = {
+  "Tag": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
+      "name": { "dataType": "string", "required": true },
+    },
+  },
   "Item": {
     "properties": {
       "id": { "dataType": "double", "required": true },
@@ -16,13 +22,16 @@ const models: TsoaRoute.Models = {
       "created": { "dataType": "datetime", "required": true },
       "authorId": { "dataType": "double", "required": true },
       "authorName": { "dataType": "string", "required": true },
-      "tags": { "dataType": "array", "array": { "dataType": "any" } },
+      "tags": { "dataType": "array", "array": { "ref": "Tag" }, "required": true },
     },
   },
-  "Tag": {
+  "ItemInsert": {
     "properties": {
-      "id": { "dataType": "double", "required": true },
-      "name": { "dataType": "string", "required": true },
+      "type": { "dataType": "string", "required": true },
+      "title": { "dataType": "string", "required": true },
+      "description": { "dataType": "string", "required": true },
+      "content": { "dataType": "string", "required": true },
+      "tags": { "dataType": "array", "array": { "dataType": "double" }, "required": true },
     },
   },
   "TagCreateRequest": {
@@ -76,6 +85,25 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.get.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.post('/v1/items',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "ItemInsert" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new ItemController();
+
+
+      const promise = controller.add.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/v1/ping',

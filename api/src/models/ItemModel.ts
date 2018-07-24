@@ -1,4 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
+import { ItemInsert } from 'interfaces/item';
 
 export default class ItemModel extends Model {
   constructor(options) {
@@ -16,6 +17,10 @@ export default class ItemModel extends Model {
         reject(error);
       });
     });
+  }
+
+  public insert(item: ItemInsert): Promise<any> {
+    return this.knex('items').insert(item, '*');
   }
 
 }
