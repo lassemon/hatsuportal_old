@@ -24,6 +24,12 @@ services:
       DATABASE_PASSWORD: hatsurebals123
       DATABASE_SCHEMA: hatsuportal
       LOG_LEVEL: INFO
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    volumes:
+      - ./ui:/usr/src/app
   db:
     image: postgres:10.4
     restart: always
