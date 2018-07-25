@@ -63,7 +63,7 @@ describe('UserController', () => {
     when(tagService.insert(TEST_TAG_LIST[0])).thenReturn(Promise.resolve(TEST_TAG_LIST[0]));
     controller.setService(instance(tagService));
 
-    await expect(controller.add(TEST_TAG_LIST[0])).resolves.toBe(TEST_TAG_LIST[0]);
+    await expect(controller.insert(TEST_TAG_LIST[0])).resolves.toBe(TEST_TAG_LIST[0]);
   });
 
   it('should delete a tag', async () => {

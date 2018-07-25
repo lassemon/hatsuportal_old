@@ -1,6 +1,6 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { ItemTag, Tag, TagInsert, TagsForItemInsert, TagUpdate } from 'interfaces/tag';
+import { DBItemTag, DBTagInsert, DBTagsForItemInsert, DBTagUpdate, Tag, TagInsertRequest, TagUpdateRequest } from 'interfaces/tag';
 import { each, find, head, toLower } from 'lodash';
 import TagModel from 'models/TagModel';
 import Logger from 'utils/Logger';
@@ -67,12 +67,12 @@ export default class TagService {
     }
   }
 
-  public async insert(tagInsert: TagInsert): Promise<Tag> {
+  public async insert(tagInsert: TagInsertRequest): Promise<Tag> {
     try {
       if (await this.tagExists(tagInsert.name)) {
         throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
       }
-      const tag = await this.tagModel.insert(tagInsert);
+      const tag = await this.tagModel.insert(tagInsert as DBTagInsert);
       return this.convert(head(tag));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -83,7 +83,7 @@ export default class TagService {
     }
   }
 
-  public async addTagsToItem(tagsForItemInsert: TagsForItemInsert): Promise<ItemTag[]> {
+  public async addTagsToItem(tagsForItemInsert: DBTagsForItemInsert): Promise<DBItemTag[]> {
     try {
       const itemTags = await this.tagModel.addToItem(tagsForItemInsert.tags.map((tag) => (
         {
@@ -114,7 +114,7 @@ export default class TagService {
     return allTagsExist;
   }
 
-  public async update(tagUpdate: TagUpdate): Promise<Tag> {
+  public async update(tagUpdate: TagUpdateRequest): Promise<Tag> {
     try {
       const tag = await this.tagModel.update(tagUpdate);
       return this.convert(tag);
@@ -130,6 +130,24 @@ export default class TagService {
 
       if (!success) {
         throw new ApiError('NotFound', 404, 'Tag remove failed');
+      }
+
+      return success;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      log.error(error);
+      throw new ApiError('BadRequest', 400, 'Tag remove failed');
+    }
+  }
+
+  public async removeAllFromItem(itemId: number): Promise<boolean> {
+    try {
+      const success = await this.tagModel.removeAllFromItem(itemId);
+
+      if (!success) {
+        throw new ApiError('NotFound', 404, 'Removing all tags from item ' + itemId + ' failed');
       }
 
       return success;

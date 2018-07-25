@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS items(
   description    TEXT,
   content        TEXT                        NOT NULL,
   created        TIMESTAMP                   NOT NULL,
+  modified       TIMESTAMP,
   author_id      INT                         NOT NULL
 );
 
@@ -29,9 +30,9 @@ INSERT INTO users (name, email, created) VALUES
   ('jykajee', 'jykajee@jee.fi', '2018-06-24T05:39:00.000Z'),
   ('Mister Thane', 'mrthane@thanelandia.fi', '2016-06-20T02:22:00.000Z');
 
-INSERT INTO items (type, title, description, content, created, author_id) VALUES
-  ('article', 'Jykän paras resepti', 'Tällä pääsee hekumaan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar. Cras rutrum nisl a metus aliquet convallis. Vivamus ultrices luctus dolor at luctus.', '2014-06-20T02:22:00.000Z', 1),
-  ('video', 'Hyvä biisi', 'Kato loppuun asti', 'https://www.youtube.com/watch?v=N9cml2D8VU0', '2013-06-20T02:22:00.000Z', 2);
+INSERT INTO items (type, title, description, content, created, modified, author_id) VALUES
+  ('article', 'Jykän paras resepti', 'Tällä pääsee hekumaan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar. Cras rutrum nisl a metus aliquet convallis. Vivamus ultrices luctus dolor at luctus.', '2014-06-20T02:22:00.000Z', NULL, 1),
+  ('video', 'Hyvä biisi', 'Kato loppuun asti', 'https://www.youtube.com/watch?v=N9cml2D8VU0', '2013-06-20T02:22:00.000Z', NULL, 2);
 
 INSERT INTO tags (name) VALUES
   ('laatukamaa'),

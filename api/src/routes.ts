@@ -20,12 +20,13 @@ const models: TsoaRoute.Models = {
       "description": { "dataType": "string", "required": true },
       "content": { "dataType": "string", "required": true },
       "created": { "dataType": "datetime", "required": true },
+      "modified": { "dataType": "datetime" },
       "authorId": { "dataType": "double", "required": true },
       "authorName": { "dataType": "string", "required": true },
       "tags": { "dataType": "array", "array": { "ref": "Tag" }, "required": true },
     },
   },
-  "ItemInsert": {
+  "ItemInsertRequest": {
     "properties": {
       "type": { "dataType": "string", "required": true },
       "title": { "dataType": "string", "required": true },
@@ -34,8 +35,24 @@ const models: TsoaRoute.Models = {
       "tags": { "dataType": "array", "array": { "dataType": "double" }, "required": true },
     },
   },
-  "TagCreateRequest": {
+  "ItemUpdateRequest": {
     "properties": {
+      "id": { "dataType": "double", "required": true },
+      "type": { "dataType": "string", "required": true },
+      "title": { "dataType": "string", "required": true },
+      "description": { "dataType": "string", "required": true },
+      "content": { "dataType": "string", "required": true },
+      "tags": { "dataType": "array", "array": { "dataType": "double" }, "required": true },
+    },
+  },
+  "TagInsertRequest": {
+    "properties": {
+      "name": { "dataType": "string", "required": true },
+    },
+  },
+  "TagUpdateRequest": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
     },
   },
@@ -90,7 +107,7 @@ export function RegisterRoutes(app: any) {
   app.post('/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "ItemInsert" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "ItemInsertRequest" },
       };
 
       let validatedArgs: any[] = [];
@@ -103,7 +120,45 @@ export function RegisterRoutes(app: any) {
       const controller = new ItemController();
 
 
-      const promise = controller.add.apply(controller, validatedArgs);
+      const promise = controller.insert.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.put('/v1/items',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "ItemUpdateRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new ItemController();
+
+
+      const promise = controller.put.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.delete('/v1/items/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new ItemController();
+
+
+      const promise = controller.delete.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/v1/ping',
@@ -164,7 +219,7 @@ export function RegisterRoutes(app: any) {
   app.post('/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "TagCreateRequest" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "TagInsertRequest" },
       };
 
       let validatedArgs: any[] = [];
@@ -177,7 +232,26 @@ export function RegisterRoutes(app: any) {
       const controller = new TagController();
 
 
-      const promise = controller.add.apply(controller, validatedArgs);
+      const promise = controller.insert.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.put('/v1/tags',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "TagUpdateRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new TagController();
+
+
+      const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.delete('/v1/tags/:id',
@@ -197,25 +271,6 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.delete.apply(controller, validatedArgs);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.put('/v1/tags',
-    function(request: any, response: any, next: any) {
-      const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "Tag" },
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new TagController();
-
-
-      const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/v1/users',

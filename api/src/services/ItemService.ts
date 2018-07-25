@@ -1,6 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { Item, ItemCreateRequest, ItemInsert } from 'interfaces/item';
+import { DBItemInsert, DBItemUpdate, Item, ItemInsertRequest, ItemUpdateRequest  } from 'interfaces/item';
+import { DBTagsForItemInsert } from 'interfaces/tag';
 import { head } from 'lodash';
 import ItemModel from 'models/ItemModel';
 import TagService from 'services/TagService';
@@ -34,7 +35,7 @@ export default class ItemService {
     try {
       const dbItems = await this.itemModel.findAll();
       let items: Item[] = this.convertAll(dbItems);
-      items = await this.addTagsToAll(items);
+      items = await this.getTagsForAll(items);
       return items;
     } catch (error) {
       log.error(error);
@@ -46,7 +47,7 @@ export default class ItemService {
     try {
       const dbItems = await this.itemModel.find(filter);
       let items: Item[] = this.convertAll(dbItems);
-      items = await this.addTagsToAll(items);
+      items = await this.getTagsForAll(items);
       return items;
     } catch (error) {
       log.error(error);
@@ -58,7 +59,7 @@ export default class ItemService {
     try {
       const dbItem = await this.itemModel.findById(id);
       let item: Item = this.convert(dbItem);
-      item = await this.addTags(item);
+      item = await this.getTags(item);
       return item;
     } catch (error) {
       log.error(error);
@@ -75,7 +76,7 @@ export default class ItemService {
     }
   }
 
-  public async insert(itemInsert: ItemCreateRequest): Promise<Item> {
+  public async insert(itemInsert: ItemInsertRequest): Promise<Item> {
     try {
       const tagsExist = await this.tagService.checkThatTagsExist(itemInsert.tags);
       if (!tagsExist) {
@@ -89,14 +90,13 @@ export default class ItemService {
         content: itemInsert.content,
         created: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      });
-      let item: Item = this.convert(head(dbItem));
+      } as DBItemInsert );
 
-      await this.tagService.addTagsToItem({itemId: item.id, tags: itemInsert.tags});
+      const item: Item = this.convert(head(dbItem));
 
-      item = await this.addTags(item);
+      await this.tagService.addTagsToItem({itemId: item.id, tags: itemInsert.tags} as DBTagsForItemInsert);
 
-      return item;
+      return await this.getTags(item);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -106,22 +106,53 @@ export default class ItemService {
     }
   }
 
-  public async update(itemUpdate: Item): Promise<Item> {
+  public async update(itemUpdate: ItemUpdateRequest): Promise<Item> {
     try {
-      const dbItem = await this.itemModel.update(itemUpdate);
-      let item: Item = this.convert(dbItem);
-      item = await this.addTags(item);
-      return item;
+      const tagsExist = await this.tagService.checkThatTagsExist(itemUpdate.tags);
+      if (!tagsExist) {
+        throw new ApiError('BadRequest', 400, 'Attempted to add tags that do not exist');
+      }
+
+      const dbItem = await this.itemModel.update({
+        id: itemUpdate.id,
+        type: itemUpdate.type,
+        title: itemUpdate.title,
+        description: itemUpdate.description,
+        content: itemUpdate.content,
+        modified: new Date(),
+        author_id: 1 // TODO GET AUTHORIZED USER
+      } as DBItemUpdate);
+
+      const item: Item = this.convert(dbItem);
+
+      await this.tagService.removeAllFromItem(item.id);
+      await this.tagService.addTagsToItem({itemId: item.id, tags: itemUpdate.tags} as DBTagsForItemInsert);
+
+      return await this.getTags(item);
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item update failed');
     }
   }
 
-  public remove(id: number): Promise<boolean> {
+  public async remove(id: number): Promise<boolean> {
     try {
-      return this.itemModel.remove(id);
+      let success = await this.itemModel.remove(id);
+
+      if (!success) {
+        throw new ApiError('NotFound', 404, 'Item remove failed');
+      }
+
+      success = await this.tagService.removeAllFromItem(id);
+
+      return success;
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item remove failed');
     }
@@ -135,6 +166,7 @@ export default class ItemService {
         description: item.description,
         content: item.content,
         created: new Date(item.created),
+        modified: item.modified || null,
         authorId: item.author_id,
         authorName: item.author_name,
         tags: []
@@ -150,14 +182,14 @@ export default class ItemService {
     });
   }
 
-  private async addTags(item: Item): Promise<Item> {
+  private async getTags(item: Item): Promise<Item> {
     const tags = await this.tagService.findByItem(item.id);
     item.tags = tags;
     return item;
   }
 
-  private async addTagsToAll(items: Item[]): Promise<Item[]> {
-    const promises = items.map(this.addTags, this);
+  private async getTagsForAll(items: Item[]): Promise<Item[]> {
+    const promises = items.map(this.getTags, this);
     await Promise.all(promises);
     return items;
   }

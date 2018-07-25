@@ -10,6 +10,7 @@ export interface Item {
   description: string;
   content: string;
   created: Date;
+  modified?: Date;
   authorId: number;
   authorName: string;
   tags: Tag[];
@@ -18,7 +19,7 @@ export interface Item {
 /**
  * @tsoaModel
  */
-export interface ItemCreateRequest {
+export interface ItemInsertRequest {
   type: string;
   title: string;
   description: string;
@@ -29,7 +30,7 @@ export interface ItemCreateRequest {
 /**
  * @tsoaModel
  */
-export interface ItemInsert {
+export interface DBItemInsert {
   type: string;
   title: string;
   description: string;
@@ -41,14 +42,24 @@ export interface ItemInsert {
 /**
  * @tsoaModel
  */
-export interface ItemUpdate {
+export interface ItemUpdateRequest {
   id: number;
   type: string;
   title: string;
   description: string;
   content: string;
-  created: Date;
-  authorId: number;
-  authorName: string;
   tags: number[];
+}
+
+/**
+ * @tsoaModel
+ */
+export interface DBItemUpdate {
+  id: number;
+  type: string;
+  title: string;
+  description: string;
+  content: string;
+  modified: Date;
+  author_id: number;
 }

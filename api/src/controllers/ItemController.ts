@@ -1,8 +1,8 @@
 import ItemService from 'services/ItemService';
 import TagService from 'services/TagService';
-import { Body, Controller, Get, Post, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { Item, ItemCreateRequest, ItemInsert } from '../interfaces/item';
+import { Item, ItemInsertRequest, ItemUpdateRequest } from '../interfaces/item';
 
 const log = new Logger('ItemController');
 
@@ -38,9 +38,27 @@ export class ItemController extends Controller {
   @Post()
   @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
-  public async add(@Body() request: ItemCreateRequest): Promise<Item> {
+  public async insert(@Body() request: ItemInsertRequest): Promise<Item> {
     log.debug('inserting item: ' + JSON. stringify(request));
     return await this.itemService.insert(request);
+  }
+
+  @Tags('items')
+  @Put()
+  @Response(404, 'Not Found')
+  @SuccessResponse(200, 'Ok')
+  public async put(@Body() request: ItemUpdateRequest): Promise<Item> {
+    log.debug('updating item with id: ' + request.id);
+    return this.itemService.update(request);
+  }
+
+  @Tags('items')
+  @Delete('{id}')
+  @Response(404, 'Not Found')
+  @SuccessResponse(200, 'Ok')
+  public async delete(id: number): Promise<boolean> {
+    log.debug('removing item with id: ' + id);
+    return this.itemService.remove(id);
   }
 
   public setService(service: ItemService) {

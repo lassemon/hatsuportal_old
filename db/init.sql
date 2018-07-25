@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS items(
   description    TEXT,
   content        TEXT                        NOT NULL,
   created        TIMESTAMP                   NOT NULL,
+  modified       TIMESTAMP,
   author_id      INT                         NOT NULL
 );
 
