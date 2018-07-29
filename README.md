@@ -8,6 +8,8 @@
   - _You'll need to create a Docker ID_
 - Install node and npm for windows (https://nodejs.org/en/download/current/)
   - _Take current version, not the LTS_
+- Install yarn for windows (https://yarnpkg.com/lang/en/docs/install/#windows-stable)
+  - _Take latest version_
 - Install Visual Code Studio (https://code.visualstudio.com/download)
   - _Use plugin TSLint https://marketplace.visualstudio.com/items?itemName=eg2.tslint_
   - _Set your VSCode settings to `"tslint.autoFixOnSave": true`_
@@ -40,6 +42,7 @@
 - `docker-compose up -d` starts the containers and detaches from run command after finished
     - _on windows, remember to share the drive that you are developing on, with docker_
 - `docker-compose down` stops all running containers
+- `docker-compose restart <worker>` restarts a single container within docker-compose
 
 
 ## Troubleshooting
