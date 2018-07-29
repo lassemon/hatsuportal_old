@@ -1,3 +1,6 @@
 #!/bin/bash
 cd ./api
-npm install
+yarn install
+cd ../
+cd ./ui
+yarn install
