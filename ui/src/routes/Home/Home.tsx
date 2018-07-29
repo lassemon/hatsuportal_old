@@ -1,12 +1,10 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { fetchItems } from 'actions/items';
 import ItemList from 'components/ItemList';
-import Spinner from 'components/Spinner';
-import RootLayout from 'layouts/RootLayout';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
 import { IRootState } from 'types';
-
 
 export interface IProps {
   error: boolean;
@@ -30,17 +28,16 @@ class HomeView extends React.Component<IProps & IActionProps, IState> {
     const items = this.props.items;
 
     return (
-      <RootLayout>
-        <h3>Welcome to HatsuPortal</h3>
+      <div>
         {loadingItems ? (
-            <Spinner />
+            <CircularProgress size={25} />
           ) : (
           <ItemList 
             header="Items"
             items={items}
           />
         )}
-      </RootLayout>
+        </div>
     );
   }
 }
