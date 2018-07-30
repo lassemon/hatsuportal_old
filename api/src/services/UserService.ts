@@ -1,6 +1,6 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { User } from 'interfaces/user';
+import { IUser } from 'interfaces/user';
 import UserModel from 'models/UserModel';
 import Logger from 'utils/logger';
 
@@ -17,7 +17,7 @@ export default class UserService {
     });
   }
 
-  public async getAll(): Promise<User[]> {
+  public async getAll(): Promise<IUser[]> {
     try {
       const users = await this.userModel.findAll();
       return this.convertAll(users);
@@ -27,7 +27,7 @@ export default class UserService {
     }
   }
 
-  public async find(filter): Promise<User[]> {
+  public async find(filter): Promise<IUser[]> {
     try {
       const users = await this.userModel.find(filter);
       return this.convertAll(users);
@@ -37,7 +37,7 @@ export default class UserService {
     }
   }
 
-  public async findById(id: number): Promise<User> {
+  public async findById(id: number): Promise<IUser> {
     try {
       const user = await this.userModel.findById(id);
       return this.convert(user);
@@ -56,7 +56,7 @@ export default class UserService {
     }
   }
 
-  public async insert(userInsert: User): Promise<User> {
+  public async insert(userInsert: IUser): Promise<IUser> {
     try {
       const user = await this.userModel.insert(userInsert);
       return this.convert(user);
@@ -66,7 +66,7 @@ export default class UserService {
     }
   }
 
-  public async update(userUpdate: User): Promise<User> {
+  public async update(userUpdate: IUser): Promise<IUser> {
     try {
       const user = await this.userModel.update(userUpdate);
       return this.convert(user);
@@ -85,18 +85,18 @@ export default class UserService {
     }
   }
 
-  private convert(user: any): User {
-    const converted: User = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        created: new Date(user.created)
-      };
+  private convert(user: any): IUser {
+    const converted: IUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      created: new Date(user.created)
+    };
 
     return converted;
   }
 
-  private convertAll(users: any[]): User[] {
+  private convertAll(users: any[]): IUser[] {
     return users.map(this.convert);
   }
 }

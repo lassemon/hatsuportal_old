@@ -6,13 +6,13 @@ import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
 
 const models: TsoaRoute.Models = {
-  "Tag": {
+  "ITag": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
     },
   },
-  "Item": {
+  "IItem": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "type": { "dataType": "string", "required": true },
@@ -23,10 +23,10 @@ const models: TsoaRoute.Models = {
       "modified": { "dataType": "datetime" },
       "authorId": { "dataType": "double", "required": true },
       "authorName": { "dataType": "string", "required": true },
-      "tags": { "dataType": "array", "array": { "ref": "Tag" }, "required": true },
+      "tags": { "dataType": "array", "array": { "ref": "ITag" }, "required": true },
     },
   },
-  "ItemInsertRequest": {
+  "IItemInsertRequest": {
     "properties": {
       "type": { "dataType": "string", "required": true },
       "title": { "dataType": "string", "required": true },
@@ -35,7 +35,7 @@ const models: TsoaRoute.Models = {
       "tags": { "dataType": "array", "array": { "dataType": "double" }, "required": true },
     },
   },
-  "ItemUpdateRequest": {
+  "IItemUpdateRequest": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "type": { "dataType": "string", "required": true },
@@ -45,18 +45,18 @@ const models: TsoaRoute.Models = {
       "tags": { "dataType": "array", "array": { "dataType": "double" }, "required": true },
     },
   },
-  "TagInsertRequest": {
+  "ITagInsertRequest": {
     "properties": {
       "name": { "dataType": "string", "required": true },
     },
   },
-  "TagUpdateRequest": {
+  "ITagUpdateRequest": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
     },
   },
-  "User": {
+  "IUser": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
@@ -107,7 +107,7 @@ export function RegisterRoutes(app: any) {
   app.post('/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "ItemInsertRequest" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "IItemInsertRequest" },
       };
 
       let validatedArgs: any[] = [];
@@ -126,7 +126,7 @@ export function RegisterRoutes(app: any) {
   app.put('/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "ItemUpdateRequest" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "IItemUpdateRequest" },
       };
 
       let validatedArgs: any[] = [];
@@ -219,7 +219,7 @@ export function RegisterRoutes(app: any) {
   app.post('/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "TagInsertRequest" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "ITagInsertRequest" },
       };
 
       let validatedArgs: any[] = [];
@@ -238,7 +238,7 @@ export function RegisterRoutes(app: any) {
   app.put('/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
-        request: { "in": "body", "name": "request", "required": true, "ref": "TagUpdateRequest" },
+        request: { "in": "body", "name": "request", "required": true, "ref": "ITagUpdateRequest" },
       };
 
       let validatedArgs: any[] = [];

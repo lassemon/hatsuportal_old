@@ -1,9 +1,9 @@
-import { Tag } from 'interfaces/tag';
+import { ITag } from 'interfaces/tag';
 
 /**
  * @tsoaModel
  */
-export interface Item {
+export interface IItem {
   id: number;
   type: string;
   title: string;
@@ -13,13 +13,13 @@ export interface Item {
   modified?: Date;
   authorId: number;
   authorName: string;
-  tags: Tag[];
+  tags: ITag[];
 }
 
 /**
  * @tsoaModel
  */
-export interface ItemInsertRequest {
+export interface IItemInsertRequest {
   type: string;
   title: string;
   description: string;
@@ -30,7 +30,7 @@ export interface ItemInsertRequest {
 /**
  * @tsoaModel
  */
-export interface DBItemInsert {
+export interface IDBItemInsert {
   type: string;
   title: string;
   description: string;
@@ -42,7 +42,7 @@ export interface DBItemInsert {
 /**
  * @tsoaModel
  */
-export interface ItemUpdateRequest {
+export interface IItemUpdateRequest {
   id: number;
   type: string;
   title: string;
@@ -54,7 +54,7 @@ export interface ItemUpdateRequest {
 /**
  * @tsoaModel
  */
-export interface DBItemUpdate {
+export interface IDBItemUpdate {
   id: number;
   type: string;
   title: string;

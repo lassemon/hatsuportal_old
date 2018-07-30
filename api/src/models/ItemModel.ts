@@ -1,5 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
-import { DBItemInsert } from 'interfaces/item';
+import { IDBItemInsert } from 'interfaces/item';
 
 export default class ItemModel extends Model {
   constructor(options) {
@@ -11,16 +11,16 @@ export default class ItemModel extends Model {
       this.knex('items as items')
         .join('users as users', 'users.id', 'items.author_id')
         .select(['items.*', 'users.name as author_name'])
-      .then((result) => {
-        resolve(result);
-      }).catch(error => {
-        reject(error);
-      });
+        .then(result => {
+          resolve(result);
+        })
+        .catch(error => {
+          reject(error);
+        });
     });
   }
 
-  public insert(item: DBItemInsert): Promise<any> {
+  public insert(item: IDBItemInsert): Promise<any> {
     return this.knex('items').insert(item, '*');
   }
-
 }

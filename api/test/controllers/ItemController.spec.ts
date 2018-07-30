@@ -1,8 +1,8 @@
 import 'jest';
-import {instance, mock, when} from 'ts-mockito-2/lib/ts-mockito';
+import { instance, mock, when } from 'ts-mockito-2/lib/ts-mockito';
 import { ItemController } from '../../src/controllers/ItemController';
 import ApiError from '../../src/errors/ApiError';
-import { Item } from '../../src/interfaces/item';
+import { IItem } from '../../src/interfaces/item';
 import ItemService from '../../src/services/ItemService';
 
 describe('UserController', () => {
@@ -10,7 +10,7 @@ describe('UserController', () => {
   let itemService: ItemService;
   const controller: ItemController = new ItemController();
 
-  const TEST_ITEM_LIST: Item[] = [
+  const TEST_ITEM_LIST: IItem[] = [
     {
       id: 123,
       type: 'article',
@@ -60,7 +60,9 @@ describe('UserController', () => {
   it('should fail', async () => {
     expect.assertions(2);
     const rejectPromise = Promise.reject(TEST_ERROR_MESSAGE);
-    rejectPromise.catch(() => {}); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:disable */
+    rejectPromise.catch(() => { }); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:enable */
     when(itemService.findById(456)).thenReturn(rejectPromise);
     controller.setService(instance(itemService));
 

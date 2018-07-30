@@ -1,8 +1,8 @@
 import 'jest';
-import {instance, mock, when} from 'ts-mockito-2/lib/ts-mockito';
+import { instance, mock, when } from 'ts-mockito-2/lib/ts-mockito';
 import { TagController } from '../../src/controllers/TagController';
 import ApiError from '../../src/errors/ApiError';
-import { Tag } from '../../src/interfaces/tag';
+import { ITag } from '../../src/interfaces/tag';
 import TagService from '../../src/services/TagService';
 
 describe('UserController', () => {
@@ -10,7 +10,7 @@ describe('UserController', () => {
   let tagService: TagService;
   const controller: TagController = new TagController();
 
-  const TEST_TAG_LIST: Tag[] = [
+  const TEST_TAG_LIST: ITag[] = [
     {
       id: 22,
       name: 'resepti'
@@ -46,7 +46,9 @@ describe('UserController', () => {
   it('should fail', async () => {
     expect.assertions(2);
     const rejectPromise = Promise.reject(TEST_ERROR_MESSAGE);
-    rejectPromise.catch(() => {}); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:disable */
+    rejectPromise.catch(() => { }); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:enable */
     when(tagService.findById(456)).thenReturn(rejectPromise);
     controller.setService(instance(tagService));
 

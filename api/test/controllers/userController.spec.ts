@@ -1,8 +1,8 @@
 import 'jest';
-import {instance, mock, when} from 'ts-mockito-2/lib/ts-mockito';
+import { instance, mock, when } from 'ts-mockito-2/lib/ts-mockito';
 import { UserController } from '../../src/controllers/UserController';
 import ApiError from '../../src/errors/ApiError';
-import { User } from '../../src/interfaces/user';
+import { IUser } from '../../src/interfaces/user';
 import UserService from '../../src/services/UserService';
 
 describe('UserController', () => {
@@ -10,9 +10,9 @@ describe('UserController', () => {
   let userService: UserService;
   const controller: UserController = new UserController();
 
-  const TEST_USER_LIST: User[] = [
-    {id: 123, name: 'test', email: 'test', created: new Date()},
-    {id: 456, name: 'test2', email: 'test2', created: new Date()}
+  const TEST_USER_LIST: IUser[] = [
+    { id: 123, name: 'test', email: 'test', created: new Date() },
+    { id: 456, name: 'test2', email: 'test2', created: new Date() }
   ];
 
   const TEST_ERROR_MESSAGE = new ApiError('UserNotFound', 404, 'User not found');
@@ -40,7 +40,9 @@ describe('UserController', () => {
   it('should fail', async () => {
     expect.assertions(2);
     const rejectPromise = Promise.reject(TEST_ERROR_MESSAGE);
-    rejectPromise.catch(() => {}); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:disable */
+    rejectPromise.catch(() => { }); // to suppress UnhandledPromiseRejectionWarning
+    /* tslint:enable */
     when(userService.findById(456)).thenReturn(rejectPromise);
     controller.setService(instance(userService));
 

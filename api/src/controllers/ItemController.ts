@@ -2,7 +2,7 @@ import ItemService from 'services/ItemService';
 import TagService from 'services/TagService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { Item, ItemInsertRequest, ItemUpdateRequest } from '../interfaces/item';
+import { IItem, IItemInsertRequest, IItemUpdateRequest } from '../interfaces/item';
 
 const log = new Logger('ItemController');
 
@@ -20,7 +20,7 @@ export class ItemController extends Controller {
 
   @Tags('items')
   @Get()
-  public async getAll(): Promise<Item[]> {
+  public async getAll(): Promise<IItem[]> {
     log.debug('getting all items');
     return this.itemService.getAll();
   }
@@ -29,7 +29,7 @@ export class ItemController extends Controller {
   @Get('{id}')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async get(id: number): Promise<Item> {
+  public async get(id: number): Promise<IItem> {
     log.debug('getting item with id: ' + id);
     return this.itemService.findById(id);
   }
@@ -38,8 +38,8 @@ export class ItemController extends Controller {
   @Post()
   @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
-  public async insert(@Body() request: ItemInsertRequest): Promise<Item> {
-    log.debug('inserting item: ' + JSON. stringify(request));
+  public async insert(@Body() request: IItemInsertRequest): Promise<IItem> {
+    log.debug('inserting item: ' + JSON.stringify(request));
     return await this.itemService.insert(request);
   }
 
@@ -47,7 +47,7 @@ export class ItemController extends Controller {
   @Put()
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async put(@Body() request: ItemUpdateRequest): Promise<Item> {
+  public async put(@Body() request: IItemUpdateRequest): Promise<IItem> {
     log.debug('updating item with id: ' + request.id);
     return this.itemService.update(request);
   }

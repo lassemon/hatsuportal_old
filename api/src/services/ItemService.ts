@@ -1,7 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { DBItemInsert, DBItemUpdate, Item, ItemInsertRequest, ItemUpdateRequest  } from 'interfaces/item';
-import { DBTagsForItemInsert } from 'interfaces/tag';
+import { IDBItemInsert, IDBItemUpdate, IItem, IItemInsertRequest, IItemUpdateRequest } from 'interfaces/item';
+import { IDBTagsForItemInsert } from 'interfaces/tag';
 import { head } from 'lodash';
 import ItemModel from 'models/ItemModel';
 import TagService from 'services/TagService';
@@ -10,7 +10,6 @@ import Logger from 'utils/logger';
 const log = new Logger('ItemService');
 
 export default class ItemService {
-
   private itemModel: ItemModel;
   private tagService: TagService;
 
@@ -23,18 +22,16 @@ export default class ItemService {
         'users.id as author_id',
         'users.name as author_name'
       ],
-      joins: [
-        { table: 'users', first: 'users.id', second: 'items.author_id' }
-      ]
+      joins: [{ table: 'users', first: 'users.id', second: 'items.author_id' }]
     });
 
     this.tagService = new TagService();
   }
 
-  public async getAll(): Promise<Item[]> {
+  public async getAll(): Promise<IItem[]> {
     try {
       const dbItems = await this.itemModel.findAll();
-      let items: Item[] = this.convertAll(dbItems);
+      let items: IItem[] = this.convertAll(dbItems);
       items = await this.getTagsForAll(items);
       return items;
     } catch (error) {
@@ -43,10 +40,10 @@ export default class ItemService {
     }
   }
 
-  public async find(filter): Promise<Item[]> {
+  public async find(filter): Promise<IItem[]> {
     try {
       const dbItems = await this.itemModel.find(filter);
-      let items: Item[] = this.convertAll(dbItems);
+      let items: IItem[] = this.convertAll(dbItems);
       items = await this.getTagsForAll(items);
       return items;
     } catch (error) {
@@ -55,10 +52,10 @@ export default class ItemService {
     }
   }
 
-  public async findById(id: number): Promise<Item> {
+  public async findById(id: number): Promise<IItem> {
     try {
       const dbItem = await this.itemModel.findById(id);
-      let item: Item = this.convert(dbItem);
+      let item: IItem = this.convert(dbItem);
       item = await this.getTags(item);
       return item;
     } catch (error) {
@@ -76,11 +73,17 @@ export default class ItemService {
     }
   }
 
-  public async insert(itemInsert: ItemInsertRequest): Promise<Item> {
+  public async insert(itemInsert: IItemInsertRequest): Promise<IItem> {
     try {
-      const tagsExist = await this.tagService.checkThatTagsExist(itemInsert.tags);
+      const tagsExist = await this.tagService.checkThatTagsExist(
+        itemInsert.tags
+      );
       if (!tagsExist) {
-        throw new ApiError('BadRequest', 400, 'Attempted to add tags that do not exist');
+        throw new ApiError(
+          'BadRequest',
+          400,
+          'Attempted to add tags that do not exist'
+        );
       }
 
       const dbItem = await this.itemModel.insert({
@@ -90,11 +93,14 @@ export default class ItemService {
         content: itemInsert.content,
         created: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      } as DBItemInsert );
+      } as IDBItemInsert);
 
-      const item: Item = this.convert(head(dbItem));
+      const item: IItem = this.convert(head(dbItem));
 
-      await this.tagService.addTagsToItem({itemId: item.id, tags: itemInsert.tags} as DBTagsForItemInsert);
+      await this.tagService.addTagsToItem({
+        itemId: item.id,
+        tags: itemInsert.tags
+      } as IDBTagsForItemInsert);
 
       return await this.getTags(item);
     } catch (error) {
@@ -106,11 +112,17 @@ export default class ItemService {
     }
   }
 
-  public async update(itemUpdate: ItemUpdateRequest): Promise<Item> {
+  public async update(itemUpdate: IItemUpdateRequest): Promise<IItem> {
     try {
-      const tagsExist = await this.tagService.checkThatTagsExist(itemUpdate.tags);
+      const tagsExist = await this.tagService.checkThatTagsExist(
+        itemUpdate.tags
+      );
       if (!tagsExist) {
-        throw new ApiError('BadRequest', 400, 'Attempted to add tags that do not exist');
+        throw new ApiError(
+          'BadRequest',
+          400,
+          'Attempted to add tags that do not exist'
+        );
       }
 
       const dbItem = await this.itemModel.update({
@@ -121,12 +133,15 @@ export default class ItemService {
         content: itemUpdate.content,
         modified: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      } as DBItemUpdate);
+      } as IDBItemUpdate);
 
-      const item: Item = this.convert(dbItem);
+      const item: IItem = this.convert(dbItem);
 
       await this.tagService.removeAllFromItem(item.id);
-      await this.tagService.addTagsToItem({itemId: item.id, tags: itemUpdate.tags} as DBTagsForItemInsert);
+      await this.tagService.addTagsToItem({
+        itemId: item.id,
+        tags: itemUpdate.tags
+      } as IDBTagsForItemInsert);
 
       return await this.getTags(item);
     } catch (error) {
@@ -158,37 +173,37 @@ export default class ItemService {
     }
   }
 
-  private convert(item: any): Item {
-    const converted: Item = {
-        id: item.id,
-        type: item.type,
-        title: item.title,
-        description: item.description,
-        content: item.content,
-        created: new Date(item.created),
-        modified: item.modified || null,
-        authorId: item.author_id,
-        authorName: item.author_name,
-        tags: []
-      };
+  private convert(item: any): IItem {
+    const converted: IItem = {
+      id: item.id,
+      type: item.type,
+      title: item.title,
+      description: item.description,
+      content: item.content,
+      created: new Date(item.created),
+      modified: item.modified || null,
+      authorId: item.author_id,
+      authorName: item.author_name,
+      tags: []
+    };
 
     return converted;
   }
 
-  private convertAll(items: any[]): Item[] {
-    return items.map((item) => {
+  private convertAll(items: any[]): IItem[] {
+    return items.map(item => {
       const tags = [];
       return this.convert(item);
     });
   }
 
-  private async getTags(item: Item): Promise<Item> {
+  private async getTags(item: IItem): Promise<IItem> {
     const tags = await this.tagService.findByItem(item.id);
     item.tags = tags;
     return item;
   }
 
-  private async getTagsForAll(items: Item[]): Promise<Item[]> {
+  private async getTagsForAll(items: IItem[]): Promise<IItem[]> {
     const promises = items.map(this.getTags, this);
     await Promise.all(promises);
     return items;

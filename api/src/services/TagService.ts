@@ -1,6 +1,14 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { DBItemTag, DBTagInsert, DBTagsForItemInsert, DBTagUpdate, Tag, TagInsertRequest, TagUpdateRequest } from 'interfaces/tag';
+import {
+  IDBItemTag,
+  IDBTagInsert,
+  IDBTagsForItemInsert,
+  IDBTagUpdate,
+  ITag,
+  ITagInsertRequest,
+  ITagUpdateRequest
+} from 'interfaces/tag';
 import { each, find, head, toLower } from 'lodash';
 import TagModel from 'models/TagModel';
 import Logger from 'utils/Logger';
@@ -18,7 +26,7 @@ export default class TagService {
     });
   }
 
-  public async getAll(): Promise<Tag[]> {
+  public async getAll(): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.findAll();
       return this.convertAll(tags);
@@ -28,7 +36,7 @@ export default class TagService {
     }
   }
 
-  public async find(filter): Promise<Tag[]> {
+  public async find(filter): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.find(filter);
       return this.convertAll(tags);
@@ -38,7 +46,7 @@ export default class TagService {
     }
   }
 
-  public async findById(id: number): Promise<Tag> {
+  public async findById(id: number): Promise<ITag> {
     try {
       const tag = await this.tagModel.findById(id);
       return this.convert(tag);
@@ -48,7 +56,7 @@ export default class TagService {
     }
   }
 
-  public async findByItem(itemId: number): Promise<Tag[]> {
+  public async findByItem(itemId: number): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.findByItemId(itemId);
       return this.convertAll(tags);
@@ -67,12 +75,12 @@ export default class TagService {
     }
   }
 
-  public async insert(tagInsert: TagInsertRequest): Promise<Tag> {
+  public async insert(tagInsert: ITagInsertRequest): Promise<ITag> {
     try {
       if (await this.tagExists(tagInsert.name)) {
         throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
       }
-      const tag = await this.tagModel.insert(tagInsert as DBTagInsert);
+      const tag = await this.tagModel.insert(tagInsert as IDBTagInsert);
       return this.convert(head(tag));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -83,7 +91,7 @@ export default class TagService {
     }
   }
 
-  public async addTagsToItem(tagsForItemInsert: DBTagsForItemInsert): Promise<DBItemTag[]> {
+  public async addTagsToItem(tagsForItemInsert: IDBTagsForItemInsert): Promise<IDBItemTag[]> {
     try {
       const itemTags = await this.tagModel.addToItem(tagsForItemInsert.tags.map((tag) => (
         {
@@ -104,7 +112,7 @@ export default class TagService {
   public async checkThatTagsExist(tagIds: number[]): Promise<boolean> {
     const tags = await this.tagModel.findByIds(tagIds);
 
-    let allTagsExist =  true;
+    let allTagsExist = true;
     each(tagIds, (tagId) => {
       if (!find(tags, (tag) => tag.id === tagId)) {
         allTagsExist = false;
@@ -114,9 +122,9 @@ export default class TagService {
     return allTagsExist;
   }
 
-  public async update(tagUpdate: TagUpdateRequest): Promise<Tag> {
+  public async update(tagUpdate: ITagUpdateRequest): Promise<ITag> {
     try {
-      const tag = await this.tagModel.update(tagUpdate);
+      const tag = await this.tagModel.update(tagUpdate as IDBTagUpdate);
       return this.convert(tag);
     } catch (error) {
       log.error(error);
@@ -160,8 +168,8 @@ export default class TagService {
     }
   }
 
-  private convert(tag: any): Tag {
-    const converted: Tag = {
+  private convert(tag: any): ITag {
+    const converted: ITag = {
       id: tag.id,
       name: tag.name
     };
@@ -169,7 +177,7 @@ export default class TagService {
     return converted;
   }
 
-  private convertAll(tags: any[]): Tag[] {
+  private convertAll(tags: any[]): ITag[] {
     return tags.map((tag) => {
       return this.convert(tag);
     });
@@ -177,7 +185,7 @@ export default class TagService {
 
   private async tagExists(tagName: string): Promise<boolean> {
     const currentTags = await this.tagModel.findAll();
-    const CurrentTagsLower = currentTags.map((tag) => ( {id: tag.id, name: toLower(tag.name)} ));
+    const CurrentTagsLower = currentTags.map((tag) => ({ id: tag.id, name: toLower(tag.name) }));
     const tagExists = !!find(CurrentTagsLower, ['name', toLower(tagName)]);
     return tagExists;
   }

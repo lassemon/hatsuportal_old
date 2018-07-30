@@ -22,10 +22,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 app.use('/swagger.json', (req, res) => {
-    res.sendFile(__dirname + '/swagger.json');
+  res.sendFile(__dirname + '/swagger.json');
 });
 
+/* tslint:disable */
 const swaggerDocument = require('../dist/swagger.json');
+/* tslint:enable */
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 console.log('Starting server on port 3000...');

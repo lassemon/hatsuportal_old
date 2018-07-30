@@ -1,7 +1,7 @@
 /**
  * @tsoaModel
  */
-export interface Tag {
+export interface ITag {
   id: number;
   name: string;
 }
@@ -9,21 +9,21 @@ export interface Tag {
 /**
  * @tsoaModel
  */
-export interface TagInsertRequest {
+export interface ITagInsertRequest {
   name: string;
 }
 
 /**
  * @tsoaModel
  */
-export interface DBTagInsert {
+export interface IDBTagInsert {
   name: string;
 }
 
 /**
  * @tsoaModel
  */
-export interface DBTagsForItemInsert {
+export interface IDBTagsForItemInsert {
   itemId: number;
   tags: number[];
 }
@@ -31,7 +31,7 @@ export interface DBTagsForItemInsert {
 /**
  * @tsoaModel
  */
-export interface DBItemTag {
+export interface IDBItemTag {
   item_id: number;
   tag_id: number;
 }
@@ -39,7 +39,7 @@ export interface DBItemTag {
 /**
  * @tsoaModel
  */
-export interface TagUpdateRequest {
+export interface ITagUpdateRequest {
   id: number;
   name: string;
 }
@@ -47,7 +47,7 @@ export interface TagUpdateRequest {
 /**
  * @tsoaModel
  */
-export interface DBTagUpdate {
+export interface IDBTagUpdate {
   id: number;
   name: string;
 }

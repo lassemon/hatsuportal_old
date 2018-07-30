@@ -1,4 +1,4 @@
-import { Controller, Example, Get, Route, Tags } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 
 @Route('v1/ping')
 export class PingController extends Controller {

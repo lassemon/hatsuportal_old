@@ -1,9 +1,14 @@
 {
   "extends": [
-    "tslint:recommended"
+    "tslint:recommended",
+    "tslint-config-prettier"
   ],
   "rules": {
-    "indent": [true, "spaces", 2],
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
     "arrow-parens": false,
     "trailing-comma": [
       true,
@@ -17,26 +22,23 @@
       "single"
     ],
     "max-line-length": [
+      true,
       120
     ],
     "no-unused-expression": false,
     "no-shadowed-variable": false,
     "interface-name": [
-      "never-prefix"
+      true,
+      "always-prefix"
     ],
     "member-ordering": [
       false
     ],
     "max-classes-per-file": [
-      false
-    ],
-    "no-reference": false,
-    "no-namespace": [
-      false
+      false,
+      1
     ],
     "no-console": false,
-    "no-empty": false,
-    "no-var-requires": false,
     "object-literal-sort-keys": false
   }
 }

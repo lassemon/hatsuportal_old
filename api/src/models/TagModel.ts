@@ -1,5 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
-import { DBItemTag, DBTagInsert } from 'interfaces/tag';
+import { IDBItemTag, IDBTagInsert } from 'interfaces/tag';
 
 export default class TagModel extends Model {
   constructor(options) {
@@ -25,11 +25,11 @@ export default class TagModel extends Model {
       });
   }
 
-  public insert(tag: DBTagInsert): Promise<any> {
+  public insert(tag: IDBTagInsert): Promise<any> {
     return this.knex('tags').insert(tag, '*');
   }
 
-  public addToItem(tagItems: DBItemTag[]): Promise<any[]> {
+  public addToItem(tagItems: IDBItemTag[]): Promise<any[]> {
     return this.knex('item_tag').insert(tagItems, '*');
   }
 
@@ -43,10 +43,10 @@ export default class TagModel extends Model {
 
   public removeAllFromItem(itemId: number): Promise<boolean> {
     return this.knex('item_tag')
-    .where('item_id', itemId)
-    .del().then((result) => {
-      return !!result;
-    });
+      .where('item_id', itemId)
+      .del().then((result) => {
+        return !!result;
+      });
   }
 
 }
