@@ -1,6 +1,7 @@
 
 export interface IRootState {
   items: IItemsState;
+  tags: ITagsState;
 }
 
 export interface IItemsState {
@@ -15,3 +16,12 @@ export interface IPayloadAction<T> {
 }
 
 export type GetItemsPayload = string[];
+
+export interface ITagsState {
+  loadingTags: boolean;
+  tags: string[];
+  error: boolean;
+}
+
+
+export type GetTagsPayload = string[];

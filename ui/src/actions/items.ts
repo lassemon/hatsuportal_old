@@ -16,8 +16,8 @@ interface IGetItemsAction extends IPayloadAction<GetItemsPayload> {
   payload: GetItemsPayload;
 }
 
-export type ItemAction = ILoadingItemsAction 
-                        | IGetItemsAction;
+export type ItemAction = ILoadingItemsAction
+  | IGetItemsAction;
 
 export const fetchItems: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
@@ -27,7 +27,7 @@ export const fetchItems: ActionCreator<
         type: LOADING_ITEMS
       });
 
-      const items = await itemAPI.getItems();
+      const items = await itemAPI.getAll();
 
       return dispatch({
         payload: items,

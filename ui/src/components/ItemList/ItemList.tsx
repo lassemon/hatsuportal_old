@@ -3,12 +3,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import WebAsset  from '@material-ui/icons/WebAsset';
+import WebAsset from '@material-ui/icons/WebAsset';
 import * as React from 'react';
 import styled from 'styled-components';
 
-interface IProps { 
-  items: string[];
+interface IProps {
+  items: any[];
   header: string;
 }
 interface IState { }

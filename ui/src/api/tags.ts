@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
-const itemsApi = {
+const tagsApi = {
   getAll: (): Promise<void> => {
-    return axios.get('/api/v1/items')
+    return axios.get('/api/v1/tags')
       .then((response: AxiosResponse) => {
         console.log(response);
         return response.data;
@@ -13,4 +13,4 @@ const itemsApi = {
   }
 };
 
-export default itemsApi;
+export default tagsApi;

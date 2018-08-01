@@ -46,7 +46,7 @@ class NavBar extends React.Component<IProps, IState> {
     if (value === 0) {
       history.push('/');
     } else if (value === 1) {
-      history.push('/foo');
+      history.push('/tags');
     }
 
   };
@@ -73,7 +73,7 @@ class NavBar extends React.Component<IProps, IState> {
           indicatorColor="primary"
         >
           <Tab label="Items" />
-          <Tab label="Users" />
+          <Tab label="Tags" />
         </StyledTabs>
       </AppBar>
     )
@@ -85,7 +85,7 @@ class NavBar extends React.Component<IProps, IState> {
       if (path === '/') {
         return 0;
       }
-      else if (path === '/foo') {
+      else if (path === '/tags') {
         return 1;
       }
       else {

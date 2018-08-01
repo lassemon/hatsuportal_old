@@ -1,7 +1,8 @@
-import { 
-  GET_ITEMS, 
-  ItemAction, 
-  LOADING_ITEMS } from 'actions/items';
+import {
+  GET_ITEMS,
+  ItemAction,
+  LOADING_ITEMS
+} from 'actions/items';
 import { IItemsState } from 'types';
 
 const initialState = {
