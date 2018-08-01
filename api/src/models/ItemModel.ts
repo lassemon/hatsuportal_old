@@ -1,12 +1,12 @@
 import Model from '@ruanmartinelli/knex-model';
-import { IDBItemInsert } from 'interfaces/item';
+import { IDBItem, IDBItemInsert } from 'interfaces/item';
 
 export default class ItemModel extends Model {
   constructor(options) {
     super(options);
   }
 
-  public findAll(): Promise<any> {
+  public getAll(): Promise<IDBItem[]> {
     return new Promise((resolve, reject) => {
       this.knex('items as items')
         .join('users as users', 'users.id', 'items.author_id')
@@ -20,7 +20,7 @@ export default class ItemModel extends Model {
     });
   }
 
-  public insert(item: IDBItemInsert): Promise<any> {
+  public insert(item: IDBItemInsert): Promise<IDBItem[]> {
     return this.knex('items').insert(item, '*');
   }
 }

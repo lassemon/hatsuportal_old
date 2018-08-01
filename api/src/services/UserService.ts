@@ -1,8 +1,8 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { IUser } from 'interfaces/user';
+import { IDBUser, IUser } from 'interfaces/user';
 import UserModel from 'models/UserModel';
-import Logger from 'utils/logger';
+import Logger from 'utils/Logger';
 
 const log = new Logger('UserService');
 
@@ -19,7 +19,7 @@ export default class UserService {
 
   public async getAll(): Promise<IUser[]> {
     try {
-      const users = await this.userModel.findAll();
+      const users = await this.userModel.getAll();
       return this.convertAll(users);
     } catch (error) {
       log.error(error);
@@ -29,7 +29,7 @@ export default class UserService {
 
   public async find(filter): Promise<IUser[]> {
     try {
-      const users = await this.userModel.find(filter);
+      const users = await this.userModel.find(filter) as IDBUser[];
       return this.convertAll(users);
     } catch (error) {
       log.error(error);
@@ -39,7 +39,7 @@ export default class UserService {
 
   public async findById(id: number): Promise<IUser> {
     try {
-      const user = await this.userModel.findById(id);
+      const user = await this.userModel.findById(id) as IDBUser;
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -47,9 +47,9 @@ export default class UserService {
     }
   }
 
-  public count(): Promise<any> {
+  public count(): Promise<number> {
     try {
-      return this.userModel.count();
+      return this.userModel.count() as Promise<number>;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'User count failed');
@@ -58,7 +58,7 @@ export default class UserService {
 
   public async insert(userInsert: IUser): Promise<IUser> {
     try {
-      const user = await this.userModel.insert(userInsert);
+      const user = await this.userModel.insert(userInsert) as IDBUser;
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -68,7 +68,7 @@ export default class UserService {
 
   public async update(userUpdate: IUser): Promise<IUser> {
     try {
-      const user = await this.userModel.update(userUpdate);
+      const user = await this.userModel.update(userUpdate) as IDBUser;
       return this.convert(user);
     } catch (error) {
       log.error(error);
@@ -85,7 +85,7 @@ export default class UserService {
     }
   }
 
-  private convert(user: any): IUser {
+  private convert(user: IDBUser): IUser {
     const converted: IUser = {
       id: user.id,
       name: user.name,
@@ -96,7 +96,7 @@ export default class UserService {
     return converted;
   }
 
-  private convertAll(users: any[]): IUser[] {
+  private convertAll(users: IDBUser[]): IUser[] {
     return users.map(this.convert);
   }
 }

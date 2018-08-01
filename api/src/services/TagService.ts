@@ -2,6 +2,7 @@ import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import {
   IDBItemTag,
+  IDBTag,
   IDBTagInsert,
   IDBTagsForItemInsert,
   IDBTagUpdate,
@@ -28,7 +29,7 @@ export default class TagService {
 
   public async getAll(): Promise<ITag[]> {
     try {
-      const tags = await this.tagModel.findAll();
+      const tags = await this.tagModel.getAll();
       return this.convertAll(tags);
     } catch (error) {
       log.error(error);
@@ -38,7 +39,7 @@ export default class TagService {
 
   public async find(filter): Promise<ITag[]> {
     try {
-      const tags = await this.tagModel.find(filter);
+      const tags = await this.tagModel.find(filter) as IDBTag[];
       return this.convertAll(tags);
     } catch (error) {
       log.error(error);
@@ -48,7 +49,7 @@ export default class TagService {
 
   public async findById(id: number): Promise<ITag> {
     try {
-      const tag = await this.tagModel.findById(id);
+      const tag = await this.tagModel.findById(id) as IDBTag;
       return this.convert(tag);
     } catch (error) {
       log.error(error);
@@ -66,9 +67,9 @@ export default class TagService {
     }
   }
 
-  public count(): Promise<any> {
+  public count(): Promise<number> {
     try {
-      return this.tagModel.count();
+      return this.tagModel.count() as Promise<number>;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Tag count failed');
@@ -124,7 +125,7 @@ export default class TagService {
 
   public async update(tagUpdate: ITagUpdateRequest): Promise<ITag> {
     try {
-      const tag = await this.tagModel.update(tagUpdate as IDBTagUpdate);
+      const tag = await this.tagModel.update(tagUpdate as IDBTagUpdate) as IDBTag;
       return this.convert(tag);
     } catch (error) {
       log.error(error);
@@ -168,7 +169,7 @@ export default class TagService {
     }
   }
 
-  private convert(tag: any): ITag {
+  private convert(tag: IDBTag): ITag {
     const converted: ITag = {
       id: tag.id,
       name: tag.name
@@ -177,14 +178,14 @@ export default class TagService {
     return converted;
   }
 
-  private convertAll(tags: any[]): ITag[] {
+  private convertAll(tags: IDBTag[]): ITag[] {
     return tags.map((tag) => {
       return this.convert(tag);
     });
   }
 
   private async tagExists(tagName: string): Promise<boolean> {
-    const currentTags = await this.tagModel.findAll();
+    const currentTags = await this.tagModel.getAll();
     const CurrentTagsLower = currentTags.map((tag) => ({ id: tag.id, name: toLower(tag.name) }));
     const tagExists = !!find(CurrentTagsLower, ['name', toLower(tagName)]);
     return tagExists;

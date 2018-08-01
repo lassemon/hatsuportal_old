@@ -1,11 +1,11 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { IDBItemInsert, IDBItemUpdate, IItem, IItemInsertRequest, IItemUpdateRequest } from 'interfaces/item';
+import { IDBItem, IDBItemInsert, IDBItemUpdate, IItem, IItemInsertRequest, IItemUpdateRequest } from 'interfaces/item';
 import { IDBTagsForItemInsert } from 'interfaces/tag';
 import { head } from 'lodash';
 import ItemModel from 'models/ItemModel';
 import TagService from 'services/TagService';
-import Logger from 'utils/logger';
+import Logger from 'utils/Logger';
 
 const log = new Logger('ItemService');
 
@@ -30,7 +30,7 @@ export default class ItemService {
 
   public async getAll(): Promise<IItem[]> {
     try {
-      const dbItems = await this.itemModel.findAll();
+      const dbItems = await this.itemModel.getAll();
       let items: IItem[] = this.convertAll(dbItems);
       items = await this.getTagsForAll(items);
       return items;
@@ -42,7 +42,7 @@ export default class ItemService {
 
   public async find(filter): Promise<IItem[]> {
     try {
-      const dbItems = await this.itemModel.find(filter);
+      const dbItems = await this.itemModel.find(filter) as IDBItem[];
       let items: IItem[] = this.convertAll(dbItems);
       items = await this.getTagsForAll(items);
       return items;
@@ -54,7 +54,7 @@ export default class ItemService {
 
   public async findById(id: number): Promise<IItem> {
     try {
-      const dbItem = await this.itemModel.findById(id);
+      const dbItem = await this.itemModel.findById(id) as IDBItem;
       let item: IItem = this.convert(dbItem);
       item = await this.getTags(item);
       return item;
@@ -64,9 +64,9 @@ export default class ItemService {
     }
   }
 
-  public count(): Promise<any> {
+  public count(): Promise<number> {
     try {
-      return this.itemModel.count();
+      return this.itemModel.count() as Promise<number>;
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Item count failed');
@@ -133,7 +133,7 @@ export default class ItemService {
         content: itemUpdate.content,
         modified: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      } as IDBItemUpdate);
+      } as IDBItemUpdate) as IDBItem;
 
       const item: IItem = this.convert(dbItem);
 
@@ -173,7 +173,7 @@ export default class ItemService {
     }
   }
 
-  private convert(item: any): IItem {
+  private convert(item: IDBItem): IItem {
     const converted: IItem = {
       id: item.id,
       type: item.type,
@@ -190,7 +190,7 @@ export default class ItemService {
     return converted;
   }
 
-  private convertAll(items: any[]): IItem[] {
+  private convertAll(items: IDBItem[]): IItem[] {
     return items.map(item => {
       const tags = [];
       return this.convert(item);

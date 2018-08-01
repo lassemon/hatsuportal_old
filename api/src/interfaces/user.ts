@@ -7,3 +7,13 @@ export interface IUser {
   email: string;
   created: Date;
 }
+
+/**
+ * @tsoaModel
+ */
+export interface IDBUser {
+  id: number;
+  name: string;
+  email: string;
+  created: Date;
+}

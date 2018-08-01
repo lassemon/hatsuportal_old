@@ -16,11 +16,11 @@ class App extends React.Component {
       <Provider store={store}>
         <Router history={history}>
           <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <RootLayout>
-            <Route exact={true} path="/" component={Home} key="home" />
-            <Route path="/foo" component={Test} key="foo" />
-          </RootLayout>
+            <CssBaseline />
+            <RootLayout>
+              <Route exact={true} path="/" component={Home} key="home" />
+              <Route path="/foo" component={Test} key="foo" />
+            </RootLayout>
           </MuiThemeProvider>
         </Router>
       </Provider>

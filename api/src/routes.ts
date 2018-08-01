@@ -67,7 +67,7 @@ const models: TsoaRoute.Models = {
 };
 
 export function RegisterRoutes(app: any) {
-  app.get('/v1/items',
+  app.get('/api/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
       };
@@ -85,7 +85,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/items/:id',
+  app.get('/api/v1/items/:id',
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -104,7 +104,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.post('/v1/items',
+  app.post('/api/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IItemInsertRequest" },
@@ -123,7 +123,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.put('/v1/items',
+  app.put('/api/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IItemUpdateRequest" },
@@ -142,7 +142,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.delete('/v1/items/:id',
+  app.delete('/api/v1/items/:id',
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -161,7 +161,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.delete.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/ping',
+  app.get('/api/v1/ping',
     function(request: any, response: any, next: any) {
       const args = {
       };
@@ -179,7 +179,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.ping.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/tags',
+  app.get('/api/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
       };
@@ -197,7 +197,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/tags/:id',
+  app.get('/api/v1/tags/:id',
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -216,7 +216,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.post('/v1/tags',
+  app.post('/api/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "ITagInsertRequest" },
@@ -235,7 +235,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.put('/v1/tags',
+  app.put('/api/v1/tags',
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "ITagUpdateRequest" },
@@ -254,7 +254,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.delete('/v1/tags/:id',
+  app.delete('/api/v1/tags/:id',
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -273,7 +273,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.delete.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/users',
+  app.get('/api/v1/users',
     function(request: any, response: any, next: any) {
       const args = {
       };
@@ -291,7 +291,7 @@ export function RegisterRoutes(app: any) {
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
-  app.get('/v1/users/:id',
+  app.get('/api/v1/users/:id',
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },

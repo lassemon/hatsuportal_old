@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 
 RegisterRoutes(app);
 
+/* tslint:disable no-any */
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   const status = err.statusCode || 500;
   const body: any = {
@@ -20,15 +21,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   };
   res.status(status).json(body);
 });
+/* tslint:enable no-any */
 
-app.use('/swagger.json', (req, res) => {
-  res.sendFile(__dirname + '/swagger.json');
-});
-
-/* tslint:disable */
+/* tslint:disable no-var-requires */
 const swaggerDocument = require('../dist/swagger.json');
-/* tslint:enable */
+/* tslint:enable no-var-requires */
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-console.log('Starting server on port 3000...');
-app.listen(3000);
+console.log('Starting server on port ' + process.env.PORT + '...');
+app.listen(process.env.PORT || 3000);

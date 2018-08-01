@@ -19,6 +19,21 @@ export interface IItem {
 /**
  * @tsoaModel
  */
+export interface IDBItem {
+  id: number;
+  type: string;
+  title: string;
+  description: string;
+  content: string;
+  created: Date;
+  modified?: Date;
+  author_id: number;
+  author_name: string;
+}
+
+/**
+ * @tsoaModel
+ */
 export interface IItemInsertRequest {
   type: string;
   title: string;

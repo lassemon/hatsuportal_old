@@ -5,6 +5,7 @@
     "entryFile": "./src/server.ts"
   },
   "routes": {
+    "basePath": "/api",
     "entryFile": "./src/server.ts",
     "routesDir": "./src",
     "middleware": "express"

@@ -1,23 +1,23 @@
 import Model from '@ruanmartinelli/knex-model';
-import { IDBItemTag, IDBTagInsert } from 'interfaces/tag';
+import { IDBItemTag, IDBTag, IDBTagInsert } from 'interfaces/tag';
 
 export default class TagModel extends Model {
   constructor(options) {
     super(options);
   }
 
-  public findAll(): Promise<any> {
+  public getAll(): Promise<IDBTag[]> {
     return this.knex('tags').select('*');
   }
 
-  public findByItemId(itemId: number): Promise<any[]> {
+  public findByItemId(itemId: number): Promise<IDBTag[]> {
     return this.knex('tags')
       .join('item_tag as item_tag', 'tags.id', 'item_tag.tag_id')
       .select('tags.*')
       .where('item_tag.item_id', itemId);
   }
 
-  public findByIds(tagIds: number[]): Promise<any[]> {
+  public findByIds(tagIds: number[]): Promise<IDBTag[]> {
     return this.knex('tags')
       .select('*')
       .where((builder) => {
@@ -25,11 +25,11 @@ export default class TagModel extends Model {
       });
   }
 
-  public insert(tag: IDBTagInsert): Promise<any> {
+  public insert(tag: IDBTagInsert): Promise<IDBTag[]> {
     return this.knex('tags').insert(tag, '*');
   }
 
-  public addToItem(tagItems: IDBItemTag[]): Promise<any[]> {
+  public addToItem(tagItems: IDBItemTag[]): Promise<IDBItemTag[]> {
     return this.knex('item_tag').insert(tagItems, '*');
   }
 

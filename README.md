@@ -21,7 +21,7 @@
 - run `sh install.sh` (installs node packages for all projects, _needed so that volume mount won't override projects and delete node_modules folders_)
 - run `docker-compose up -d`
 - (on windows run `docker-volume-watcher`, see http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html for more info)
-- `http://localhost/api/docs/` should now answer with swagger documentation
+- `http://localhost/docs/` should now answer with swagger documentation
 - `http://localhost:8080/` should now answer with PostgreSQL Adminer. (_see credentials from docker-compose.yml_)
 - `http://localhost` should now answer with React UI
 - DISCLAIMER: note that in the API project, nodemon only updates dependency changes trough the ./src/server.ts inclusion hierarchy (_see nodemon.json file_), but does not run for example commands like `tsoa swagger` or `tsoa routes`. To make sure all changes are deployed to server, run `npm run build`, `docker-compose down` and finally `docker-compose up` to generate all files and deploy them to the server.
@@ -36,6 +36,7 @@
 - `docker kill $(docker ps -q)` kills all running containers
 - `docker rm $(docker ps -a -q)` deletes all stopped containers
 - `docker rmi $(docker images -q)` deletes all images
+- `docker volume prune` removes all dangling volumes
 - `docker build -t <friendlyname>` builds a docker image with specified name
 - `docker run -p <hostport>:<containerport> <friendlyname>` run a docker image and publish a port to host
 - `docker stop <container ID>` stops the container (_find the id with `docker ps`_)

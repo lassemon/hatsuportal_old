@@ -4,9 +4,9 @@
   "description": "API Service for HatsuPortal Application",
   "main": "server.js",
   "scripts": {
-    "build": "npm run clean && npm run lint && npm run test && npm run swagger-gen && npm run routes-gen && npm run tsc && npm run copy-swagger-ui",
-    "coverage": "npm run test-cov && npm run test-remap",
-    "postinstall": "npm run build",
+    "build": "yarn run clean && yarn run lint && yarn run test && yarn run swagger-gen && yarn run routes-gen && yarn run tsc && yarn run copy-swagger-ui",
+    "coverage": "yarn run test-cov && yarn run test-remap",
+    "postinstall": "yarn run build",
     "lint": "tslint ./*.ts ./lib/*.ts ./src/**/*.ts ./test/**/*.ts",
     "test": "jest --config jest.json --no-cache",
     "tsc": "tsc --project tsconfig.json",

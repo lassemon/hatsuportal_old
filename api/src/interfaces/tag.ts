@@ -9,6 +9,14 @@ export interface ITag {
 /**
  * @tsoaModel
  */
+export interface IDBTag {
+  id: number;
+  name: string;
+}
+
+/**
+ * @tsoaModel
+ */
 export interface ITagInsertRequest {
   name: string;
 }

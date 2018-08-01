@@ -38,6 +38,7 @@
       false,
       1
     ],
+    "no-any": true,
     "no-console": false,
     "object-literal-sort-keys": false
   }

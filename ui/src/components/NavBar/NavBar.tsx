@@ -13,14 +13,14 @@ import { history } from 'store'
 import styled from 'styled-components';
 
 type ClassNames = 'flex';
-  
+
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   flex: {
     flexGrow: 1,
   }
 });
 
-interface IProps extends WithStyles<typeof styles> { 
+interface IProps extends WithStyles<typeof styles> {
   match: any
   location: any,
   history: any,
@@ -43,16 +43,16 @@ class NavBar extends React.Component<IProps, IState> {
   public handleChange = (event: any, value: any) => {
     this.setState({ value });
 
-    if(value === 0) { 
+    if (value === 0) {
       history.push('/');
-    } else if(value === 1) {
+    } else if (value === 1) {
       history.push('/foo');
     }
 
   };
 
   public render() {
-    
+
     const { classes } = this.props;
     const { theme } = this.props;
 
@@ -61,33 +61,37 @@ class NavBar extends React.Component<IProps, IState> {
     `;
 
     return (
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="title" color="inherit" className={classes.flex}>
-              HatsuPortal
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            HatsuPortal
             </Typography>
-            <Button color="inherit">Login</Button>
-          </Toolbar>
-          <StyledTabs value={this.state.value} 
-                      onChange={this.handleChange}
-                      indicatorColor="primary"
-          > 
-            <Tab label="Items" />
-            <Tab label="Users" />
-          </StyledTabs>
-        </AppBar>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+        <StyledTabs value={this.state.value}
+          onChange={this.handleChange}
+          indicatorColor="primary"
+        >
+          <Tab label="Items" />
+          <Tab label="Users" />
+        </StyledTabs>
+      </AppBar>
     )
   }
 
   private deduceTabValue = () => {
-    const path = this.props.location.pathname;
-    if(path === '/') {
-      return 0;
-    }
-    else if(path === '/foo') {
-      return 1;
-    }
-    else {
+    if (this.props && this.props.location) {
+      const path = this.props.location.pathname;
+      if (path === '/') {
+        return 0;
+      }
+      else if (path === '/foo') {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    } else {
       return 0;
     }
   };
