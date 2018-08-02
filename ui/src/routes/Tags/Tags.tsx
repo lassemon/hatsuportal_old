@@ -4,28 +4,31 @@ import ItemList from 'components/ItemList';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IRootState } from 'types';
+import { IRootState, ITag } from 'types';
 
 export interface IProps {
   error: boolean;
-  tags: any[];
+  tags: ITag[];
   loadingTags: boolean;
 }
-
-export interface IState { }
 
 interface IActionProps {
   fetchTags: typeof fetchTags;
 }
 
-class HomeView extends React.Component<IProps & IActionProps, IState> {
+class HomeView extends React.Component<IProps & IActionProps> {
   public componentDidMount() {
     this.props.fetchTags();
   }
 
   public render() {
     const loadingTags = this.props.loadingTags;
-    const tags = this.props.tags.map(tag => ({ title: tag.name }));
+    const tags = this.props.tags.map(tag => (
+      {
+        title: tag.name,
+        description: ''
+      }
+    ));
 
     return (
       <div>

@@ -6,14 +6,14 @@ import Typography from '@material-ui/core/Typography';
 import WebAsset from '@material-ui/icons/WebAsset';
 import * as React from 'react';
 import styled from 'styled-components';
+import { IItemListItem } from 'types';
 
 interface IProps {
-  items: any[];
+  items: IItemListItem[];
   header: string;
 }
-interface IState { }
 
-class ItemList extends React.Component<IProps, IState> {
+class ItemList extends React.Component<IProps> {
   public render() {
 
     const items = this.props.items || []
@@ -24,7 +24,7 @@ class ItemList extends React.Component<IProps, IState> {
         }
     `;
 
-    const convertedItems = items.map((item: any, index: number) => {
+    const convertedItems = items.map((item: IItemListItem, index: number) => {
       return (
         <ListItem button={true} key={index}>
           <ListItemIcon>

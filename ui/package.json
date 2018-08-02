@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "react-scripts-ts build --build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
@@ -35,6 +35,6 @@
     "@types/react-redux": "^5.0.20",
     "@types/react-router-dom": "^4.3.0",
     "@types/react-router-redux": "^5.0.15",
-    "typescript": "^2.9.2"
+    "typescript": "^3.0.1"
   }
 }

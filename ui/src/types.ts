@@ -6,7 +6,7 @@ export interface IRootState {
 
 export interface IItemsState {
   loadingItems: boolean;
-  items: string[];
+  items: IItem[];
   error: boolean;
 }
 
@@ -19,9 +19,34 @@ export type GetItemsPayload = string[];
 
 export interface ITagsState {
   loadingTags: boolean;
-  tags: string[];
+  tags: ITag[];
   error: boolean;
 }
 
 
 export type GetTagsPayload = string[];
+
+export interface IItemListItem {
+  title: string;
+  description: string;
+}
+
+
+// API interfaces
+export interface IItem {
+  id: number;
+  type: string;
+  title: string;
+  description: string;
+  content: string;
+  created: Date;
+  modified?: Date;
+  authorId: number;
+  authorName: string;
+  tags: ITag[];
+}
+
+export interface ITag {
+  id: number;
+  name: string;
+}

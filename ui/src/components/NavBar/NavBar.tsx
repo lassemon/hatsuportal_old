@@ -1,13 +1,13 @@
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import { withTheme } from '@material-ui/core/styles';
+import { Theme, withTheme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import { withRouter } from 'react-router'
+import { RouteComponentProps, withRouter } from 'react-router'
 import { compose } from 'recompose';
 import { history } from 'store'
 import styled from 'styled-components';
@@ -20,11 +20,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface IProps extends WithStyles<typeof styles> {
-  match: any
-  location: any,
-  history: any,
-  theme: any
+interface IProps extends RouteComponentProps<string>, WithStyles<typeof styles> {
+  theme: Theme
 }
 
 interface IState {
@@ -40,7 +37,8 @@ class NavBar extends React.Component<IProps, IState> {
     }
   }
 
-  public handleChange = (event: any, value: any) => {
+  public handleChange = (event: React.ChangeEvent<{}>, value: number) => {
+
     this.setState({ value });
 
     if (value === 0) {

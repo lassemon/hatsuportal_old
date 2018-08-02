@@ -16,7 +16,7 @@ export default (state: ITagsState = initialState, action: ItemAction) => {
     case LOADING_TAGS:
       return {
         ...state,
-        loadingItems: true
+        loadingTags: true
       };
     case GET_TAGS:
       return {

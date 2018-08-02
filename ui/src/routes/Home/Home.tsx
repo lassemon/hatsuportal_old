@@ -4,28 +4,31 @@ import ItemList from 'components/ItemList';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IRootState } from 'types';
+import { IItem, IRootState } from 'types';
 
 export interface IProps {
   error: boolean;
-  items: string[];
+  items: IItem[];
   loadingItems: boolean;
 }
-
-export interface IState { }
 
 interface IActionProps {
   fetchItems: typeof fetchItems;
 }
 
-class HomeView extends React.Component<IProps & IActionProps, IState> {
+class HomeView extends React.Component<IProps & IActionProps> {
   public componentDidMount() {
     this.props.fetchItems();
   }
 
   public render() {
     const loadingItems = this.props.loadingItems;
-    const items = this.props.items;
+    const items = this.props.items.map(item => (
+      {
+        title: item.title,
+        description: item.description
+      }
+    ));
 
     return (
       <div>
