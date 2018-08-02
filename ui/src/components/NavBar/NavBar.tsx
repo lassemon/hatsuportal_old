@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router'
-import { compose } from 'recompose';
+import { compose } from 'redux';
 import { history } from 'store'
 import styled from 'styled-components';
 
