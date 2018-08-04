@@ -44,7 +44,7 @@
     "tsconfig-paths": "^3.4.2",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.14.0",
-    "typescript": "^3.0.1"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "@ruanmartinelli/knex-model": "^0.3.0",

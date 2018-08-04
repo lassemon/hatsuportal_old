@@ -1,5 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
-import { IDBUser } from 'interfaces/user'
+import { IDBUser } from 'interfaces/user';
 
 export default class UserModel extends Model {
   constructor(options) {

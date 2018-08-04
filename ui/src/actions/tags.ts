@@ -1,4 +1,4 @@
-import tagsAPI from 'api/tags'
+import tagsAPI from 'api/tags';
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { GetTagsPayload, IPayloadAction, IRootState } from 'types';

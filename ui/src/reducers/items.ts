@@ -8,7 +8,7 @@ import { IItemsState } from 'types';
 const initialState = {
   error: false,
   items: [],
-  loadingItems: false,
+  loadingItems: false
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {

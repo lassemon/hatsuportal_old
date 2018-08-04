@@ -9,8 +9,8 @@ import * as React from 'react';
 const theme = createMuiTheme({
   palette: {
     primary: purple,
-    secondary: green,
-  },
+    secondary: green
+  }
 });
 
 function withRoot(Component: React.ComponentType) {

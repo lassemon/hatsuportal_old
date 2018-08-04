@@ -1,4 +1,4 @@
-import itemAPI from 'api/items'
+import itemAPI from 'api/items';
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { GetItemsPayload, IPayloadAction, IRootState } from 'types';

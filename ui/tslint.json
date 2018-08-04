@@ -11,6 +11,17 @@
     ]
   },
   "rules": {
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singleline": "never"
+      }
+    ],
     "no-any": true,
     "object-literal-sort-keys": false
   }

@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 type ClassNames = 'root';
-  
+
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1
@@ -20,7 +20,7 @@ class MainContent extends React.Component<WithStyles<typeof styles>> {
       <Main>
         {this.props.children}
       </Main>
-    )
+    );
   }
 }
 

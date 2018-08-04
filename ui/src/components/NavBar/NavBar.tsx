@@ -7,7 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router'
+import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'redux';
 import { history } from 'store';
 import styled from 'styled-components';
@@ -24,11 +24,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface IProps extends RouteComponentProps<string>, WithStyles<typeof styles> {
-  theme: Theme
+  theme: Theme;
 }
 
 interface IState {
-  value: number
+  value: number;
 }
 
 class NavBar extends React.Component<IProps, IState> {
@@ -37,7 +37,7 @@ class NavBar extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       value: this.deduceTabValue()
-    }
+    };
   }
 
   public handleChange = (event: React.ChangeEvent<{}>, value: number) => {
@@ -50,7 +50,7 @@ class NavBar extends React.Component<IProps, IState> {
       history.push('/tags');
     }
 
-  };
+  }
 
   public render() {
     const { classes } = this.props;
@@ -77,7 +77,7 @@ class NavBar extends React.Component<IProps, IState> {
           <Tab label="Tags" />
         </StyledTabs>
       </AppBar>
-    )
+    );
   }
 
   private deduceTabValue = () => {
@@ -95,7 +95,7 @@ class NavBar extends React.Component<IProps, IState> {
     } else {
       return 0;
     }
-  };
+  }
 }
 
 export default compose(

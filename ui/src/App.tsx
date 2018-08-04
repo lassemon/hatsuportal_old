@@ -5,10 +5,10 @@ import RootLayout from 'layouts/RootLayout';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router-dom';
-import Home from 'routes/Home'
-import Tags from 'routes/Tags'
+import Home from 'routes/Home';
+import Tags from 'routes/Tags';
 import store, { history } from 'store';
-import theme from 'theme'
+import theme from 'theme';
 
 class App extends React.Component {
   public render() {

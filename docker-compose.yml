@@ -14,7 +14,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: ["npm", "run", "start:prod"]
+    command: ["yarn", "start:prod"]
     volumes:
       - ./api:/usr/src/app
     environment:

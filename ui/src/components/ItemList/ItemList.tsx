@@ -17,7 +17,7 @@ interface IProps {
 class ItemList extends React.Component<IProps> {
 
   public render() {
-    const items = this.props.items || []
+    const items = this.props.items || [];
 
     const StyledList = styled(List)`
       > div + div {

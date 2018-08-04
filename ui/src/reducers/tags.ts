@@ -8,7 +8,7 @@ import { ITagsState } from 'types';
 const initialState = {
   error: false,
   tags: [],
-  loadingTags: false,
+  loadingTags: false
 };
 
 export default (state: ITagsState = initialState, action: ItemAction) => {

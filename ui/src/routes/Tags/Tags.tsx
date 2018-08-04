@@ -50,7 +50,7 @@ const mapStateToProps = (state: IRootState): Partial<IProps> => {
     error: state.items.error,
     tags: state.tags.tags,
     loadingTags: state.tags.loadingTags
-  }
+  };
 };
 
 // Turns an object whose values are action creators, into an object with the same keys,
@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
     { fetchTags },
     dispatch
   );
-}
+};
 
 export default connect(
   mapStateToProps,

@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   api:
-    command: ["npm", "run", "start"]
+    command: ["yarn", "start"]
     environment:
       ENV: dev
       LOG_LEVEL: DEBUG
