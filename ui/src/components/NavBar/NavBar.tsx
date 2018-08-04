@@ -9,14 +9,17 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router'
 import { compose } from 'redux';
-import { history } from 'store'
+import { history } from 'store';
 import styled from 'styled-components';
 
-type ClassNames = 'flex';
+type ClassNames = 'flex' | 'tabs';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   flex: {
-    flexGrow: 1,
+    flexGrow: 1
+  },
+  tabs: {
+    background: theme.palette.secondary.main
   }
 });
 
@@ -25,7 +28,7 @@ interface IProps extends RouteComponentProps<string>, WithStyles<typeof styles> 
 }
 
 interface IState {
-  value: number,
+  value: number
 }
 
 class NavBar extends React.Component<IProps, IState> {
@@ -50,12 +53,12 @@ class NavBar extends React.Component<IProps, IState> {
   };
 
   public render() {
-
     const { classes } = this.props;
-    const { theme } = this.props;
 
     const StyledTabs = styled(Tabs)`
-      background: ${theme.palette.secondary.main}
+        [class*="indicator"]{
+          background: white;
+        }
     `;
 
     return (
@@ -63,12 +66,12 @@ class NavBar extends React.Component<IProps, IState> {
         <Toolbar>
           <Typography variant="title" color="inherit" className={classes.flex}>
             HatsuPortal
-            </Typography>
+          </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
         <StyledTabs value={this.state.value}
           onChange={this.handleChange}
-          indicatorColor="primary"
+          className={classes.tabs}
         >
           <Tab label="Items" />
           <Tab label="Tags" />

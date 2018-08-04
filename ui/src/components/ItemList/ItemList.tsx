@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import WebAsset from '@material-ui/icons/WebAsset';
 import * as React from 'react';
 import styled from 'styled-components';
+import theme from 'theme';
 import { IItemListItem } from 'types';
 
 interface IProps {
@@ -14,14 +15,14 @@ interface IProps {
 }
 
 class ItemList extends React.Component<IProps> {
-  public render() {
 
+  public render() {
     const items = this.props.items || []
 
     const StyledList = styled(List)`
-        > div + div {
-          border-top: 1px solid rgba(0, 0, 0, 0.12);
-        }
+      > div + div {
+        border-top: 1px solid ${theme.palette.divider};
+      }
     `;
 
     const convertedItems = items.map((item: IItemListItem, index: number) => {

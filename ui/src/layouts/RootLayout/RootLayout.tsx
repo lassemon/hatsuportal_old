@@ -4,10 +4,11 @@ import MainContent from 'layouts/MainContent'
 import * as React from 'react';
 
 type ClassNames = 'root';
-  
+
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    height: '100%'
   }
 });
 
