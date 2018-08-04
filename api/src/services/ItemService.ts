@@ -1,11 +1,14 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { IDBItem, IDBItemInsert, IDBItemUpdate, IItem, IItemInsertRequest, IItemUpdateRequest } from 'interfaces/item';
-import { IDBTagsForItemInsert } from 'interfaces/tag';
+import { IDBItem, IItem } from 'interfaces/item';
+import {
+  IItemInsertQuery, IItemInsertRequest, IItemUpdateQuery,
+  IItemUpdateRequest, ITagsForItemQuery
+} from 'interfaces/requests';
 import { head } from 'lodash';
 import ItemModel from 'models/ItemModel';
-import TagService from 'services/TagService';
 import Logger from 'utils/Logger';
+import TagService from './TagService';
 
 const log = new Logger('ItemService');
 
@@ -93,14 +96,14 @@ export default class ItemService {
         content: itemInsert.content,
         created: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      } as IDBItemInsert);
+      } as IItemInsertQuery);
 
       const item: IItem = this.convert(head(dbItem));
 
       await this.tagService.addTagsToItem({
         itemId: item.id,
         tags: itemInsert.tags
-      } as IDBTagsForItemInsert);
+      } as ITagsForItemQuery);
 
       return await this.getTags(item);
     } catch (error) {
@@ -133,7 +136,7 @@ export default class ItemService {
         content: itemUpdate.content,
         modified: new Date(),
         author_id: 1 // TODO GET AUTHORIZED USER
-      } as IDBItemUpdate) as IDBItem;
+      } as IItemUpdateQuery) as IDBItem;
 
       const item: IItem = this.convert(dbItem);
 
@@ -141,7 +144,7 @@ export default class ItemService {
       await this.tagService.addTagsToItem({
         itemId: item.id,
         tags: itemUpdate.tags
-      } as IDBTagsForItemInsert);
+      } as ITagsForItemQuery);
 
       return await this.getTags(item);
     } catch (error) {

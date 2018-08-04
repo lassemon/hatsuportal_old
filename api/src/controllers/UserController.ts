@@ -1,6 +1,7 @@
 import UserService from 'services/UserService';
-import { Controller, Get, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Get, Post, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
+import { IUserInsertRequest } from '../interfaces/requests';
 import { IUser } from '../interfaces/user';
 
 const log = new Logger('UserController');
@@ -29,6 +30,16 @@ export class UserController extends Controller {
   public async get(id: number): Promise<IUser> {
     log.debug('getting user with id: ' + id);
     return this.userService.findById(id);
+  }
+
+  @Tags('users')
+  @Post()
+  @Response(400, 'Bad Request')
+  @Response(409, 'Conflict')
+  @SuccessResponse(200, 'Ok')
+  public async insert(@Body() request: IUserInsertRequest): Promise<IUser> {
+    log.debug('inserting user: ' + JSON.stringify(request));
+    return this.userService.insert(request);
   }
 
   public setService(service: UserService) {

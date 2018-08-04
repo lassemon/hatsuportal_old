@@ -4,7 +4,7 @@
   "description": "API Service for HatsuPortal Application",
   "main": "server.js",
   "scripts": {
-    "build": "yarn run clean && yarn run lint && yarn run test && yarn run swagger-gen && yarn run routes-gen && yarn run tsc && yarn run copy-swagger-ui",
+    "build": "yarn run clean && yarn run lint && yarn run test && yarn run swagger-gen && yarn run routes-gen && yarn run tsc",
     "coverage": "yarn run test-cov && yarn run test-remap",
     "postinstall": "yarn run build",
     "lint": "tslint ./*.ts ./lib/*.ts ./src/**/*.ts ./test/**/*.ts",
@@ -16,7 +16,6 @@
     "clean": "rimraf dist",
     "swagger-gen": "tsoa swagger",
     "routes-gen": "tsoa routes",
-    "copy-swagger-ui": "mkdirp ./dist/docs && ncp ./src/swagger-ui ./dist/docs/swagger-ui",
     "tsoa": "tsoa"
   },
   "keywords": [

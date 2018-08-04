@@ -1,7 +1,11 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import { RegisterRoutes } from 'routes';
 import * as swaggerUI from 'swagger-ui-express';
-import { RegisterRoutes } from './routes';
+
+import './controllers/ItemController';
+import './controllers/TagController';
+import './controllers/UserController';
 
 const app = express();
 

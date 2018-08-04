@@ -1,15 +1,11 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import {
-  IDBItemTag,
-  IDBTag,
-  IDBTagInsert,
-  IDBTagsForItemInsert,
-  IDBTagUpdate,
-  ITag,
-  ITagInsertRequest,
-  ITagUpdateRequest
-} from 'interfaces/tag';
+  IItemTagInserQuery, ITagInsertQuery, ITagInsertRequest,
+  ITagsForItemQuery, ITagUpdateQuery, ITagUpdateRequest
+} from 'interfaces/requests';
+
+import { IDBItemTag, IDBTag, ITag } from 'interfaces/tag';
 import { each, find, head, toLower } from 'lodash';
 import TagModel from 'models/TagModel';
 import Logger from 'utils/Logger';
@@ -81,7 +77,7 @@ export default class TagService {
       if (await this.tagExists(tagInsert.name)) {
         throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
       }
-      const tag = await this.tagModel.insert(tagInsert as IDBTagInsert);
+      const tag = await this.tagModel.insert(tagInsert as ITagInsertQuery);
       return this.convert(head(tag));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -92,14 +88,18 @@ export default class TagService {
     }
   }
 
-  public async addTagsToItem(tagsForItemInsert: IDBTagsForItemInsert): Promise<IDBItemTag[]> {
+  public async addTagsToItem(tagsForItemInsert: ITagsForItemQuery): Promise<IDBItemTag[]> {
     try {
-      const itemTags = await this.tagModel.addToItem(tagsForItemInsert.tags.map((tag) => (
-        {
-          item_id: tagsForItemInsert.itemId,
-          tag_id: tag
-        }
-      )));
+      const itemTags = await this.tagModel.addToItem(
+        tagsForItemInsert.tags.map(
+          tag => (
+            {
+              item_id: tagsForItemInsert.itemId,
+              tag_id: tag
+            }
+          ) as IItemTagInserQuery
+        )
+      );
       return itemTags;
     } catch (error) {
       if (error instanceof ApiError) {
@@ -125,7 +125,7 @@ export default class TagService {
 
   public async update(tagUpdate: ITagUpdateRequest): Promise<ITag> {
     try {
-      const tag = await this.tagModel.update(tagUpdate as IDBTagUpdate) as IDBTag;
+      const tag = await this.tagModel.update(tagUpdate as ITagUpdateQuery) as IDBTag;
       return this.convert(tag);
     } catch (error) {
       log.error(error);

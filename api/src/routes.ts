@@ -1,7 +1,6 @@
 /* tslint:disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { ItemController } from './controllers/ItemController';
-import { PingController } from './controllers/PingController';
 import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
 
@@ -62,6 +61,13 @@ const models: TsoaRoute.Models = {
       "name": { "dataType": "string", "required": true },
       "email": { "dataType": "string", "required": true },
       "created": { "dataType": "datetime", "required": true },
+    },
+  },
+  "IUserInsertRequest": {
+    "properties": {
+      "name": { "dataType": "string", "required": true },
+      "email": { "dataType": "string", "required": true },
+      "password": { "dataType": "string", "required": true },
     },
   },
 };
@@ -159,24 +165,6 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.delete.apply(controller, validatedArgs);
-      promiseHandler(controller, promise, response, next);
-    });
-  app.get('/api/v1/ping',
-    function(request: any, response: any, next: any) {
-      const args = {
-      };
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = getValidatedArgs(args, request);
-      } catch (err) {
-        return next(err);
-      }
-
-      const controller = new PingController();
-
-
-      const promise = controller.ping.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/api/v1/tags',
@@ -308,6 +296,25 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.get.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.post('/api/v1/users',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "IUserInsertRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
 

@@ -14,6 +14,7 @@ export interface IUser {
 export interface IDBUser {
   id: number;
   name: string;
+  password: string;
   email: string;
   created: Date;
 }

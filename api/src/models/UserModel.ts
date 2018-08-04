@@ -1,4 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
+import { IUserInsertQuery } from 'interfaces/requests';
 import { IDBUser } from 'interfaces/user';
 
 export default class UserModel extends Model {
@@ -14,5 +15,9 @@ export default class UserModel extends Model {
         reject(error);
       });
     });
+  }
+
+  public insert(user: IUserInsertQuery): Promise<IDBUser[]> {
+    return this.knex('users').insert(user, '*');
   }
 }

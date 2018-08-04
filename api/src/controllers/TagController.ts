@@ -1,7 +1,8 @@
+import { ITagInsertRequest, ITagUpdateRequest } from 'interfaces/requests';
 import TagService from 'services/TagService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { ITag, ITagInsertRequest, ITagUpdateRequest } from '../interfaces/tag';
+import { ITag } from '../interfaces/tag';
 
 const log = new Logger('TagController');
 

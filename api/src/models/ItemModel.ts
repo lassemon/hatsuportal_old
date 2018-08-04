@@ -1,5 +1,6 @@
 import Model from '@ruanmartinelli/knex-model';
-import { IDBItem, IDBItemInsert } from 'interfaces/item';
+import { IDBItem } from 'interfaces/item';
+import { IItemInsertQuery } from 'interfaces/requests';
 
 export default class ItemModel extends Model {
   constructor(options) {
@@ -20,7 +21,7 @@ export default class ItemModel extends Model {
     });
   }
 
-  public insert(item: IDBItemInsert): Promise<IDBItem[]> {
+  public insert(item: IItemInsertQuery): Promise<IDBItem[]> {
     return this.knex('items').insert(item, '*');
   }
 }

@@ -2,7 +2,8 @@ import ItemService from 'services/ItemService';
 import TagService from 'services/TagService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { IItem, IItemInsertRequest, IItemUpdateRequest } from '../interfaces/item';
+import { IItem } from '../interfaces/item';
+import { IItemInsertRequest, IItemUpdateRequest } from '../interfaces/requests';
 
 const log = new Logger('ItemController');
 
