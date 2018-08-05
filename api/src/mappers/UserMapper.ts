@@ -23,11 +23,12 @@ export default class UserMapper {
   }
 
   public async mapInsertToQuery(insertRequest: IUserInsertRequest): Promise<IUserInsertQuery> {
-    const encryptedPassword = await Encryption.encryptPassword(insertRequest.password);
+    const encryptedPassword = await Encryption.encrypt(insertRequest.password);
 
     const userInsert = {
       ...insertRequest,
       password: encryptedPassword,
+      active: true,
       created: new Date()
     };
 
@@ -39,7 +40,7 @@ export default class UserMapper {
   }
 
   public async mapUpdateToQuery(updateRequest: IUserUpdateRequest): Promise<IUserUpdateQuery> {
-    const encryptedPassword = await Encryption.encryptPassword(updateRequest.password);
+    const encryptedPassword = await Encryption.encrypt(updateRequest.password);
 
     const userInsert = {
       ...updateRequest,

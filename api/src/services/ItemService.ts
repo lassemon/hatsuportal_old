@@ -2,7 +2,7 @@ import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { IDBItem, IItem } from 'interfaces/item';
 import { IItemInsertRequest, IItemUpdateRequest, ITagsForItemQuery } from 'interfaces/requests';
-import { head } from 'lodash';
+import { head, isEmpty } from 'lodash';
 import ItemMapper from 'mappers/ItemMapper';
 import ItemModel from 'models/ItemModel';
 import Logger from 'utils/Logger';
@@ -46,10 +46,16 @@ export default class ItemService {
   public async find(filter): Promise<IItem[]> {
     try {
       const dbItems = await this.itemModel.find(filter) as IDBItem[];
+      if (isEmpty(dbItems)) {
+        throw new ApiError('ItemNotFound', 404, 'Items not found');
+      }
       let items: IItem[] = this.itemMapper.serializeAll(dbItems);
       items = await this.getTagsForAll(items);
       return items;
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('ItemNotFound', 404, 'Items not found');
     }
@@ -58,6 +64,9 @@ export default class ItemService {
   public async findById(id: number): Promise<IItem> {
     try {
       const dbItem = await this.itemModel.findById(id) as IDBItem;
+      if (isEmpty(dbItem)) {
+        throw new ApiError('ItemNotFound', 404, 'Items not found');
+      }
       let item: IItem = this.itemMapper.serialize(dbItem);
       item = await this.getTags(item);
       return item;

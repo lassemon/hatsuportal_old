@@ -344,6 +344,25 @@ export function RegisterRoutes(app: any) {
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
+  app.delete('/api/v1/users/:id',
+    function(request: any, response: any, next: any) {
+      const args = {
+        id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.delete.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
 
 
   function isController(object: any): object is Controller {

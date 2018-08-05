@@ -16,6 +16,7 @@ export interface IUserInsertRequest {
 export interface IUserInsertQuery {
   name: string;
   password: string;
+  active: boolean;
   email: string;
   created: Date;
 }

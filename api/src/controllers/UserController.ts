@@ -1,6 +1,6 @@
 import UserMapper from 'mappers/UserMapper';
 import UserService from 'services/UserService';
-import { Body, Controller, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
 import { IUserResponse } from '../interfaces/responses';
@@ -53,6 +53,15 @@ export class UserController extends Controller {
     // TODO validate that logged in user is the same as the one being updated
     log.debug('updating user with id: ' + request.id);
     return this.userMapper.mapToResponse(await this.userService.update(request));
+  }
+
+  @Tags('users')
+  @Delete('{id}')
+  @Response(404, 'Not Found')
+  @SuccessResponse(200, 'Ok')
+  public async delete(id: number): Promise<boolean> {
+    log.debug('deactivating user with id: ' + id);
+    return this.userService.remove(id);
   }
 
   public setService(service: UserService) {

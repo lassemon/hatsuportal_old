@@ -1,9 +1,10 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import {
-  IItemTagInsertQuery, ITagInsertQuery, ITagInsertRequest,
-  ITagsForItemQuery, ITagUpdateQuery, ITagUpdateRequest
+  IItemTagInsertQuery, ITagInsertRequest,
+  ITagsForItemQuery, ITagUpdateRequest
 } from 'interfaces/requests';
+import { isEmpty } from 'lodash';
 
 import { IDBItemTag, IDBTag, ITag } from 'interfaces/tag';
 import { each, find, head, toLower } from 'lodash';
@@ -39,8 +40,14 @@ export default class TagService {
   public async find(filter): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.find(filter) as IDBTag[];
+      if (isEmpty(tags)) {
+        throw new ApiError('ItemNotFound', 404, 'Items not found');
+      }
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('TagNotFound', 404, 'Tags not found');
     }
@@ -49,6 +56,9 @@ export default class TagService {
   public async findById(id: number): Promise<ITag> {
     try {
       const tag = await this.tagModel.findById(id) as IDBTag;
+      if (isEmpty(tag)) {
+        throw new ApiError('ItemNotFound', 404, 'Items not found');
+      }
       return this.tagMapper.serialize(tag);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -62,8 +72,14 @@ export default class TagService {
   public async findByItem(itemId: number): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.findByItemId(itemId);
+      if (isEmpty(tags)) {
+        throw new ApiError('ItemNotFound', 404, 'Items not found');
+      }
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       return Promise.resolve([]);
     }
