@@ -1,7 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import {
-  IItemTagInserQuery, ITagInsertQuery, ITagInsertRequest,
+  IItemTagInsertQuery, ITagInsertQuery, ITagInsertRequest,
   ITagsForItemQuery, ITagUpdateQuery, ITagUpdateRequest
 } from 'interfaces/requests';
 
@@ -83,7 +83,7 @@ export default class TagService {
       if (await this.tagExists(tagInsert.name)) {
         throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
       }
-      const tag = await this.tagModel.insert(tagInsert as ITagInsertQuery);
+      const tag = await this.tagModel.insert(this.tagMapper.mapInsertToQuery(tagInsert));
       return this.tagMapper.serialize(head(tag));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -103,7 +103,7 @@ export default class TagService {
               item_id: tagsForItemInsert.itemId,
               tag_id: tag
             }
-          ) as IItemTagInserQuery
+          ) as IItemTagInsertQuery
         )
       );
       return itemTags;
@@ -118,7 +118,9 @@ export default class TagService {
 
   public async update(tagUpdate: ITagUpdateRequest): Promise<ITag> {
     try {
-      const tag = await this.tagModel.update(tagUpdate as ITagUpdateQuery) as IDBTag;
+      const tag = await this.tagModel.update(
+        this.tagMapper.mapUpdateToQuery(tagUpdate)
+      ) as IDBTag;
       return this.tagMapper.serialize(tag);
     } catch (error) {
       log.error(error);

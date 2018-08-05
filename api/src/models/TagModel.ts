@@ -1,5 +1,5 @@
 import Model from '@ruanmartinelli/knex-model';
-import { IItemTagInserQuery, ITagInsertQuery } from 'interfaces/requests';
+import { IItemTagInsertQuery, ITagInsertQuery } from 'interfaces/requests';
 import { IDBItemTag, IDBTag } from 'interfaces/tag';
 
 export default class TagModel extends Model {
@@ -30,7 +30,7 @@ export default class TagModel extends Model {
     return this.knex('tags').insert(tag, '*');
   }
 
-  public addToItem(tagItems: IItemTagInserQuery[]): Promise<IDBItemTag[]> {
+  public addToItem(tagItems: IItemTagInsertQuery[]): Promise<IDBItemTag[]> {
     return this.knex('item_tag').insert(tagItems, '*');
   }
 

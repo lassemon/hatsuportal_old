@@ -1,14 +1,26 @@
+import {
+  ITagInsertQuery, ITagInsertRequest,
+  ITagUpdateQuery, ITagUpdateRequest
+} from 'interfaces/requests';
 import { ITagResponse } from 'interfaces/responses';
 import { IDBTag, ITag } from 'interfaces/tag';
 
 export default class TagMapper {
 
-  public map(tag: ITag): ITagResponse {
+  public mapToResponse(tag: ITag): ITagResponse {
     return tag as ITagResponse;
   }
 
-  public mapAll(tags: ITag[]): ITagResponse[] {
-    return tags.map(this.map, this);
+  public mapAllToResponse(tags: ITag[]): ITagResponse[] {
+    return tags.map(this.mapToResponse, this);
+  }
+
+  public mapInsertToQuery(tagInsert: ITagInsertRequest): ITagInsertQuery {
+    return tagInsert as ITagInsertQuery;
+  }
+
+  public mapUpdateToQuery(tagUpdate: ITagUpdateRequest): ITagUpdateQuery {
+    return tagUpdate as ITagUpdateQuery;
   }
 
   public serialize(tag: IDBTag): ITag {

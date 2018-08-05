@@ -23,7 +23,7 @@ export class ItemController extends Controller {
   @Get()
   public async getAll(): Promise<IItemResponse[]> {
     log.debug('getting all items');
-    return this.itemMapper.mapAll(await this.itemService.getAll());
+    return this.itemMapper.mapAllToResponse(await this.itemService.getAll());
   }
 
   @Tags('items')
@@ -32,7 +32,7 @@ export class ItemController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async get(id: number): Promise<IItemResponse> {
     log.debug('getting item with id: ' + id);
-    return this.itemMapper.map(await this.itemService.findById(id));
+    return this.itemMapper.mapToResponse(await this.itemService.findById(id));
   }
 
   @Tags('items')
@@ -41,7 +41,7 @@ export class ItemController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async insert(@Body() request: IItemInsertRequest): Promise<IItemResponse> {
     log.debug('inserting item: ' + JSON.stringify(request));
-    return await this.itemMapper.map(await this.itemService.insert(request));
+    return await this.itemMapper.mapToResponse(await this.itemService.insert(request));
   }
 
   @Tags('items')
@@ -50,7 +50,7 @@ export class ItemController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: IItemUpdateRequest): Promise<IItemResponse> {
     log.debug('updating item with id: ' + request.id);
-    return this.itemMapper.map(await this.itemService.update(request));
+    return this.itemMapper.mapToResponse(await this.itemService.update(request));
   }
 
   @Tags('items')

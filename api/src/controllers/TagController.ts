@@ -23,7 +23,7 @@ export class TagController extends Controller {
   @Get()
   public async getAll(): Promise<ITagResponse[]> {
     log.debug('getting all tags');
-    return this.tagMapper.mapAll(await this.tagService.getAll());
+    return this.tagMapper.mapAllToResponse(await this.tagService.getAll());
   }
 
   @Tags('tags')
@@ -32,7 +32,7 @@ export class TagController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async get(id: number): Promise<ITagResponse> {
     log.debug('getting tag with id: ' + id);
-    return this.tagMapper.map(await this.tagService.findById(id));
+    return this.tagMapper.mapToResponse(await this.tagService.findById(id));
   }
 
   @Tags('tags')
@@ -42,7 +42,7 @@ export class TagController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async insert(@Body() request: ITagInsertRequest): Promise<ITagResponse> {
     log.debug('inserting tag: ' + JSON.stringify(request));
-    return this.tagMapper.map(await this.tagService.insert(request));
+    return this.tagMapper.mapToResponse(await this.tagService.insert(request));
   }
 
   @Tags('tags')
@@ -51,7 +51,7 @@ export class TagController extends Controller {
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: ITagUpdateRequest): Promise<ITagResponse> {
     log.debug('updating tag with id: ' + request.id + ' to ' + request.name);
-    return this.tagMapper.map(await this.tagService.update(request));
+    return this.tagMapper.mapToResponse(await this.tagService.update(request));
   }
 
   @Tags('tags')

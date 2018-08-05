@@ -1,10 +1,7 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
 import { IDBItem, IItem } from 'interfaces/item';
-import {
-  IItemInsertQuery, IItemInsertRequest, IItemUpdateQuery,
-  IItemUpdateRequest, ITagsForItemQuery
-} from 'interfaces/requests';
+import { IItemInsertRequest, IItemUpdateRequest, ITagsForItemQuery } from 'interfaces/requests';
 import { head } from 'lodash';
 import ItemMapper from 'mappers/ItemMapper';
 import ItemModel from 'models/ItemModel';
@@ -86,14 +83,7 @@ export default class ItemService {
     try {
       await this.validateTagInsert(itemInsert.tags);
 
-      const dbItem = await this.itemModel.insert({
-        type: itemInsert.type,
-        title: itemInsert.title,
-        description: itemInsert.description,
-        content: itemInsert.content,
-        created: new Date(),
-        author_id: 1 // TODO GET AUTHORIZED USER
-      } as IItemInsertQuery);
+      const dbItem = await this.itemModel.insert(this.itemMapper.mapInsertToQuery(itemInsert));
 
       const item: IItem = this.itemMapper.serialize(head(dbItem));
 
@@ -125,15 +115,9 @@ export default class ItemService {
     try {
       await this.validateTagInsert(itemUpdate.tags);
 
-      const dbItem = await this.itemModel.update({
-        id: itemUpdate.id,
-        type: itemUpdate.type,
-        title: itemUpdate.title,
-        description: itemUpdate.description,
-        content: itemUpdate.content,
-        modified: new Date(),
-        author_id: 1 // TODO GET AUTHORIZED USER
-      } as IItemUpdateQuery) as IDBItem;
+      const dbItem = await this.itemModel.update(
+        this.itemMapper.mapUpdateToQuery(itemUpdate)
+      ) as IDBItem;
 
       const item: IItem = this.itemMapper.serialize(dbItem);
 

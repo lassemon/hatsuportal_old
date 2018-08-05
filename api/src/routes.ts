@@ -70,6 +70,14 @@ const models: TsoaRoute.Models = {
       "password": { "dataType": "string", "required": true },
     },
   },
+  "IUserUpdateRequest": {
+    "properties": {
+      "id": { "dataType": "double", "required": true },
+      "name": { "dataType": "string", "required": true },
+      "email": { "dataType": "string", "required": true },
+      "password": { "dataType": "string", "required": true },
+    },
+  },
 };
 
 export function RegisterRoutes(app: any) {
@@ -315,6 +323,25 @@ export function RegisterRoutes(app: any) {
 
 
       const promise = controller.insert.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.put('/api/v1/users',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "body", "name": "request", "required": true, "ref": "IUserUpdateRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+
+      const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
 

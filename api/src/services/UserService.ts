@@ -1,11 +1,10 @@
 import connection from 'database/connection';
 import ApiError from 'errors/ApiError';
-import { IUserInsertQuery, IUserInsertRequest } from 'interfaces/requests';
+import { IUserInsertQuery, IUserInsertRequest, IUserUpdateRequest } from 'interfaces/requests';
 import { IDBUser, IUser } from 'interfaces/user';
 import { head } from 'lodash';
 import UserMapper from 'mappers/UserMapper';
 import UserModel from 'models/UserModel';
-import Encryption from 'security/Encryption';
 import Logger from 'utils/Logger';
 
 const log = new Logger('UserService');
@@ -76,18 +75,7 @@ export default class UserService {
 
   public async insert(insertRequest: IUserInsertRequest): Promise<IUser> {
     try {
-      const encryptedPassword = await Encryption.encryptPassword(insertRequest.password);
-      console.log('ecrypted pass', encryptedPassword);
-      const userInsert = {
-        ...insertRequest,
-        password: encryptedPassword,
-        created: new Date()
-      } as IUserInsertQuery;
-
-      if (insertRequest.password === userInsert.password) {
-        throw new ApiError('BadRequest', 400, 'Attempted to add unencrypted password to database');
-      }
-
+      const userInsert = await this.userMapper.mapInsertToQuery(insertRequest);
       const user = await this.userModel.insert(userInsert);
       return this.userMapper.serialize(head(user)) as IUser;
     } catch (error) {
@@ -99,8 +87,9 @@ export default class UserService {
     }
   }
 
-  public async update(userUpdate: IUser): Promise<IUser> {
+  public async update(updateRequest: IUserUpdateRequest): Promise<IUser> {
     try {
+      const userUpdate = await this.userMapper.mapUpdateToQuery(updateRequest);
       const user = await this.userModel.update(userUpdate) as IDBUser;
       return this.userMapper.serialize(user);
     } catch (error) {

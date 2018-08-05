@@ -14,13 +14,31 @@ export interface IUserInsertRequest {
  * @tsoaModel
  */
 export interface IUserInsertQuery {
-  id: number;
   name: string;
   password: string;
   email: string;
   created: Date;
 }
 
+/**
+ * @tsoaModel
+ */
+export interface IUserUpdateRequest {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
+/**
+ * @tsoaModel
+ */
+export interface IUserUpdateQuery {
+  id: number;
+  name: string;
+  password: string;
+  email: string;
+}
 
 // --- ITEMS --- //
 
@@ -116,7 +134,7 @@ export interface ITagsForItemQuery {
 /**
  * @tsoaModel
  */
-export interface IItemTagInserQuery {
+export interface IItemTagInsertQuery {
   item_id: number;
   tag_id: number;
 }
