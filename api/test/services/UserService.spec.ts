@@ -32,7 +32,7 @@ describe('UserService', () => {
 
   it('should return a user by id', async () => {
     expect.assertions(1);
-    when(userModel.findById(123)).thenReturn(Promise.resolve(DB_TEST_USER_RESPONSE[0]));
+    when(userModel.findById(123)).thenReturn(Promise.resolve(DB_TEST_USER_RESPONSE));
     userService.setModel(instance(userModel));
 
     await expect(userService.findById(123)).resolves.toEqual(DB_TEST_USER_RESPONSE[0]);
