@@ -7,6 +7,7 @@ import {
 
 import { IDBItemTag, IDBTag, ITag } from 'interfaces/tag';
 import { each, find, head, toLower } from 'lodash';
+import TagMapper from 'mappers/TagMapper';
 import TagModel from 'models/TagModel';
 import Logger from 'utils/Logger';
 
@@ -15,18 +16,20 @@ const log = new Logger('TagService');
 export default class TagService {
 
   private tagModel: TagModel;
+  private tagMapper: TagMapper;
 
   constructor() {
     this.tagModel = new TagModel({
       tableName: 'tags',
       connection
     });
+    this.tagMapper = new TagMapper();
   }
 
   public async getAll(): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.getAll();
-      return this.convertAll(tags);
+      return this.tagMapper.serializeAll(tags);
     } catch (error) {
       log.error(error);
       throw new ApiError('TagNotFound', 404, 'Tags not found');
@@ -36,7 +39,7 @@ export default class TagService {
   public async find(filter): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.find(filter) as IDBTag[];
-      return this.convertAll(tags);
+      return this.tagMapper.serializeAll(tags);
     } catch (error) {
       log.error(error);
       throw new ApiError('TagNotFound', 404, 'Tags not found');
@@ -46,8 +49,11 @@ export default class TagService {
   public async findById(id: number): Promise<ITag> {
     try {
       const tag = await this.tagModel.findById(id) as IDBTag;
-      return this.convert(tag);
+      return this.tagMapper.serialize(tag);
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
       log.error(error);
       throw new ApiError('TagNotFound', 404, 'Tag not found with id: ' + id);
     }
@@ -56,7 +62,7 @@ export default class TagService {
   public async findByItem(itemId: number): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.findByItemId(itemId);
-      return this.convertAll(tags);
+      return this.tagMapper.serializeAll(tags);
     } catch (error) {
       log.error(error);
       return Promise.resolve([]);
@@ -78,7 +84,7 @@ export default class TagService {
         throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
       }
       const tag = await this.tagModel.insert(tagInsert as ITagInsertQuery);
-      return this.convert(head(tag));
+      return this.tagMapper.serialize(head(tag));
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -110,23 +116,10 @@ export default class TagService {
     }
   }
 
-  public async checkThatTagsExist(tagIds: number[]): Promise<boolean> {
-    const tags = await this.tagModel.findByIds(tagIds);
-
-    let allTagsExist = true;
-    each(tagIds, (tagId) => {
-      if (!find(tags, (tag) => tag.id === tagId)) {
-        allTagsExist = false;
-        return false;
-      }
-    });
-    return allTagsExist;
-  }
-
   public async update(tagUpdate: ITagUpdateRequest): Promise<ITag> {
     try {
       const tag = await this.tagModel.update(tagUpdate as ITagUpdateQuery) as IDBTag;
-      return this.convert(tag);
+      return this.tagMapper.serialize(tag);
     } catch (error) {
       log.error(error);
       throw new ApiError('BadRequest', 400, 'Tag update failed');
@@ -169,25 +162,27 @@ export default class TagService {
     }
   }
 
-  private convert(tag: IDBTag): ITag {
-    const converted: ITag = {
-      id: tag.id,
-      name: tag.name
-    };
-
-    return converted;
-  }
-
-  private convertAll(tags: IDBTag[]): ITag[] {
-    return tags.map((tag) => {
-      return this.convert(tag);
-    });
-  }
-
-  private async tagExists(tagName: string): Promise<boolean> {
+  public async tagExists(tagName: string): Promise<boolean> {
     const currentTags = await this.tagModel.getAll();
-    const CurrentTagsLower = currentTags.map((tag) => ({ id: tag.id, name: toLower(tag.name) }));
-    const tagExists = !!find(CurrentTagsLower, ['name', toLower(tagName)]);
+    const currentTagsLower = currentTags.map((tag) => ({ id: tag.id, name: toLower(tag.name) }));
+    const tagExists = !!find(currentTagsLower, ['name', toLower(tagName)]);
     return tagExists;
+  }
+
+  public async allTagsExist(tagIds: number[]): Promise<boolean> {
+    const tags = await this.tagModel.findByIds(tagIds);
+
+    let allTagsExist = true;
+    each(tagIds, (tagId) => {
+      if (!find(tags, (tag) => tag.id === tagId)) {
+        allTagsExist = false;
+        return false;
+      }
+    });
+    return allTagsExist;
+  }
+
+  public setModel(model: TagModel) {
+    this.tagModel = model;
   }
 }

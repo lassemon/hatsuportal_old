@@ -5,13 +5,13 @@ import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
 
 const models: TsoaRoute.Models = {
-  "ITag": {
+  "ITagResponse": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
     },
   },
-  "IItem": {
+  "IItemResponse": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "type": { "dataType": "string", "required": true },
@@ -22,7 +22,7 @@ const models: TsoaRoute.Models = {
       "modified": { "dataType": "datetime" },
       "authorId": { "dataType": "double", "required": true },
       "authorName": { "dataType": "string", "required": true },
-      "tags": { "dataType": "array", "array": { "ref": "ITag" }, "required": true },
+      "tags": { "dataType": "array", "array": { "ref": "ITagResponse" }, "required": true },
     },
   },
   "IItemInsertRequest": {
@@ -55,7 +55,7 @@ const models: TsoaRoute.Models = {
       "name": { "dataType": "string", "required": true },
     },
   },
-  "IUser": {
+  "IUserResponse": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },

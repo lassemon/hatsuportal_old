@@ -1,9 +1,9 @@
+import ItemMapper from 'mappers/ItemMapper';
 import ItemService from 'services/ItemService';
-import TagService from 'services/TagService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { IItem } from '../interfaces/item';
 import { IItemInsertRequest, IItemUpdateRequest } from '../interfaces/requests';
+import { IItemResponse } from '../interfaces/responses';
 
 const log = new Logger('ItemController');
 
@@ -11,46 +11,46 @@ const log = new Logger('ItemController');
 export class ItemController extends Controller {
 
   private itemService: ItemService;
-  private tagService: TagService;
+  private itemMapper: ItemMapper;
 
   constructor() {
     super();
     this.itemService = new ItemService();
-    this.tagService = new TagService();
+    this.itemMapper = new ItemMapper();
   }
 
   @Tags('items')
   @Get()
-  public async getAll(): Promise<IItem[]> {
+  public async getAll(): Promise<IItemResponse[]> {
     log.debug('getting all items');
-    return this.itemService.getAll();
+    return this.itemMapper.mapAll(await this.itemService.getAll());
   }
 
   @Tags('items')
   @Get('{id}')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async get(id: number): Promise<IItem> {
+  public async get(id: number): Promise<IItemResponse> {
     log.debug('getting item with id: ' + id);
-    return this.itemService.findById(id);
+    return this.itemMapper.map(await this.itemService.findById(id));
   }
 
   @Tags('items')
   @Post()
   @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
-  public async insert(@Body() request: IItemInsertRequest): Promise<IItem> {
+  public async insert(@Body() request: IItemInsertRequest): Promise<IItemResponse> {
     log.debug('inserting item: ' + JSON.stringify(request));
-    return await this.itemService.insert(request);
+    return await this.itemMapper.map(await this.itemService.insert(request));
   }
 
   @Tags('items')
   @Put()
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async put(@Body() request: IItemUpdateRequest): Promise<IItem> {
+  public async put(@Body() request: IItemUpdateRequest): Promise<IItemResponse> {
     log.debug('updating item with id: ' + request.id);
-    return this.itemService.update(request);
+    return this.itemMapper.map(await this.itemService.update(request));
   }
 
   @Tags('items')

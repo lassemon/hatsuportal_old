@@ -5,7 +5,7 @@ import ApiError from '../../src/errors/ApiError';
 import { IItem } from '../../src/interfaces/item';
 import ItemService from '../../src/services/ItemService';
 
-describe('UserController', () => {
+describe('ItemController', () => {
 
   let itemService: ItemService;
   const controller: ItemController = new ItemController();
@@ -44,9 +44,10 @@ describe('UserController', () => {
   it('should return a list of items', async () => {
     expect.assertions(1);
     when(itemService.getAll()).thenReturn(Promise.resolve(TEST_ITEM_LIST));
+    when(itemService.getTagsForAll(TEST_ITEM_LIST)).thenReturn(Promise.resolve(TEST_ITEM_LIST));
     controller.setService(instance(itemService));
 
-    await expect(controller.getAll()).resolves.toBe(TEST_ITEM_LIST);
+    await expect(controller.getAll()).resolves.toEqual(TEST_ITEM_LIST);
   });
 
   it('should return an item by id', async () => {
@@ -54,7 +55,7 @@ describe('UserController', () => {
     when(itemService.findById(123)).thenReturn(Promise.resolve(TEST_ITEM_LIST[0]));
     controller.setService(instance(itemService));
 
-    await expect(controller.get(123)).resolves.toBe(TEST_ITEM_LIST[0]);
+    await expect(controller.get(123)).resolves.toEqual(TEST_ITEM_LIST[0]);
   });
 
   it('should fail', async () => {
@@ -69,9 +70,33 @@ describe('UserController', () => {
     try {
       const result = await controller.get(456);
     } catch (error) {
-      expect(error.getMessage()).toBe('Item not found');
-      expect(error.getStatus()).toBe(404);
+      expect(error.getName()).toEqual('ItemNotFound');
+      expect(error.getStatus()).toEqual(404);
     }
+  });
+
+  it('should add an item', async () => {
+    expect.assertions(1);
+    when(itemService.insert(TEST_ITEM_LIST[0])).thenReturn(Promise.resolve(TEST_ITEM_LIST[0]));
+    controller.setService(instance(itemService));
+
+    await expect(controller.insert(TEST_ITEM_LIST[0])).resolves.toEqual(TEST_ITEM_LIST[0]);
+  });
+
+  it('should delete an item', async () => {
+    expect.assertions(1);
+    when(itemService.remove(TEST_ITEM_LIST[0].id)).thenReturn(Promise.resolve(true));
+    controller.setService(instance(itemService));
+
+    await expect(controller.delete(TEST_ITEM_LIST[0].id)).resolves.toEqual(true);
+  });
+
+  it('should update an item', async () => {
+    expect.assertions(1);
+    when(itemService.update(TEST_ITEM_LIST[0])).thenReturn(Promise.resolve(TEST_ITEM_LIST[0]));
+    controller.setService(instance(itemService));
+
+    await expect(controller.put(TEST_ITEM_LIST[0])).resolves.toEqual(TEST_ITEM_LIST[0]);
   });
 
 });

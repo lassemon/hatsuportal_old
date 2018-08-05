@@ -9,15 +9,15 @@ export default class ApiError extends Error {
     this.statusCode = statusCode;
   }
 
-  public getMessage(): string {
-    return this.message;
-  }
-
   public getName(): string {
     return this.name;
   }
 
   public getStatus(): number {
     return this.statusCode;
+  }
+
+  public getMessage(): string {
+    return this.message;
   }
 }

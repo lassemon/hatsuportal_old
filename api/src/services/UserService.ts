@@ -3,6 +3,7 @@ import ApiError from 'errors/ApiError';
 import { IUserInsertQuery, IUserInsertRequest } from 'interfaces/requests';
 import { IDBUser, IUser } from 'interfaces/user';
 import { head } from 'lodash';
+import UserMapper from 'mappers/UserMapper';
 import UserModel from 'models/UserModel';
 import Encryption from 'security/Encryption';
 import Logger from 'utils/Logger';
@@ -12,18 +13,20 @@ const log = new Logger('UserService');
 export default class UserService {
 
   private userModel: UserModel;
+  private userMapper: UserMapper;
 
   constructor() {
     this.userModel = new UserModel({
       tableName: 'users',
       connection
     });
+    this.userMapper = new UserMapper();
   }
 
   public async getAll(): Promise<IUser[]> {
     try {
       const users = await this.userModel.getAll();
-      return this.convertAll(users);
+      return this.userMapper.serializeAll(users);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -36,7 +39,7 @@ export default class UserService {
   public async find(filter): Promise<IUser[]> {
     try {
       const users = await this.userModel.find(filter) as IDBUser[];
-      return this.convertAll(users);
+      return this.userMapper.serializeAll(users);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -49,7 +52,7 @@ export default class UserService {
   public async findById(id: number): Promise<IUser> {
     try {
       const user = await this.userModel.findById(id) as IDBUser;
-      return this.convert(user);
+      return this.userMapper.serialize(user);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -86,7 +89,7 @@ export default class UserService {
       }
 
       const user = await this.userModel.insert(userInsert);
-      return this.convert(head(user)) as IUser;
+      return this.userMapper.serialize(head(user)) as IUser;
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -99,7 +102,7 @@ export default class UserService {
   public async update(userUpdate: IUser): Promise<IUser> {
     try {
       const user = await this.userModel.update(userUpdate) as IDBUser;
-      return this.convert(user);
+      return this.userMapper.serialize(user);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -121,18 +124,7 @@ export default class UserService {
     }
   }
 
-  private convert(user: IDBUser): IUser {
-    const converted: IUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created: new Date(user.created)
-    };
-
-    return converted;
-  }
-
-  private convertAll(users: IDBUser[]): IUser[] {
-    return users.map(this.convert);
+  public setModel(model: UserModel) {
+    this.userModel = model;
   }
 }
