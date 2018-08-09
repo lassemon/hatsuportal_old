@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS item_tag(
 );
 
 INSERT INTO users (name, password, active, email, created) VALUES
-  ('jykajee', 'root', true, 'jykajee@jee.fi', '2018-06-24T05:39:00.000Z'),
-  ('Mister Thane', 'root', true, 'mrthane@thanelandia.fi', '2016-06-20T02:22:00.000Z');
+  ('jykajee', '$2a$10$PbjSuGNJqPOJZ6gMBnu6ZOgotbtCw234urJqednMFwVwEsSkBRSjW', true, 'jykajee@jee.fi', '2018-06-24T05:39:00.000Z'),
+  ('Mister Thane', '$2a$10$rEfUbmJ/dn1FkKrWrS6Dge34unz/zjqEHg/38.fOSis.BOBBXmX8.', true, 'mrthane@thanelandia.fi', '2016-06-20T02:22:00.000Z');
 
 INSERT INTO items (type, title, description, content, created, modified, author_id) VALUES
   ('article', 'Jykän paras resepti', 'Tällä pääsee hekumaan', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis orci mauris. In ultricies libero in magna tincidunt pulvinar. Cras rutrum nisl a metus aliquet convallis. Vivamus ultrices luctus dolor at luctus.', '2014-06-20T02:22:00.000Z', NULL, 1),

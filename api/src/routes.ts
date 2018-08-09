@@ -3,6 +3,7 @@ import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from
 import { ItemController } from './controllers/ItemController';
 import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
+import * as passport from 'passport';
 
 const models: TsoaRoute.Models = {
   "ITagResponse": {
@@ -55,6 +56,21 @@ const models: TsoaRoute.Models = {
       "name": { "dataType": "string", "required": true },
     },
   },
+  "ILoginResponse": {
+    "properties": {
+      "authToken": { "dataType": "string", "required": true },
+      "id": { "dataType": "string" },
+      "username": { "dataType": "string" },
+      "email": { "dataType": "string" },
+    },
+  },
+  "ILoginRequest": {
+    "properties": {
+      "username": { "dataType": "string" },
+      "email": { "dataType": "string" },
+      "password": { "dataType": "string", "required": true },
+    },
+  },
   "IUserResponse": {
     "properties": {
       "id": { "dataType": "double", "required": true },
@@ -80,7 +96,7 @@ const models: TsoaRoute.Models = {
   },
 };
 
-export function RegisterRoutes(app: any) {
+export function RegisterRoutes(app: any, authMiddleware: Function) {
   app.get('/api/v1/items',
     function(request: any, response: any, next: any) {
       const args = {
@@ -94,7 +110,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new ItemController();
-
 
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -114,7 +129,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new ItemController();
 
-
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -132,7 +146,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new ItemController();
-
 
       const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -152,7 +165,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new ItemController();
 
-
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -171,7 +183,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new ItemController();
 
-
       const promise = controller.delete.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -188,7 +199,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new TagController();
-
 
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -208,7 +218,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new TagController();
 
-
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -226,7 +235,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new TagController();
-
 
       const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -246,7 +254,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new TagController();
 
-
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -265,8 +272,25 @@ export function RegisterRoutes(app: any) {
 
       const controller = new TagController();
 
-
       const promise = controller.delete.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.post('/api/v1/users/login',
+    function(request: any, response: any, next: any) {
+      const args = {
+        loginParams: { "in": "body", "name": "loginParams", "required": true, "ref": "ILoginRequest" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+      const promise = controller.login.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/api/v1/users',
@@ -282,7 +306,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new UserController();
-
 
       const promise = controller.getAll.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -302,7 +325,6 @@ export function RegisterRoutes(app: any) {
 
       const controller = new UserController();
 
-
       const promise = controller.get.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
@@ -320,7 +342,6 @@ export function RegisterRoutes(app: any) {
       }
 
       const controller = new UserController();
-
 
       const promise = controller.insert.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
@@ -340,11 +361,11 @@ export function RegisterRoutes(app: any) {
 
       const controller = new UserController();
 
-
       const promise = controller.put.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.delete('/api/v1/users/:id',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -359,30 +380,29 @@ export function RegisterRoutes(app: any) {
 
       const controller = new UserController();
 
-
       const promise = controller.delete.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
 
-
-  function isController(object: any): object is Controller {
-    return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;
+  function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+    return authMiddleware(security);
   }
 
   function promiseHandler(controllerObj: any, promise: any, response: any, next: any) {
     return Promise.resolve(promise)
       .then((data: any) => {
         let statusCode;
-        if (isController(controllerObj)) {
-          const headers = controllerObj.getHeaders();
+        if (controllerObj instanceof Controller) {
+          const controller = controllerObj as Controller
+          const headers = controller.getHeaders();
           Object.keys(headers).forEach((name: string) => {
             response.set(name, headers[name]);
           });
 
-          statusCode = controllerObj.getStatus();
+          statusCode = controller.getStatus();
         }
 
-        if (data || data === false) { // === false allows boolean result
+        if (data || data === false) {
           response.status(statusCode || 200).json(data);
         } else {
           response.status(statusCode || 204).end();
@@ -392,26 +412,27 @@ export function RegisterRoutes(app: any) {
   }
 
   function getValidatedArgs(args: any, request: any): any[] {
-    const fieldErrors: FieldErrors = {};
-    const values = Object.keys(args).map((key) => {
+    const errorFields: FieldErrors = {};
+    const values = Object.keys(args).map(function(key) {
       const name = args[key].name;
       switch (args[key].in) {
         case 'request':
           return request;
         case 'query':
-          return ValidateParam(args[key], request.query[name], models, name, fieldErrors);
+          return ValidateParam(args[key], request.query[name], models, name, errorFields);
         case 'path':
-          return ValidateParam(args[key], request.params[name], models, name, fieldErrors);
+          return ValidateParam(args[key], request.params[name], models, name, errorFields);
         case 'header':
-          return ValidateParam(args[key], request.header(name), models, name, fieldErrors);
+          return ValidateParam(args[key], request.header(name), models, name, errorFields);
         case 'body':
-          return ValidateParam(args[key], request.body, models, name, fieldErrors, name + '.');
+          return ValidateParam(args[key], request.body, models, name, errorFields);
         case 'body-prop':
-          return ValidateParam(args[key], request.body[name], models, name, fieldErrors, 'body.');
+          return ValidateParam(args[key], request.body[name], models, name, errorFields);
       }
     });
-    if (Object.keys(fieldErrors).length > 0) {
-      throw new ValidateError(fieldErrors, '');
+
+    if (Object.keys(errorFields).length > 0) {
+      throw new ValidateError(errorFields, '');
     }
     return values;
   }

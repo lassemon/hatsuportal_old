@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "types": [
       "node",
       "express",
@@ -27,6 +30,7 @@
   },
   "exclude": [
     "node_modules",
-    "**/*spec.ts"
+    "**/*spec.ts",
+    "./src/security/passport-auth-template.ts"
   ]
 }

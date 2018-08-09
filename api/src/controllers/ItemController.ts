@@ -20,6 +20,7 @@ export class ItemController extends Controller {
   }
 
   @Tags('items')
+  @Response(404, 'Not Found')
   @Get()
   public async getAll(): Promise<IItemResponse[]> {
     log.debug('getting all items');

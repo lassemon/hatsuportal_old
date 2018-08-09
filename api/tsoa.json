@@ -2,12 +2,36 @@
   "swagger": {
     "basePath": "/api",
     "outputDirectory": "./dist",
-    "entryFile": "./src/server.ts"
+    "entryFile": "./src/server.ts",
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "securityDefinitions": {
+      "jwt": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    },
+    "security": [
+      {
+        "jwt": []
+      }
+    ]
   },
   "routes": {
     "basePath": "/api",
     "entryFile": "./src/server.ts",
     "routesDir": "./src",
-    "middleware": "express"
+    "middleware": "express",
+    "middlewareTemplate": "./src/security/passport-auth-template.ts",
+    "authenticationModule": "./src/security/authentication"
   }
 }

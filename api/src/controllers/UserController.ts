@@ -1,9 +1,10 @@
+import * as jwt from 'jsonwebtoken';
 import UserMapper from 'mappers/UserMapper';
 import UserService from 'services/UserService';
-import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
-import { IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
-import { IUserResponse } from '../interfaces/responses';
+import { ILoginRequest, IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
+import { ILoginResponse, IUserResponse } from '../interfaces/responses';
 
 const log = new Logger('UserController');
 
@@ -17,6 +18,35 @@ export class UserController extends Controller {
     super();
     this.userService = new UserService();
     this.userMapper = new UserMapper();
+  }
+
+
+  @Tags('Auth')
+  @Response<ILoginResponse>(200, 'Success')
+  @Response(401, 'Unauthorized')
+  @Post('login')
+  public async login(@Body() loginParams: ILoginRequest): Promise<ILoginResponse> {
+    const username: string = loginParams.username;
+    const email: string = loginParams.email;
+    const password: string = loginParams.password;
+
+    const payload = {
+      user: {
+        id: 1,
+        username,
+        email,
+        password
+      }
+    };
+
+    const authToken = jwt.sign(payload, process.env.JWT_SECRET);
+
+    return {
+      authToken,
+      id: 'test',
+      username: 'username',
+      email: 'email'
+    };
   }
 
   @Tags('users')
@@ -57,6 +87,7 @@ export class UserController extends Controller {
 
   @Tags('users')
   @Delete('{id}')
+  @Security('jwt')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async delete(id: number): Promise<boolean> {
