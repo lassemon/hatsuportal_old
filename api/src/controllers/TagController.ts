@@ -1,6 +1,6 @@
 import TagMapper from 'mappers/TagMapper';
 import TagService from 'services/TagService';
-import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { ITagInsertRequest, ITagUpdateRequest } from '../interfaces/requests';
 import { ITagResponse } from '../interfaces/responses';
@@ -37,8 +37,10 @@ export class TagController extends Controller {
 
   @Tags('tags')
   @Post()
-  @Response(400, 'Bad Request')
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(409, 'Conflict')
+  @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
   public async insert(@Body() request: ITagInsertRequest): Promise<ITagResponse> {
     log.debug('inserting tag: ' + JSON.stringify(request));
@@ -47,6 +49,8 @@ export class TagController extends Controller {
 
   @Tags('tags')
   @Put()
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: ITagUpdateRequest): Promise<ITagResponse> {
@@ -56,6 +60,8 @@ export class TagController extends Controller {
 
   @Tags('tags')
   @Delete('{id}')
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async delete(id: number): Promise<boolean> {

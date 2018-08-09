@@ -1,10 +1,13 @@
+import ApiError from 'errors/ApiError';
 import * as jwt from 'jsonwebtoken';
 import UserMapper from 'mappers/UserMapper';
+import Encryption from 'security/Encryption';
 import UserService from 'services/UserService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { ILoginRequest, IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
 import { ILoginResponse, IUserResponse } from '../interfaces/responses';
+import { IUser } from '../interfaces/user';
 
 const log = new Logger('UserController');
 
@@ -22,31 +25,29 @@ export class UserController extends Controller {
 
 
   @Tags('Auth')
-  @Response<ILoginResponse>(200, 'Success')
   @Response(401, 'Unauthorized')
+  @Response<ILoginResponse>(200, 'Success')
   @Post('login')
   public async login(@Body() loginParams: ILoginRequest): Promise<ILoginResponse> {
     const username: string = loginParams.username;
-    const email: string = loginParams.email;
     const password: string = loginParams.password;
+
+    const user: IUser = await this.userService.findByName(username);
+
+    if (!await Encryption.compare(password, user.password)) {
+      throw new ApiError('Unauthorized', 401, 'Login failed');
+    }
 
     const payload = {
       user: {
-        id: 1,
-        username,
-        email,
-        password
+        id: user.id,
+        name: user.name
       }
     };
 
     const authToken = jwt.sign(payload, process.env.JWT_SECRET);
 
-    return {
-      authToken,
-      id: 'test',
-      username: 'username',
-      email: 'email'
-    };
+    return this.userMapper.mapToLoginResponse(user, authToken);
   }
 
   @Tags('users')
@@ -67,8 +68,10 @@ export class UserController extends Controller {
 
   @Tags('users')
   @Post()
-  @Response(400, 'Bad Request')
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(409, 'Conflict')
+  @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
   public async insert(@Body() request: IUserInsertRequest): Promise<IUserResponse> {
     log.debug('inserting user: ' + JSON.stringify(request));
@@ -77,6 +80,8 @@ export class UserController extends Controller {
 
   @Tags('users')
   @Put()
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: IUserUpdateRequest): Promise<IUserResponse> {
@@ -88,6 +93,7 @@ export class UserController extends Controller {
   @Tags('users')
   @Delete('{id}')
   @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async delete(id: number): Promise<boolean> {

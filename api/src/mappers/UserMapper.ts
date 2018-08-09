@@ -3,7 +3,7 @@ import {
   IUserInsertQuery, IUserInsertRequest,
   IUserUpdateQuery, IUserUpdateRequest
 } from 'interfaces/requests';
-import { IUserResponse } from 'interfaces/responses';
+import { ILoginResponse, IUserResponse } from 'interfaces/responses';
 import { IDBUser, IUser } from 'interfaces/user';
 import Encryption from 'security/Encryption';
 
@@ -15,6 +15,16 @@ export default class UserMapper {
       name: user.name,
       email: user.email,
       created: user.created
+    };
+  }
+
+  public mapToLoginResponse(user: IUser, authToken: string): ILoginResponse {
+    const mappedUser = this.mapToResponse(user);
+    return {
+      authToken,
+      id: mappedUser.id,
+      name: mappedUser.name,
+      email: mappedUser.email
     };
   }
 

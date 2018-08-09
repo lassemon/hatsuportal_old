@@ -16,10 +16,8 @@ const authentication = new Authentication(passport);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Passport MW
-
+// Authentication Middleware
 app.use(authentication.getPassport().initialize());
-
 RegisterRoutes(app, authentication.getAuthMiddleware());
 
 /* tslint:disable no-any */

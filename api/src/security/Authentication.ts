@@ -29,9 +29,6 @@ export default class Authentication {
 
     this.passport.use(new Strategy(options, async (jwtPayload: IJwtPayload, done: VerifiedCallback) => {
       try {
-        console.log('INSIDE PASSPORT JWT STRATEGY', options);
-        console.log('JWT PAYLOAD IS', jwtPayload);
-
         const result = await userService.findById(jwtPayload.user.id) as IUser;
 
         if (isEmpty(result)) {

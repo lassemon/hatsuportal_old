@@ -29,6 +29,17 @@ export default class UserModel extends Model {
     });
   }
 
+  public findByName(username: string): Promise<IDBUser[]> {
+    return new Promise((resolve, reject) => {
+      this.knex('users').select('*').where('name', username).whereNot('active', false)
+        .then((result) => {
+          resolve(result);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  }
+
   public insert(user: IUserInsertQuery): Promise<IDBUser[]> {
     return this.knex('users').insert(user, '*');
   }

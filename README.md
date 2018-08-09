@@ -17,8 +17,8 @@
 
 ## Running development environment
 
-- navigate to project root
-- run `sh install.sh` (installs node packages for all projects, _needed so that volume mount won't override projects and delete node_modules folders_ and runs `docker-compose up`)
+- Navigate to project root
+- Run `sh install.sh` (installs node packages for all projects, _needed so that volume mount won't override projects and delete node_modules folders_ and runs `docker-compose up`)
 - (on windows run `docker-volume-watcher`, see http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html for more info)
 - `http://localhost/docs/` should now answer with swagger documentation
 - `http://localhost:8080/` should now answer with PostgreSQL Adminer. (_see credentials from docker-compose.yml_)
@@ -28,9 +28,26 @@
 
 ## Destroying development environment
 
-- navigate to project root
-- run `sh uninstall.sh` (removes node_modules folders, kills and destroys all docker containers, deletes all images and removes all not used volumes.
+- Navigate to project root
+- Run `sh uninstall.sh` (removes node_modules folders, kills and destroys all docker containers, deletes all images and removes all not used volumes.
 - **_DISLAIMER: If you have other docker projects on your machine, this will destroy them too!!_**
+
+
+## Using SwaggerUI
+
+- Navigate to `http://localhost/docs/`
+- Open any of the API descriptions and press the `Try it out` button on the right side.
+- SwaggerUI will generate a placeholder request for you. Pressing the `Execute` button will send the request.
+- Some of the API requests require a Json Web Token https://jwt.io/ and will respond with `401 Unauthorized` without a proper jwt in the request headers.
+- Login to the application using the login POST request (find it in the API listing under _Auth_)
+- Both test users `jykajee` and `Mister Thane` use the password `root`
+- Login response will contain `authToken`. copy it.
+- Navigate to the top of the SwaggerUI page and press the `Authorize` button.
+- A popup opens. Inside the `Value` field. Input first the word `Bearer` followed by a space and then the authToken.
+- e.g. `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJuYW1lIjoiTWlzdGVyIFRoYW5lIn0sImlhdCI6MTUzMzg0NDk4MH0.796cXHQ_Jvh2HYcglNovfWfKsX4WgW3zcqevrMWYoxc`
+- Press the `Authorize` button inside the popup dialog and then press `Close`.
+- All requests now sent to the API using SwaggerUI should contain a valid jwt token.
+- More about bearer token https://stackoverflow.com/a/25843058
 
 ## Docker cheatsheet
 

@@ -6,8 +6,8 @@ import { ITag } from './tag';
  */
 export interface ILoginResponse {
   authToken: string;
-  id?: string;
-  username?: string;
+  id?: number;
+  name?: string;
   email?: string;
 }
 

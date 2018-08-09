@@ -59,15 +59,14 @@ const models: TsoaRoute.Models = {
   "ILoginResponse": {
     "properties": {
       "authToken": { "dataType": "string", "required": true },
-      "id": { "dataType": "string" },
-      "username": { "dataType": "string" },
+      "id": { "dataType": "double" },
+      "name": { "dataType": "string" },
       "email": { "dataType": "string" },
     },
   },
   "ILoginRequest": {
     "properties": {
       "username": { "dataType": "string" },
-      "email": { "dataType": "string" },
       "password": { "dataType": "string", "required": true },
     },
   },
@@ -133,6 +132,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.post('/api/v1/items',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IItemInsertRequest" },
@@ -151,6 +151,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.put('/api/v1/items',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IItemUpdateRequest" },
@@ -169,6 +170,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.delete('/api/v1/items/:id',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -222,6 +224,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.post('/api/v1/tags',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "ITagInsertRequest" },
@@ -240,6 +243,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.put('/api/v1/tags',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "ITagUpdateRequest" },
@@ -258,6 +262,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.delete('/api/v1/tags/:id',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
@@ -329,6 +334,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.post('/api/v1/users',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IUserInsertRequest" },
@@ -347,6 +353,7 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       promiseHandler(controller, promise, response, next);
     });
   app.put('/api/v1/users',
+    authenticateMiddleware([{ "name": "jwt" }]),
     function(request: any, response: any, next: any) {
       const args = {
         request: { "in": "body", "name": "request", "required": true, "ref": "IUserUpdateRequest" },

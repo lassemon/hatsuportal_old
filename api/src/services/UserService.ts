@@ -67,6 +67,23 @@ export default class UserService {
     }
   }
 
+  public async findByName(username: string): Promise<IUser> {
+    try {
+      const user = await this.userModel.findByName(username) as IDBUser[];
+      if (isEmpty(user)) {
+        throw new ApiError('UserNotFound', 404, 'User not found with name: ' + username);
+      }
+      return this.userMapper.serialize(head(user));
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      log.error(error);
+      throw new ApiError('UserNotFound', 404, 'User not found with name: ' + username);
+    }
+  }
+
+
   public count(): Promise<number> {
     try {
       return this.userModel.count() as Promise<number>;

@@ -1,6 +1,6 @@
 import ItemMapper from 'mappers/ItemMapper';
 import ItemService from 'services/ItemService';
-import { Body, Controller, Delete, Get, Post, Put, Response, Route, SuccessResponse, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { IItemInsertRequest, IItemUpdateRequest } from '../interfaces/requests';
 import { IItemResponse } from '../interfaces/responses';
@@ -38,6 +38,8 @@ export class ItemController extends Controller {
 
   @Tags('items')
   @Post()
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(400, 'Bad Request')
   @SuccessResponse(200, 'Ok')
   public async insert(@Body() request: IItemInsertRequest): Promise<IItemResponse> {
@@ -47,6 +49,8 @@ export class ItemController extends Controller {
 
   @Tags('items')
   @Put()
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: IItemUpdateRequest): Promise<IItemResponse> {
@@ -56,6 +60,8 @@ export class ItemController extends Controller {
 
   @Tags('items')
   @Delete('{id}')
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async delete(id: number): Promise<boolean> {
