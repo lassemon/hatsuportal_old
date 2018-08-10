@@ -1,6 +1,5 @@
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import NavBar from 'components/NavBar';
-import MainContent from 'layouts/MainContent';
 import * as React from 'react';
 
 type ClassNames = 'root';
@@ -18,9 +17,7 @@ class RootLayout extends React.Component<WithStyles<typeof styles>> {
     return (
       <div key="main" className={classes.root} role="main">
         <NavBar />
-        <MainContent>
-          {this.props.children}
-        </MainContent>
+        {this.props.children}
       </div>
     );
   }
