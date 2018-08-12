@@ -4,16 +4,6 @@ import { ITag } from './tag';
 /**
  * @tsoaModel
  */
-export interface ILoginResponse {
-  authToken: string;
-  id?: number;
-  name?: string;
-  email?: string;
-}
-
-/**
- * @tsoaModel
- */
 export interface IUserResponse {
   id: number;
   name: string;

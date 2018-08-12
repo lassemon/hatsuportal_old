@@ -1,3 +1,4 @@
+import { resolve } from 'dns';
 import ApiError from 'errors/ApiError';
 import * as jwt from 'jsonwebtoken';
 import UserMapper from 'mappers/UserMapper';
@@ -6,7 +7,7 @@ import UserService from 'services/UserService';
 import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
 import Logger from 'utils/Logger';
 import { ILoginRequest, IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
-import { ILoginResponse, IUserResponse } from '../interfaces/responses';
+import { IUserResponse } from '../interfaces/responses';
 import { IUser } from '../interfaces/user';
 
 const log = new Logger('UserController');
@@ -16,6 +17,7 @@ export class UserController extends Controller {
 
   private userService: UserService;
   private userMapper: UserMapper;
+  private cookies = {};
 
   constructor() {
     super();
@@ -23,12 +25,11 @@ export class UserController extends Controller {
     this.userMapper = new UserMapper();
   }
 
-
   @Tags('Auth')
   @Response(401, 'Unauthorized')
-  @Response<ILoginResponse>(200, 'Success')
+  @Response<IUserResponse>(200, 'Success')
   @Post('login')
-  public async login(@Body() loginParams: ILoginRequest): Promise<ILoginResponse> {
+  public async login(@Body() loginParams: ILoginRequest): Promise<IUserResponse> {
     const username: string = loginParams.username;
     const password: string = loginParams.password;
 
@@ -47,7 +48,30 @@ export class UserController extends Controller {
 
     const authToken = jwt.sign(payload, process.env.JWT_SECRET);
 
-    return this.userMapper.mapToLoginResponse(user, authToken);
+    this.setCookies({
+      token: {
+        value: authToken,
+        options: {
+          httpOnly: true
+        }
+      }
+    });
+
+    return this.userMapper.mapToResponse(user);
+  }
+
+  @Tags('Auth')
+  @Security('jwt')
+  @Response(401, 'Unauthorized')
+  @Response(200, 'Success')
+  @Post('logout')
+  public logout(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.setCookies({
+        token: null
+      });
+      resolve(true);
+    });
   }
 
   @Tags('users')
@@ -99,6 +123,16 @@ export class UserController extends Controller {
   public async delete(id: number): Promise<boolean> {
     log.debug('deactivating user with id: ' + id);
     return this.userService.remove(id);
+  }
+
+  private setCookies(cookies) {
+    this.cookies = cookies;
+  }
+
+  private getCookies() {
+    const cookies = JSON.parse(JSON.stringify(this.cookies));
+    this.cookies = {};
+    return cookies;
   }
 
   public setService(service: UserService) {

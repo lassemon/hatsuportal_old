@@ -22,8 +22,16 @@ export default class Authentication {
   private init = () => {
     const userService = new UserService();
 
+    const cookieExtractor = (req) => {
+      let token = null;
+      if (req && req.cookies) {
+        token = req.cookies.token;
+      }
+      return token;
+    };
+
     const options: StrategyOptions = {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: cookieExtractor,
       secretOrKey: process.env.JWT_SECRET
     };
 

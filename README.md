@@ -38,16 +38,11 @@
 - Navigate to `http://localhost/docs/`
 - Open any of the API descriptions and press the `Try it out` button on the right side.
 - SwaggerUI will generate a placeholder request for you. Pressing the `Execute` button will send the request.
-- Some of the API requests require a Json Web Token https://jwt.io/ and will respond with `401 Unauthorized` without a proper jwt in the request headers.
+- Some of the API requests require a Json Web Token https://jwt.io/ and will respond with `401 Unauthorized` without a proper jwt in the client cookies.
 - Login to the application using the login POST request (find it in the API listing under _Auth_)
 - Both test users `jykajee` and `Mister Thane` use the password `root`
-- Login response will contain `authToken`. copy it.
-- Navigate to the top of the SwaggerUI page and press the `Authorize` button.
-- A popup opens. Inside the `Value` field. Input first the word `Bearer` followed by a space and then the authToken.
-- e.g. `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJuYW1lIjoiTWlzdGVyIFRoYW5lIn0sImlhdCI6MTUzMzg0NDk4MH0.796cXHQ_Jvh2HYcglNovfWfKsX4WgW3zcqevrMWYoxc`
-- Press the `Authorize` button inside the popup dialog and then press `Close`.
-- All requests now sent to the API using SwaggerUI should contain a valid jwt token.
-- More about bearer token https://stackoverflow.com/a/25843058
+- Login response will set a cookie named `token` which then will be be sent to server on all subsequent requests
+- Use logout POST request (also under _Auth_) to remove the cookie
 
 ## Docker cheatsheet
 

@@ -1,4 +1,5 @@
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as passport from 'passport';
 import { RegisterRoutes } from 'routes';
@@ -15,6 +16,9 @@ const authentication = new Authentication(passport);
 // BodyParser Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// CookieParser Middleware
+app.use(cookieParser());
 
 // Authentication Middleware
 app.use(authentication.getPassport().initialize());

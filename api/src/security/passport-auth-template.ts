@@ -10,9 +10,6 @@ import { iocContainer } from '{{iocModule}}';
 {{#each controllers}}
 import { {{name}} } from '{{modulePath}}';
 {{/each}}
-{{#if authenticationModule}}
-import * as passport from 'passport';
-{{/if}}
 
 const models: TsoaRoute.Models = {
     {{#each models}}
@@ -85,6 +82,17 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
                     });
 
                     statusCode = controller.getStatus();
+                }
+
+                if (typeof controllerObj.getCookies === 'function') {
+                    const cookies = controllerObj.getCookies();
+                    Object.keys(cookies).forEach((name: string) => {
+                        if(!cookies[name]) {
+                            response.clearCookie(name);
+                        } else {
+                            response.cookie(name, cookies[name].value, cookies[name].options);
+                        }
+                    });
                 }
 
                 if (data || data === false) {

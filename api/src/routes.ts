@@ -3,7 +3,6 @@ import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from
 import { ItemController } from './controllers/ItemController';
 import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
-import * as passport from 'passport';
 
 const models: TsoaRoute.Models = {
   "ITagResponse": {
@@ -56,26 +55,18 @@ const models: TsoaRoute.Models = {
       "name": { "dataType": "string", "required": true },
     },
   },
-  "ILoginResponse": {
-    "properties": {
-      "authToken": { "dataType": "string", "required": true },
-      "id": { "dataType": "double" },
-      "name": { "dataType": "string" },
-      "email": { "dataType": "string" },
-    },
-  },
-  "ILoginRequest": {
-    "properties": {
-      "username": { "dataType": "string" },
-      "password": { "dataType": "string", "required": true },
-    },
-  },
   "IUserResponse": {
     "properties": {
       "id": { "dataType": "double", "required": true },
       "name": { "dataType": "string", "required": true },
       "email": { "dataType": "string", "required": true },
       "created": { "dataType": "datetime", "required": true },
+    },
+  },
+  "ILoginRequest": {
+    "properties": {
+      "username": { "dataType": "string" },
+      "password": { "dataType": "string", "required": true },
     },
   },
   "IUserInsertRequest": {
@@ -298,6 +289,24 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       const promise = controller.login.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
+  app.post('/api/v1/users/logout',
+    authenticateMiddleware([{ "name": "jwt" }]),
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+      const promise = controller.logout.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
   app.get('/api/v1/users',
     function(request: any, response: any, next: any) {
       const args = {
@@ -407,6 +416,17 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
           });
 
           statusCode = controller.getStatus();
+        }
+
+        if (typeof controllerObj.getCookies === 'function') {
+          const cookies = controllerObj.getCookies();
+          Object.keys(cookies).forEach((name: string) => {
+            if (!cookies[name]) {
+              response.clearCookie(name);
+            } else {
+              response.cookie(name, cookies[name].value, cookies[name].options);
+            }
+          });
         }
 
         if (data || data === false) {
