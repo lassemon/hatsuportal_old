@@ -4,7 +4,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 export default createMuiTheme({
   palette: {
-    primary: deepOrange,
-    secondary: indigo
+    primary: indigo,
+    secondary: deepOrange
   }
 });

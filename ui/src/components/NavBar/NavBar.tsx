@@ -1,25 +1,28 @@
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import { Theme, withTheme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import LoginModal from 'components/LoginModal';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'redux';
 import { history } from 'store';
 import styled from 'styled-components';
 
-type ClassNames = 'flex' | 'tabs';
+type ClassNames = 'flex' | 'toolbar' | 'tabs';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   flex: {
     flexGrow: 1
   },
-  tabs: {
+  toolbar: {
     background: theme.palette.secondary.main
+  },
+  tabs: {
+    background: theme.palette.primary.main
   }
 });
 
@@ -63,11 +66,11 @@ class NavBar extends React.Component<IProps, IState> {
 
     return (
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <Typography variant="title" color="inherit" className={classes.flex}>
             HatsuPortal
           </Typography>
-          <Button color="inherit">Login</Button>
+          <LoginModal />
         </Toolbar>
         <StyledTabs value={this.state.value}
           onChange={this.handleChange}
