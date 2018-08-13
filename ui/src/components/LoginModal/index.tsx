@@ -1,2 +1,2 @@
-import LoginModal from './LoginModal';
+import LoginModal from './LoginModalContainer';
 export default LoginModal;

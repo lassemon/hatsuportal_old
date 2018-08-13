@@ -1,5 +1,5 @@
 import AppBar from '@material-ui/core/AppBar';
-import { Theme, withTheme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import LoginModal from 'components/LoginModal';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'redux';
 import { history } from 'store';
 import styled from 'styled-components';
 
@@ -26,9 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-interface IProps extends RouteComponentProps<string>, WithStyles<typeof styles> {
-  theme: Theme;
-}
+interface IProps extends RouteComponentProps<string>, WithStyles<typeof styles> { }
 
 interface IState {
   value: number;
@@ -101,7 +98,4 @@ class NavBar extends React.Component<IProps, IState> {
   }
 }
 
-export default compose(
-  withTheme(),
-  withStyles(styles)
-)(withRouter(NavBar));
+export default withStyles(styles, { withTheme: true })(withRouter(NavBar));
