@@ -1,28 +1,40 @@
 import {
-  GET_ITEMS,
-  ItemAction,
-  LOADING_ITEMS
+  FETCH_ITEMS_COMPLETE,
+  FETCH_ITEMS_ERROR,
+  FETCH_ITEMS_LOADING,
+  FETCH_ITEMS_SUCCESS,
+  ItemAction
 } from 'actions/items';
 import { IItemsState } from 'types';
 
 const initialState = {
   error: false,
   items: [],
-  loadingItems: false
+  loading: false
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {
   switch (action.type) {
-    case LOADING_ITEMS:
+    case FETCH_ITEMS_LOADING:
       return {
         ...state,
-        loadingItems: true
+        error: false,
+        loading: true
       };
-    case GET_ITEMS:
+    case FETCH_ITEMS_SUCCESS:
       return {
         ...state,
-        items: action.payload,
-        loadingItems: false
+        items: action.payload
+      };
+    case FETCH_ITEMS_ERROR:
+      return {
+        ...state,
+        error: true
+      };
+    case FETCH_ITEMS_COMPLETE:
+      return {
+        ...state,
+        loading: false
       };
     default:
       return state;

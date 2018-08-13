@@ -1,28 +1,40 @@
 import {
-  GET_TAGS,
-  ItemAction,
-  LOADING_TAGS
+  FETCH_TAGS_COMPLETE,
+  FETCH_TAGS_ERROR,
+  FETCH_TAGS_LOADING,
+  FETCH_TAGS_SUCCESS,
+  ItemAction
 } from 'actions/tags';
 import { ITagsState } from 'types';
 
 const initialState = {
   error: false,
   tags: [],
-  loadingTags: false
+  loading: false
 };
 
 export default (state: ITagsState = initialState, action: ItemAction) => {
   switch (action.type) {
-    case LOADING_TAGS:
+    case FETCH_TAGS_LOADING:
       return {
         ...state,
-        loadingTags: true
+        error: false,
+        loading: true
       };
-    case GET_TAGS:
+    case FETCH_TAGS_SUCCESS:
       return {
         ...state,
-        tags: action.payload,
-        loadingTags: false
+        tags: action.payload
+      };
+    case FETCH_TAGS_ERROR:
+      return {
+        ...state,
+        error: true
+      };
+    case FETCH_TAGS_COMPLETE:
+      return {
+        ...state,
+        loading: false
       };
     default:
       return state;

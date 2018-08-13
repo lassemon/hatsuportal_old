@@ -9,7 +9,7 @@ import { IItem, IRootState } from 'types';
 export interface IProps {
   error: boolean;
   items: IItem[];
-  loadingItems: boolean;
+  loading: boolean;
 }
 
 interface IActionProps {
@@ -22,7 +22,7 @@ class HomeView extends React.Component<IProps & IActionProps> {
   }
 
   public render() {
-    const loadingItems = this.props.loadingItems;
+    const loading = this.props.loading;
     const items = this.props.items.map(item => (
       {
         title: item.title,
@@ -32,7 +32,7 @@ class HomeView extends React.Component<IProps & IActionProps> {
 
     return (
       <div>
-        {loadingItems ? (
+        {loading ? (
           <CircularProgress size={25} />
         ) : (
             <ItemList
@@ -49,7 +49,7 @@ const mapStateToProps = (state: IRootState): Partial<IProps> => {
   return {
     error: state.items.error,
     items: state.items.items,
-    loadingItems: state.items.loadingItems
+    loading: state.items.loading
   };
 };
 

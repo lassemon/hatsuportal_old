@@ -9,7 +9,7 @@ import { IRootState, ITag } from 'types';
 export interface IProps {
   error: boolean;
   tags: ITag[];
-  loadingTags: boolean;
+  loading: boolean;
 }
 
 interface IActionProps {
@@ -22,7 +22,7 @@ class HomeView extends React.Component<IProps & IActionProps> {
   }
 
   public render() {
-    const loadingTags = this.props.loadingTags;
+    const loading = this.props.loading;
     const tags = this.props.tags.map(tag => (
       {
         title: tag.name,
@@ -32,7 +32,7 @@ class HomeView extends React.Component<IProps & IActionProps> {
 
     return (
       <div>
-        {loadingTags ? (
+        {loading ? (
           <CircularProgress size={25} />
         ) : (
             <ItemList
@@ -49,7 +49,7 @@ const mapStateToProps = (state: IRootState): Partial<IProps> => {
   return {
     error: state.items.error,
     tags: state.tags.tags,
-    loadingTags: state.tags.loadingTags
+    loading: state.tags.loading
   };
 };
 

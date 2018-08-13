@@ -5,7 +5,7 @@ export interface IRootState {
 }
 
 export interface IItemsState {
-  loadingItems: boolean;
+  loading: boolean;
   items: IItem[];
   error: boolean;
 }
@@ -18,7 +18,7 @@ export interface IPayloadAction<T> {
 export type GetItemsPayload = string[];
 
 export interface ITagsState {
-  loadingTags: boolean;
+  loading: boolean;
   tags: ITag[];
   error: boolean;
 }
