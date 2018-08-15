@@ -1,18 +1,19 @@
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { IRootState } from 'types';
+import { IAsyncChainOptions, IRootState } from 'types';
 
-/*tslint:disable*/
-const asyncChain: ActionCreator<ThunkAction<Promise<Action>, IRootState, void, Action>> = (fetch: any, options: any) => {
+/*tslint:disable no-any */
+const asyncChain: ActionCreator<ThunkAction<Promise<Action>, IRootState, void, Action>> = (fetch: (payload?: any) => Promise<any>, options: IAsyncChainOptions, payload?: any) => {
+  /*tslint:enable no-any*/
   return async (dispatch: Dispatch<Action>): Promise<Action> => {
     dispatch({
       type: options.loading
     });
 
     try {
-      const items = await fetch();
+      const reponse = await fetch(payload);
       dispatch({
-        payload: items,
+        payload: reponse,
         type: options.success
       });
     } catch (error) {
@@ -27,7 +28,5 @@ const asyncChain: ActionCreator<ThunkAction<Promise<Action>, IRootState, void, A
 
   };
 };
-
-
 
 export default asyncChain;

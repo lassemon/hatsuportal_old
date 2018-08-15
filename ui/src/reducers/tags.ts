@@ -3,7 +3,7 @@ import {
   FETCH_TAGS_ERROR,
   FETCH_TAGS_LOADING,
   FETCH_TAGS_SUCCESS,
-  ItemAction
+  TagAction
 } from 'actions/tags';
 import { ITagsState } from 'types';
 
@@ -13,7 +13,7 @@ const initialState = {
   loading: false
 };
 
-export default (state: ITagsState = initialState, action: ItemAction) => {
+export default (state: ITagsState = initialState, action: TagAction) => {
   switch (action.type) {
     case FETCH_TAGS_LOADING:
       return {

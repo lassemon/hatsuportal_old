@@ -29,7 +29,7 @@ interface ICompleteTagsAction extends Action {
   readonly type: FETCH_TAGS_COMPLETE_TYPE;
 }
 
-export type ItemAction = ILoadingTagsAction
+export type TagAction = ILoadingTagsAction
   | ISuccessTagsAction
   | IErrorTagsAction
   | ICompleteTagsAction;

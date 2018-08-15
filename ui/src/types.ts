@@ -1,7 +1,9 @@
 
+// Application States
 export interface IRootState {
   items: IItemsState;
   tags: ITagsState;
+  auth: IAuthState;
 }
 
 export interface IItemsState {
@@ -10,20 +12,27 @@ export interface IItemsState {
   error: boolean;
 }
 
-export interface IPayloadAction<T> {
-  type: string;
-  payload: T;
-}
-
-export type GetItemsPayload = string[];
-
 export interface ITagsState {
   loading: boolean;
   tags: ITag[];
   error: boolean;
 }
 
+export interface IAuthState {
+  loginError: boolean;
+  loginLoading: boolean;
+  logoutError: boolean;
+  logoutLoading: boolean;
+  loggedIn: boolean;
+  user?: IUser;
+}
 
+export interface IPayloadAction<T> {
+  type: string;
+  payload: T;
+}
+
+export type GetItemsPayload = string[];
 export type GetTagsPayload = string[];
 
 export interface IItemListItem {
@@ -31,8 +40,27 @@ export interface IItemListItem {
   description: string;
 }
 
+export interface IAsyncChainOptions {
+  loading: string;
+  success: string;
+  error: string;
+  complete: string;
+}
+
+// requests
+export interface ILoginRequest {
+  username: string;
+  password: string;
+}
 
 // API interfaces
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  created: Date;
+}
+
 export interface IItem {
   id: number;
   type: string;

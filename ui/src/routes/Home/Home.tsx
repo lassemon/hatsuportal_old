@@ -4,19 +4,13 @@ import ItemList from 'components/ItemList';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IItem, IRootState } from 'types';
-
-export interface IProps {
-  error: boolean;
-  items: IItem[];
-  loading: boolean;
-}
+import { IItemsState, IRootState } from 'types';
 
 interface IActionProps {
   fetchItems: typeof fetchItems;
 }
 
-class HomeView extends React.Component<IProps & IActionProps> {
+class HomeView extends React.Component<IItemsState & IActionProps> {
   public componentDidMount() {
     this.props.fetchItems();
   }
@@ -45,7 +39,7 @@ class HomeView extends React.Component<IProps & IActionProps> {
   }
 }
 
-const mapStateToProps = (state: IRootState): Partial<IProps> => {
+const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   return {
     error: state.items.error,
     items: state.items.items,

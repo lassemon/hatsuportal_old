@@ -1,4 +1,3 @@
-import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { Theme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
@@ -44,7 +43,6 @@ class HatsuModal extends React.PureComponent<IProps> {
 
     return (
       <div>
-        <Button color="inherit" onClick={this.props.handleOpen}>{this.props.loginText}</Button>
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
