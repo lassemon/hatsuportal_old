@@ -10,19 +10,19 @@ interface IActionProps {
   fetchItems: typeof fetchItems;
 }
 
-class HomeView extends React.Component<IItemsState & IActionProps> {
+class Home extends React.Component<IItemsState & IActionProps> {
   public componentDidMount() {
     this.props.fetchItems();
   }
 
   public render() {
     const loading = this.props.loading;
-    const items = this.props.items.map(item => (
+    const items = this.props.items ? this.props.items.map(item => (
       {
         title: item.title,
         description: item.description
       }
-    ));
+    )) : [];
 
     return (
       <div>
@@ -59,4 +59,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HomeView);
+)(Home);

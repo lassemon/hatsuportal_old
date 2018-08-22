@@ -1,14 +1,12 @@
-import axios, { AxiosResponse } from 'axios';
+import Ajax from 'utils/Ajax';
+
+const ajax = new Ajax();
 
 const itemsApi = {
   getAll: (): Promise<void> => {
-    return axios.get('/api/v1/items')
-      .then((response: AxiosResponse) => {
-        return response.data;
-      })
-      .catch((error: string) => {
-        throw new Error(error);
-      });
+    return ajax.get({
+      endpoint: 'v1/items'
+    });
   }
 };
 

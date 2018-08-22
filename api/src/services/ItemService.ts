@@ -39,7 +39,7 @@ export default class ItemService {
       return items;
     } catch (error) {
       log.error(error);
-      throw new ApiError('ItemNotFound', 404, 'Items not found');
+      throw new ApiError(404, 'ItemNotFound', 'Items not found');
     }
   }
 
@@ -47,7 +47,7 @@ export default class ItemService {
     try {
       const dbItems = await this.itemModel.find(filter) as IDBItem[];
       if (isEmpty(dbItems)) {
-        throw new ApiError('ItemNotFound', 404, 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Items not found');
       }
       let items: IItem[] = this.itemMapper.serializeAll(dbItems);
       items = await this.getTagsForAll(items);
@@ -57,7 +57,7 @@ export default class ItemService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('ItemNotFound', 404, 'Items not found');
+      throw new ApiError(404, 'ItemNotFound', 'Items not found');
     }
   }
 
@@ -65,7 +65,7 @@ export default class ItemService {
     try {
       const dbItem = await this.itemModel.findById(id) as IDBItem;
       if (isEmpty(dbItem)) {
-        throw new ApiError('ItemNotFound', 404, 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Items not found');
       }
       let item: IItem = this.itemMapper.serialize(dbItem);
       item = await this.getTags(item);
@@ -75,7 +75,7 @@ export default class ItemService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('ItemNotFound', 404, 'Item not found with id: ' + id);
+      throw new ApiError(404, 'ItemNotFound', 'Item not found with id: ' + id);
     }
   }
 
@@ -84,7 +84,7 @@ export default class ItemService {
       return this.itemModel.count() as Promise<number>;
     } catch (error) {
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Item count failed');
+      throw new ApiError(400, 'BadRequest', 'Item count failed');
     }
   }
 
@@ -107,7 +107,7 @@ export default class ItemService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Item insert failed');
+      throw new ApiError(400, 'BadRequest', 'Item insert failed');
     }
   }
 
@@ -115,7 +115,7 @@ export default class ItemService {
     if (tagIds && tagIds.length > 0) {
       const tagsExist = await this.tagService.allTagsExist(tagIds);
       if (!tagsExist) {
-        throw new ApiError('BadRequest', 400, 'Attempted to add tags that do not exist');
+        throw new ApiError(400, 'BadRequest', 'Attempted to add tags that do not exist');
       }
     }
   }
@@ -142,7 +142,7 @@ export default class ItemService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Item update failed');
+      throw new ApiError(400, 'BadRequest', 'Item update failed');
     }
   }
 
@@ -151,7 +151,7 @@ export default class ItemService {
       let success = await this.itemModel.remove(id);
 
       if (!success) {
-        throw new ApiError('NotFound', 404, 'Item remove failed');
+        throw new ApiError(404, 'NotFound', 'Item remove failed');
       }
 
       success = await this.tagService.removeAllFromItem(id);
@@ -162,7 +162,7 @@ export default class ItemService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Item remove failed');
+      throw new ApiError(400, 'BadRequest', 'Item remove failed');
     }
   }
 

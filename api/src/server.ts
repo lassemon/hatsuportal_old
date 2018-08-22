@@ -26,7 +26,7 @@ RegisterRoutes(app, authentication.getAuthMiddleware());
 
 /* tslint:disable no-any */
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const status = err.statusCode || 500;
+  const status = err.status || err.statusCode || 500;
   const body: any = {
     fields: err.fields || undefined,
     message: err.message || 'An error occurred during the request',

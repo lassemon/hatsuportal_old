@@ -1,6 +1,3 @@
-/**
- * @tsoaModel
- */
 export default class ApiError extends Error {
 
   public status: number;
@@ -17,4 +14,3 @@ export default class ApiError extends Error {
     this.message = `${status} - ${statusText}`;
   }
 }
-

@@ -31,7 +31,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('UserNotFound', 404, 'Users not found');
+      throw new ApiError(404, 'UserNotFound', 'Users not found');
     }
   }
 
@@ -39,7 +39,7 @@ export default class UserService {
     try {
       const users = await this.userModel.find(filter) as IDBUser[];
       if (isEmpty(users)) {
-        throw new ApiError('UserNotFound', 404, 'Users not found');
+        throw new ApiError(404, 'UserNotFound', 'Users not found');
       }
       return this.userMapper.serializeAll(users);
     } catch (error) {
@@ -47,7 +47,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('UserNotFound', 404, 'Users not found');
+      throw new ApiError(404, 'UserNotFound', 'Users not found');
     }
   }
 
@@ -55,7 +55,7 @@ export default class UserService {
     try {
       const user = await this.userModel.findById(id) as IDBUser[];
       if (isEmpty(user)) {
-        throw new ApiError('UserNotFound', 404, 'User not found with id: ' + id);
+        throw new ApiError(404, 'UserNotFound', 'User not found with id: ' + id);
       }
       return this.userMapper.serialize(head(user));
     } catch (error) {
@@ -63,7 +63,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('UserNotFound', 404, 'User not found with id: ' + id);
+      throw new ApiError(404, 'UserNotFound', 'User not found with id: ' + id);
     }
   }
 
@@ -71,7 +71,7 @@ export default class UserService {
     try {
       const user = await this.userModel.findByName(username) as IDBUser[];
       if (isEmpty(user)) {
-        throw new ApiError('UserNotFound', 404, 'User not found with name: ' + username);
+        throw new ApiError(404, 'UserNotFound', 'User not found with name: ' + username);
       }
       return this.userMapper.serialize(head(user));
     } catch (error) {
@@ -79,7 +79,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('UserNotFound', 404, 'User not found with name: ' + username);
+      throw new ApiError(404, 'UserNotFound', 'User not found with name: ' + username);
     }
   }
 
@@ -92,7 +92,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'User count failed');
+      throw new ApiError(400, 'BadRequest', 'User count failed');
     }
   }
 
@@ -106,7 +106,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'User insert failed');
+      throw new ApiError(400, 'BadRequest', 'User insert failed');
     }
   }
 
@@ -120,7 +120,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'User update failed');
+      throw new ApiError(400, 'BadRequest', 'User update failed');
     }
   }
 
@@ -132,7 +132,7 @@ export default class UserService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'User remove failed');
+      throw new ApiError(400, 'BadRequest', 'User remove failed');
     }
   }
 

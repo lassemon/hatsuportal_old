@@ -24,7 +24,7 @@ describe('UserController', () => {
     created: user.created
   }));
 
-  const TEST_ERROR_MESSAGE = new ApiError('UserNotFound', 404, 'User not found');
+  const TEST_ERROR_MESSAGE = new ApiError(404, 'UserNotFound', 'User not found');
 
   beforeEach(() => {
     userService = mock(UserService);
@@ -58,8 +58,8 @@ describe('UserController', () => {
     try {
       const result = await controller.get(456);
     } catch (error) {
-      expect(error.getName()).toEqual('UserNotFound');
-      expect(error.getStatus()).toEqual(404);
+      expect(error.statusText).toEqual('UserNotFound');
+      expect(error.status).toEqual(404);
     }
   });
 

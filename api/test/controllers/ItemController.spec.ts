@@ -35,7 +35,7 @@ describe('ItemController', () => {
     }
   ];
 
-  const TEST_ERROR_MESSAGE = new ApiError('ItemNotFound', 404, 'Item not found');
+  const TEST_ERROR_MESSAGE = new ApiError(404, 'ItemNotFound', 'Item not found');
 
   beforeEach(() => {
     itemService = mock(ItemService);
@@ -70,8 +70,8 @@ describe('ItemController', () => {
     try {
       const result = await controller.get(456);
     } catch (error) {
-      expect(error.getName()).toEqual('ItemNotFound');
-      expect(error.getStatus()).toEqual(404);
+      expect(error.statusText).toEqual('ItemNotFound');
+      expect(error.status).toEqual(404);
     }
   });
 

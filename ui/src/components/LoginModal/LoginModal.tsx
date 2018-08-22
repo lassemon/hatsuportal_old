@@ -10,7 +10,7 @@ import Modal from 'components/Modal';
 import * as React from 'react';
 import { IUser } from 'types';
 
-type ClassNames = 'loginLogoutContainer' | 'loginTitle' | 'loginInput' | 'loginButtonLoader' | 'loginButtonBar' | 'loginLogoutButton';
+type ClassNames = 'loginLogoutContainer' | 'loginTitle' | 'loginInput' | 'loginButtonLoader' | 'loginButtonBar' | 'loginModalButton' | 'logoutButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   loginLogoutContainer: {
@@ -41,7 +41,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     textAlign: 'right',
     marginTop: theme.spacing.unit * 4
   },
-  loginLogoutButton: {
+  loginModalButton: {
+    marginLeft: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+    boxShadow: 'none'
+  },
+  logoutButton: {
     marginLeft: theme.spacing.unit,
     boxShadow: 'none'
   }
@@ -98,16 +103,15 @@ class LoginModal extends React.PureComponent<IProps> {
         {this.props.loggedIn && this.props.user ? (
           <div className={classes.loginLogoutContainer}>
             <Typography variant="subheading" color="inherit">{this.props.user.email}</Typography>
-            <Button color="primary" variant="contained" className={classes.loginLogoutButton} onClick={this.handleLogout}>Logout</Button>
+            <Button color="primary" variant="contained" className={classes.logoutButton} onClick={this.handleLogout}>Logout</Button>
           </div>
         ) : (
             <Button color="inherit" onClick={this.handleOpen}>Login</Button>
           )}
         <Modal open={this.state.open && !this.props.loggedIn}
-          loginText="Login"
           handleOpen={this.handleOpen}
           handleClose={this.handleClose} >
-          <Typography variant="title" id="modal-title" className={classes.loginTitle}>
+          <Typography variant="title" className={classes.loginTitle}>
             HatsuPortal Login
         </Typography>
           <FormControl className={classes.loginInput}>
@@ -147,7 +151,7 @@ class LoginModal extends React.PureComponent<IProps> {
           <div className={classes.loginButtonBar}>
             <Button
               disabled={this.props.loading}
-              className={classes.loginLogoutButton}
+              className={classes.loginModalButton}
               color="secondary"
               variant="contained"
               onClick={this.handleClose}>
@@ -155,7 +159,7 @@ class LoginModal extends React.PureComponent<IProps> {
               </Button>
             <Button
               disabled={this.props.loading}
-              className={classes.loginLogoutButton}
+              className={classes.loginModalButton}
               color="primary"
               variant="contained"
               onClick={this.props.handleLogin}>

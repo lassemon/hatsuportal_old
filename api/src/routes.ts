@@ -307,6 +307,24 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       const promise = controller.logout.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
+  app.post('/api/v1/users/refresh',
+    function(request: any, response: any, next: any) {
+      const args = {
+        request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new UserController();
+
+      const promise = controller.refresh.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
   app.get('/api/v1/users',
     function(request: any, response: any, next: any) {
       const args = {

@@ -17,12 +17,12 @@ class HomeView extends React.Component<ITagsState & IActionProps> {
 
   public render() {
     const loading = this.props.loading;
-    const tags = this.props.tags.map(tag => (
+    const tags = this.props.tags ? this.props.tags.map(tag => (
       {
         title: tag.name,
         description: ''
       }
-    ));
+    )) : [];
 
     return (
       <div>

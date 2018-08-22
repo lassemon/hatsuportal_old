@@ -33,7 +33,7 @@ export default class UserMapper {
     };
 
     if (insertRequest.password === userInsert.password) {
-      throw new ApiError('BadRequest', 400, 'Attempted to add unencrypted password to database');
+      throw new ApiError(400, 'BadRequest', 'Attempted to add unencrypted password to database');
     }
 
     return userInsert;
@@ -48,7 +48,7 @@ export default class UserMapper {
     };
 
     if (updateRequest.password === userInsert.password) {
-      throw new ApiError('BadRequest', 400, 'Attempted to add unencrypted password to database');
+      throw new ApiError(400, 'BadRequest', 'Attempted to add unencrypted password to database');
     }
 
     return userInsert;

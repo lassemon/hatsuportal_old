@@ -6,7 +6,8 @@ services:
     environment:
       ENV: dev
       LOG_LEVEL: DEBUG
-      JWT_SECRET: jtwSecret
+      TOKEN_EXP_TIME_MINUTES: 1
+      REFRESH_TOKEN_EXP_TIME_MINUTES: 2
   db:
     volumes:
     - ./db/init_dev.sql:/docker-entrypoint-initdb.d/init.sql

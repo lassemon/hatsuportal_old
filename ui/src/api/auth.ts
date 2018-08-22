@@ -1,21 +1,27 @@
-import axios, { AxiosResponse } from 'axios';
 import { ILoginRequest } from 'types';
+import Ajax from 'utils/Ajax';
+// import RefreshTokenError from './RefreshTokenError';
+
+const ajax = new Ajax();
 
 const authApi = {
   login: (payload: ILoginRequest): Promise<void> => {
-    return axios.post('/api/v1/users/login', payload).then((response: AxiosResponse) => {
-      return response.data;
-    }).catch((error: string) => {
-      throw new Error(error);
+    return ajax.post({
+      payload,
+      endpoint: 'v1/users/login',
+      noRefresh: true
     });
   },
   logout: (): Promise<void> => {
-    return axios.post('/api/v1/users/logout')
-      .then((response: AxiosResponse) => {
-        return response.data;
-      }).catch((error: string) => {
-        throw new Error(error);
-      });
+    return ajax.post({
+      endpoint: 'v1/users/logout'
+    });
+  },
+  refreshToken: (): Promise<void> => {
+    return ajax.post({
+      endpoint: 'v1/users/refresh',
+      noRefresh: true
+    });
   }
 };
 

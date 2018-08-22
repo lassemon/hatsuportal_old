@@ -73,7 +73,7 @@ describe('ItemService', () => {
     tags: []
   };
 
-  const TEST_ERROR_MESSAGE = new ApiError('ItemNotFound', 404, 'Item not found');
+  const TEST_ERROR_MESSAGE = new ApiError(404, 'ItemNotFound', 'Item not found');
 
   beforeEach(() => {
     itemService = new ItemService();
@@ -113,8 +113,8 @@ describe('ItemService', () => {
     try {
       await itemService.findById(TEST_ITEM_LIST[1].id);
     } catch (error) {
-      expect(error.getName()).toEqual('ItemNotFound');
-      expect(error.getStatus()).toEqual(404);
+      expect(error.statusText).toEqual('ItemNotFound');
+      expect(error.status).toEqual(404);
     }
   });
 

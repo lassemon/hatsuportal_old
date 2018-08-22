@@ -20,7 +20,7 @@ describe('TagService', () => {
     { id: 33, name: 'musiikki' }
   ];
 
-  const TEST_ERROR_MESSAGE = new ApiError('TagNotFound', 404, 'Tag not found');
+  const TEST_ERROR_MESSAGE = new ApiError(404, 'TagNotFound', 'Tag not found');
 
   beforeEach(() => {
     tagService = new TagService();
@@ -55,8 +55,8 @@ describe('TagService', () => {
     try {
       const result = await tagService.findById(MAPPED_TEST_TAG_LIST[1].id);
     } catch (error) {
-      expect(error.getName()).toEqual('TagNotFound');
-      expect(error.getStatus()).toEqual(404);
+      expect(error.statusText).toEqual('TagNotFound');
+      expect(error.status).toEqual(404);
     }
   });
 

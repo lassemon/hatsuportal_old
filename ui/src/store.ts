@@ -1,11 +1,13 @@
 import createHistory from 'history/createBrowserHistory';
+import { tokenMiddleware, userMiddleware } from 'middleware';
+import { Store } from 'react-redux';
 import { routerMiddleware } from 'react-router-redux';
+import rootReducer from 'reducers/root';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { loadUser, saveUser } from 'utils/localStorage';
-import { observeStore } from 'utils/store';
-import rootReducer from './reducers/root';
+import { IRootState } from 'types';
+import { loadUser } from 'utils/localStorage';
 
 export const history = createHistory();
 
@@ -17,6 +19,8 @@ const persistedState = {
 
 const middleware = [
   thunk,
+  userMiddleware,
+  tokenMiddleware,
   routerMiddleware(history)
 ];
 
@@ -30,6 +34,6 @@ const store = createStore(
   composedEnhancers
 );
 
-observeStore(store, saveUser);
+// observeStore(store, saveUser);
 
-export default store;
+export default store as Store<IRootState>;

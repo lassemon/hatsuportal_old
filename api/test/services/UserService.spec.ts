@@ -15,7 +15,7 @@ describe('UserService', () => {
     { id: 456, name: 'test2', password: 'test', email: 'test2', created: new Date() }
   ];
 
-  const TEST_ERROR_MESSAGE = new ApiError('UserNotFound', 404, 'User not found');
+  const TEST_ERROR_MESSAGE = new ApiError(404, 'UserNotFound', 'User not found');
 
   beforeEach(() => {
     userService = new UserService();
@@ -50,8 +50,8 @@ describe('UserService', () => {
     try {
       const result = await userService.findById(456);
     } catch (error) {
-      expect(error.getName()).toEqual('UserNotFound');
-      expect(error.getStatus()).toEqual(404);
+      expect(error.statusText).toEqual('UserNotFound');
+      expect(error.status).toEqual(404);
     }
   });
 

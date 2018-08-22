@@ -8,6 +8,7 @@ import {
   LOGOUT_COMPLETE,
   LOGOUT_ERROR,
   LOGOUT_LOADING,
+  LOGOUT_RESET,
   LOGOUT_SUCCESS
 } from 'actions/auth';
 import { IAuthState } from 'types';
@@ -72,6 +73,14 @@ export default (state: IAuthState = initialState, action: AuthAction) => {
       return {
         ...state,
         logoutLoading: false
+      };
+    case LOGOUT_RESET:
+      return {
+        ...state,
+        loginError: false,
+        logoutError: false,
+        loggedIn: null,
+        user: null
       };
     default:
       return state;

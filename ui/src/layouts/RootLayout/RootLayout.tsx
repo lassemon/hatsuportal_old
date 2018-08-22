@@ -1,4 +1,5 @@
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
+import ErrorModal from 'components/ErrorModal';
 import NavBar from 'components/NavBar';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -25,6 +26,7 @@ class RootLayout extends React.Component<WithStyles<typeof styles>> {
         <Main>
           {this.props.children}
         </Main>
+        <ErrorModal />
       </div>
     );
   }

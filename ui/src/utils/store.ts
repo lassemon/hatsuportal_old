@@ -1,11 +1,7 @@
 import { Store } from "react-redux";
 import { IRootState } from "types";
 
-export const observeStore = (
-  store: Store<IRootState>,
-  onChange: (state: IRootState) => void
-) => {
-
+export const observeStore = (store: Store<IRootState>, onChange: (state: IRootState) => void) => {
   const handleChange = () => {
     onChange(store.getState());
   };

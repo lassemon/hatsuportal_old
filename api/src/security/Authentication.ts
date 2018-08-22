@@ -1,18 +1,14 @@
-import { IUser } from 'interfaces/user';
+import { IJwtPayload, IUser } from 'interfaces/user';
 import { isEmpty } from 'lodash';
 import { PassportStatic } from 'passport';
-import { ExtractJwt, Strategy, StrategyOptions, VerifiedCallback } from 'passport-jwt';
+import { Strategy, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import UserService from 'services/UserService';
 import { TsoaRoute } from 'tsoa';
-
-interface IJwtPayload {
-  user?: IUser;
-  iat?: Date;
-}
 
 export default class Authentication {
 
   private passport: PassportStatic;
+  private static instance: Authentication;
 
   constructor(passport: PassportStatic) {
     this.passport = passport;
@@ -20,38 +16,42 @@ export default class Authentication {
   }
 
   private init = () => {
-    const userService = new UserService();
+    if (!Authentication.instance) {
+      const userService = new UserService();
 
-    const cookieExtractor = (req) => {
-      let token = null;
-      if (req && req.cookies) {
-        token = req.cookies.token;
-      }
-      return token;
-    };
-
-    const options: StrategyOptions = {
-      jwtFromRequest: cookieExtractor,
-      secretOrKey: process.env.JWT_SECRET
-    };
-
-    this.passport.use(new Strategy(options, async (jwtPayload: IJwtPayload, done: VerifiedCallback) => {
-      try {
-        const result = await userService.findById(jwtPayload.user.id) as IUser;
-
-        if (isEmpty(result)) {
-          return done(result, false);
+      const cookieExtractor = (req) => {
+        let token = null;
+        if (req && req.cookies) {
+          token = req.cookies.token;
         }
+        return token;
+      };
 
-        if (!result) {
-          return done(null, false);
-        } else {
-          return done(null, result, { issuedAt: jwtPayload.iat });
+      const options: StrategyOptions = {
+        jwtFromRequest: cookieExtractor,
+        secretOrKey: process.env.JWT_SECRET
+      };
+
+      this.passport.use(new Strategy(options, async (jwtPayload: IJwtPayload, done: VerifiedCallback) => {
+        try {
+          const result = await userService.findById(jwtPayload.user) as IUser;
+
+          if (isEmpty(result)) {
+            return done(result, false);
+          }
+
+          if (!result) {
+            return done(null, false);
+          } else {
+            return done(null, result, { issuedAt: jwtPayload.iat });
+          }
+        } catch (error) {
+          return done(error, false);
         }
-      } catch (error) {
-        return done(error, false);
-      }
-    }));
+      }));
+
+      Authentication.instance = this;
+    }
   }
 
   public getAuthMiddleware = () => {
@@ -63,6 +63,5 @@ export default class Authentication {
   public getPassport() {
     return this.passport;
   }
-
 }
 

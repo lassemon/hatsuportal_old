@@ -1,21 +1,20 @@
-import Modal from '@material-ui/core/Modal';
+import MUIModal from '@material-ui/core/Modal';
 import { Theme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 
 const getModalStyle = () => {
-  const top = 50;
-  const left = 50;
-
   return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
   };
 };
 
 const styles: StyleRulesCallback<'modal'> = (theme: Theme) => ({
   modal: {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxHeight: '95%',
+    overflowY: 'auto',
     display: 'flex',
     flexFlow: 'row wrap',
     justifyContent: 'space-between',
@@ -25,37 +24,39 @@ const styles: StyleRulesCallback<'modal'> = (theme: Theme) => ({
     maxWidth: theme.spacing.unit * 80,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 1.5
   }
 });
 
 interface IProps extends WithStyles<typeof styles> {
   open: boolean;
-  loginText: string;
-  handleOpen: () => void;
-  handleClose: () => void;
+  handleOpen?: () => void;
+  handleClose?: () => void;
+  /*tslint:disable no-any */
+  modalApi?: any;
 }
 
-class HatsuModal extends React.PureComponent<IProps> {
+class Modal extends React.PureComponent<IProps> {
 
   public render() {
     const { classes } = this.props;
 
     return (
       <div>
-        <Modal
+        <MUIModal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
           open={this.props.open}
           onClose={this.props.handleClose}
+          {...this.props.modalApi}
         >
           <div style={getModalStyle()} className={classes.modal}>
             {this.props.children}
           </div>
-        </Modal>
-      </div>
+        </MUIModal>
+      </div >
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(HatsuModal);
+export default withStyles(styles, { withTheme: true })(Modal);

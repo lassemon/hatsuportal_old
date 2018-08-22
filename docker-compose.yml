@@ -10,6 +10,8 @@ services:
       - ./gateway/config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
+    environment:
+      TZ: 'Europe/Helsinki'
   api:
     build:
       context: ./api
@@ -25,12 +27,20 @@ services:
       DATABASE_SCHEMA: hatsuportal
       LOG_LEVEL: INFO
       PORT: 3000
+      JWT_SECRET: eac82bcf-b879-4dc3-ab84-db38a0b8da94
+      REFRESH_TOKEN_SECRET: 9d0b7e53-c4a2-415e-b3d6-6b025b5e4b2d
+      IDENTIFIER: HatsuPortal
+      TOKEN_EXP_TIME_MINUTES: 15
+      REFRESH_TOKEN_EXP_TIME_MINUTES: 720
+      TZ: Europe/Helsinki
   ui:
     build:
       context: ./ui
       dockerfile: Dockerfile
     volumes:
       - ./ui:/usr/src/app
+    environment:
+      TZ: 'Europe/Helsinki'
   db:
     image: postgres:10.4
     restart: always

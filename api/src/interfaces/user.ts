@@ -1,3 +1,5 @@
+import { IUserResponse } from './responses';
+
 /**
  * @tsoaModel
  */
@@ -18,4 +20,12 @@ export interface IDBUser {
   password: string;
   email: string;
   created: Date;
+}
+
+export interface IJwtPayload {
+  user: number;
+  iss: string;
+  iat: number;
+  sub: string;
+  exp: number;
 }

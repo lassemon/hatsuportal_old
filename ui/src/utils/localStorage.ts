@@ -1,8 +1,8 @@
-import { IRootState } from "types";
+import { IUser } from "types";
 
-export const saveUser = (state: IRootState) => {
-  localStorage.setItem('loggedIn', JSON.stringify(state.auth.loggedIn));
-  localStorage.setItem('user', JSON.stringify(state.auth.user));
+export const saveUser = (loggedIn: boolean, user: IUser | null) => {
+  localStorage.setItem('loggedIn', JSON.stringify(loggedIn));
+  localStorage.setItem('user', JSON.stringify(user));
 };
 
 export const loadUser = () => {

@@ -33,7 +33,7 @@ export default class TagService {
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
       log.error(error);
-      throw new ApiError('TagNotFound', 404, 'Tags not found');
+      throw new ApiError(404, 'TagNotFound', 'Tags not found');
     }
   }
 
@@ -41,7 +41,7 @@ export default class TagService {
     try {
       const tags = await this.tagModel.find(filter) as IDBTag[];
       if (isEmpty(tags)) {
-        throw new ApiError('ItemNotFound', 404, 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Items not found');
       }
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
@@ -49,7 +49,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('TagNotFound', 404, 'Tags not found');
+      throw new ApiError(404, 'TagNotFound', 'Tags not found');
     }
   }
 
@@ -57,7 +57,7 @@ export default class TagService {
     try {
       const tag = await this.tagModel.findById(id) as IDBTag;
       if (isEmpty(tag)) {
-        throw new ApiError('ItemNotFound', 404, 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Items not found');
       }
       return this.tagMapper.serialize(tag);
     } catch (error) {
@@ -65,7 +65,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('TagNotFound', 404, 'Tag not found with id: ' + id);
+      throw new ApiError(404, 'TagNotFound', 'Tag not found with id: ' + id);
     }
   }
 
@@ -73,7 +73,7 @@ export default class TagService {
     try {
       const tags = await this.tagModel.findByItemId(itemId);
       if (isEmpty(tags)) {
-        throw new ApiError('ItemNotFound', 404, 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Items not found');
       }
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
@@ -90,14 +90,14 @@ export default class TagService {
       return this.tagModel.count() as Promise<number>;
     } catch (error) {
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag count failed');
+      throw new ApiError(400, 'BadRequest', 'Tag count failed');
     }
   }
 
   public async insert(tagInsert: ITagInsertRequest): Promise<ITag> {
     try {
       if (await this.tagExists(tagInsert.name)) {
-        throw new ApiError('Conflict', 409, 'Tag \'' + tagInsert.name + '\' already exists');
+        throw new ApiError(409, 'Conflict', 'Tag \'' + tagInsert.name + '\' already exists');
       }
       const tag = await this.tagModel.insert(this.tagMapper.mapInsertToQuery(tagInsert));
       return this.tagMapper.serialize(head(tag));
@@ -106,7 +106,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag insert failed');
+      throw new ApiError(400, 'BadRequest', 'Tag insert failed');
     }
   }
 
@@ -128,7 +128,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag insert failed');
+      throw new ApiError(400, 'BadRequest', 'Tag insert failed');
     }
   }
 
@@ -140,7 +140,7 @@ export default class TagService {
       return this.tagMapper.serialize(tag);
     } catch (error) {
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag update failed');
+      throw new ApiError(400, 'BadRequest', 'Tag update failed');
     }
   }
 
@@ -149,7 +149,7 @@ export default class TagService {
       const success = await this.tagModel.remove(id);
 
       if (!success) {
-        throw new ApiError('NotFound', 404, 'Tag remove failed');
+        throw new ApiError(404, 'NotFound', 'Tag remove failed');
       }
 
       return success;
@@ -158,7 +158,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag remove failed');
+      throw new ApiError(400, 'BadRequest', 'Tag remove failed');
     }
   }
 
@@ -167,7 +167,7 @@ export default class TagService {
       const success = await this.tagModel.removeAllFromItem(itemId);
 
       if (!success) {
-        throw new ApiError('NotFound', 404, 'Removing all tags from item ' + itemId + ' failed');
+        throw new ApiError(404, 'NotFound', 'Removing all tags from item ' + itemId + ' failed');
       }
 
       return success;
@@ -176,7 +176,7 @@ export default class TagService {
         throw error;
       }
       log.error(error);
-      throw new ApiError('BadRequest', 400, 'Tag remove failed');
+      throw new ApiError(400, 'BadRequest', 'Tag remove failed');
     }
   }
 

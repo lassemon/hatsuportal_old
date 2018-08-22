@@ -18,7 +18,12 @@ const asyncChain: ActionCreator<ThunkAction<Promise<Action>, IRootState, void, A
       });
     } catch (error) {
       dispatch({
-        type: options.error
+        type: options.error,
+        error: true,
+        payload: {
+          status: error.status,
+          error
+        }
       });
     }
 

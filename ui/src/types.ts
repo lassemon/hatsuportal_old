@@ -4,6 +4,7 @@ export interface IRootState {
   items: IItemsState;
   tags: ITagsState;
   auth: IAuthState;
+  error: IErrorState;
 }
 
 export interface IItemsState {
@@ -16,6 +17,16 @@ export interface ITagsState {
   loading: boolean;
   tags: ITag[];
   error: boolean;
+}
+
+export interface IErrorState {
+  globalError?: IError;
+}
+
+export interface IError {
+  title?: string;
+  message: string;
+  errorCode?: number;
 }
 
 export interface IAuthState {

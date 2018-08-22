@@ -1,32 +1,37 @@
-import { resolve } from 'dns';
 import ApiError from 'errors/ApiError';
+import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import UserMapper from 'mappers/UserMapper';
+import Authorization from 'security/Authorization';
 import Encryption from 'security/Encryption';
 import UserService from 'services/UserService';
-import { Body, Controller, Delete, Get, Post, Put, Response, Route, Security, SuccessResponse, Tags } from 'tsoa';
+import {
+  Body, Controller, Delete, Get, Post, Put, Request, Response, Route, Security, SuccessResponse, Tags
+} from 'tsoa';
 import Logger from 'utils/Logger';
 import { ILoginRequest, IUserInsertRequest, IUserUpdateRequest } from '../interfaces/requests';
 import { IUserResponse } from '../interfaces/responses';
 import { IUser } from '../interfaces/user';
 
 const log = new Logger('UserController');
+const refreshTokenList = {};
 
 @Route('v1/users')
 export class UserController extends Controller {
 
   private userService: UserService;
   private userMapper: UserMapper;
+  private authorization: Authorization;
   private cookies = {};
 
   constructor() {
     super();
     this.userService = new UserService();
     this.userMapper = new UserMapper();
+    this.authorization = new Authorization();
   }
 
   @Tags('Auth')
-  @Response(401, 'Unauthorized')
   @Response<IUserResponse>(200, 'Success')
   @Post('login')
   public async login(@Body() loginParams: ILoginRequest): Promise<IUserResponse> {
@@ -36,17 +41,11 @@ export class UserController extends Controller {
     const user: IUser = await this.userService.findByName(username);
 
     if (!await Encryption.compare(password, user.password)) {
-      throw new ApiError('Unauthorized', 401, 'Login failed');
+      throw new ApiError(401, 'Unauthorized', 'Login failed');
     }
 
-    const payload = {
-      user: {
-        id: user.id,
-        name: user.name
-      }
-    };
-
-    const authToken = jwt.sign(payload, process.env.JWT_SECRET);
+    const authToken = this.authorization.createAuthToken(user);
+    const refreshToken = this.authorization.createRefreshToken(user);
 
     this.setCookies({
       token: {
@@ -54,8 +53,16 @@ export class UserController extends Controller {
         options: {
           httpOnly: true
         }
+      },
+      refreshToken: {
+        value: refreshToken,
+        options: {
+          httpOnly: true
+        }
       }
     });
+
+    refreshTokenList[refreshToken] = user;
 
     return this.userMapper.mapToResponse(user);
   }
@@ -68,10 +75,47 @@ export class UserController extends Controller {
   public logout(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.setCookies({
-        token: null
+        token: null,
+        refreshToken: null
       });
       resolve(true);
     });
+  }
+
+  @Tags('Auth')
+  @Response(401, 'Unauthorized')
+  @Response(200, 'Success')
+  @Post('refresh')
+  public async refresh(@Request() request: express.Request): Promise<boolean> {
+    if (request && request.cookies && (request.cookies.refreshToken in refreshTokenList)) {
+      const refreshToken = this.authorization.decodeToken(request.cookies.refreshToken);
+
+      if (!this.authorization.validateToken(refreshToken)) {
+        throw new ApiError(401, 'Unauthorized');
+      }
+
+      const user: IUser = await this.userService.findById(refreshToken.user);
+      const newAuthToken = this.authorization.createAuthToken(user);
+      const newRefreshToken = this.authorization.createRefreshToken(user);
+
+      this.setCookies({
+        token: {
+          value: newAuthToken,
+          options: {
+            httpOnly: true
+          }
+        },
+        refreshToken: {
+          value: newRefreshToken,
+          options: {
+            httpOnly: true
+          }
+        }
+      });
+    } else {
+      throw new ApiError(401, 'Unauthorized');
+    }
+    return true;
   }
 
   @Tags('users')
