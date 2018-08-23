@@ -2,7 +2,7 @@ import { login, loginReset, logout } from 'actions/auth';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IAuthState, IRootState } from 'types';
+import { IAuthState, IRootState, IUser } from 'types';
 import LoginModal from './LoginModal';
 
 interface IActionProps {
@@ -11,15 +11,39 @@ interface IActionProps {
   logout: typeof logout;
 }
 
-class LoginModalContainer extends React.PureComponent<IAuthState & IActionProps> {
-  public state = {
-    username: '',
-    password: ''
-  };
+interface IProps {
+  loginError: boolean;
+  loginLoading: boolean;
+  logoutError: boolean;
+  logoutLoading: boolean;
+  loggedIn: boolean;
+  user?: IUser;
+}
 
-  public handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+interface IState {
+  username: string;
+  password: string;
+}
+
+class LoginModalContainer extends React.PureComponent<IActionProps & IProps, IState> {
+
+  public constructor(props: IActionProps & IProps) {
+    super(props);
+    this.state = {
+      username: '',
+      password: ''
+    };
+  }
+
+  public passwordChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      [name]: event.target.value
+      'password': event.target.value
+    });
+  }
+
+  public usernameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      'username': event.target.value
     });
   }
 
@@ -49,7 +73,8 @@ class LoginModalContainer extends React.PureComponent<IAuthState & IActionProps>
         error={this.props.loginError || this.props.logoutError}
         loggedIn={this.props.loggedIn}
         user={this.props.user}
-        handleChange={this.handleChange}
+        passwordChanged={this.passwordChanged}
+        usernameChanged={this.usernameChanged}
         handleLogin={this.handleLogin}
         handleLogout={this.handleLogout}
         handleClose={this.handleClose} />

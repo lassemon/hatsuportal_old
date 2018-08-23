@@ -59,18 +59,28 @@ interface IProps extends WithStyles<typeof styles> {
   loading: boolean;
   loggedIn: boolean;
   user?: IUser;
-  handleChange: (event: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
+  usernameChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  passwordChanged: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleLogin: () => void;
   handleLogout: () => void;
   handleOpen?: () => void;
   handleClose?: () => void;
 }
 
-class LoginModal extends React.PureComponent<IProps> {
-  public state = {
-    open: false,
-    showPassword: false
-  };
+interface IState {
+  open: boolean;
+  showPassword: boolean;
+}
+
+class LoginModal extends React.PureComponent<IProps, IState> {
+
+  public constructor(props: IProps) {
+    super(props);
+    this.state = {
+      open: false,
+      showPassword: false
+    };
+  }
 
   public handleOpen = () => {
     this.setState({ open: true });
@@ -121,7 +131,7 @@ class LoginModal extends React.PureComponent<IProps> {
               disabled={this.props.loading}
               id="login-username"
               value={this.props.username}
-              onChange={this.props.handleChange('username')}
+              onChange={this.props.usernameChanged}
             />
           </FormControl>
           <FormControl className={classes.loginInput}>
@@ -132,7 +142,7 @@ class LoginModal extends React.PureComponent<IProps> {
               id="login-password"
               type={this.state.showPassword ? 'text' : 'password'}
               value={this.props.password}
-              onChange={this.props.handleChange('password')}
+              onChange={this.props.passwordChanged}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton

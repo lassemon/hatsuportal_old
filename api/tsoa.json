@@ -20,6 +20,6 @@
     "routesDir": "./src",
     "middleware": "express",
     "middlewareTemplate": "./src/security/passport-auth-template.ts",
-    "authenticationModule": "./src/security/authentication"
+    "authenticationModule": "./src/security/Authentication"
   }
 }

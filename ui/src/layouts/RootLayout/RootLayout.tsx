@@ -14,6 +14,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 class RootLayout extends React.Component<WithStyles<typeof styles>> {
+
   public render() {
     const { classes } = this.props;
     const Main = styled.main`
@@ -22,11 +23,12 @@ class RootLayout extends React.Component<WithStyles<typeof styles>> {
 
     return (
       <div key="main" className={classes.root} role="main">
-        <NavBar />
-        <Main>
-          {this.props.children}
-        </Main>
-        <ErrorModal />
+        <ErrorModal>
+          <NavBar />
+          <Main>
+            {this.props.children}
+          </Main>
+        </ErrorModal>
       </div>
     );
   }

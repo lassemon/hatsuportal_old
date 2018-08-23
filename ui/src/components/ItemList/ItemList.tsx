@@ -16,6 +16,10 @@ interface IProps {
 
 class ItemList extends React.Component<IProps> {
 
+  public constructor(props: IProps) {
+    super(props);
+  }
+
   public render() {
     const items = this.props.items || [];
 

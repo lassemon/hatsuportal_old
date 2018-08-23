@@ -38,6 +38,10 @@ interface IProps extends WithStyles<typeof styles> {
 
 class Modal extends React.PureComponent<IProps> {
 
+  public constructor(props: IProps) {
+    super(props);
+  }
+
   public render() {
     const { classes } = this.props;
 

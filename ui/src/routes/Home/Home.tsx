@@ -4,13 +4,24 @@ import ItemList from 'components/ItemList';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IItemsState, IRootState } from 'types';
+import { IItem, IItemsState, IRootState } from 'types';
 
 interface IActionProps {
   fetchItems: typeof fetchItems;
 }
 
-class Home extends React.Component<IItemsState & IActionProps> {
+interface IProps {
+  error: boolean;
+  items: IItem[];
+  loading: boolean;
+}
+
+class Home extends React.Component<IActionProps & IProps> {
+
+  public constructor(props: IActionProps & IProps) {
+    super(props);
+  }
+
   public componentDidMount() {
     this.props.fetchItems();
   }
@@ -47,8 +58,6 @@ const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   };
 };
 
-// Turns an object whose values are action creators, into an object with the same keys,
-// but with every action creator wrapped into a dispatch call so they may be invoked directly.
 const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
   return bindActionCreators(
     { fetchItems },

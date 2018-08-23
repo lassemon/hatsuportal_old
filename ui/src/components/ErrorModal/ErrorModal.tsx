@@ -3,7 +3,7 @@ import Modal from 'components/Modal';
 import * as React from 'react';
 import { IError } from 'types';
 
-type ClassNames = 'errorContainer' | 'errorIndicatorIcon' | 'errorTitle' | 'reloadButton';
+type ClassNames = 'errorContainer' | 'errorIndicatorIcon' | 'errorTitle' | 'errorContent' | 'errorMessage' | 'reloadButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   errorContainer: {
@@ -25,6 +25,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit
   },
+  errorContent: {
+    flex: '0 0 100%'
+  },
+  errorMessage: {
+    whiteSpace: 'pre-wrap',
+    margin: '0'
+  },
   reloadButton: {
     boxShadow: 'none',
     margin: '.5em 0  .5em auto'
@@ -41,9 +48,10 @@ interface IState {
 
 class ErrorModal extends React.PureComponent<IProps, IState> {
 
-  public state = {
-    reloading: false
-  };
+  public constructor(props: IProps) {
+    super(props);
+    this.state = { reloading: false };
+  }
 
   public handleReload = () => {
     this.setState(() => {
@@ -67,8 +75,8 @@ class ErrorModal extends React.PureComponent<IProps, IState> {
             <Typography variant="title" gutterBottom={true} className={classes.errorTitle}>
               {this.props.error.title}
             </Typography>
-            <Typography variant="body2">
-              {this.props.error.message}
+            <Typography variant="body2" className={classes.errorContent}>
+              <p className={classes.errorMessage}>{this.props.error.message}</p>
             </Typography>
             <Button
               disabled={this.state.reloading}
