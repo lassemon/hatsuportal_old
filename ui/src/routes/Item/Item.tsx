@@ -1,5 +1,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { fetchItem } from 'actions/items';
+import Item from 'components/Item';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -18,9 +19,10 @@ interface IProps extends RouteComponentProps<IItemParams> {
   itemError: boolean;
   item: IItem;
   loadingItem: boolean;
+  loggedIn: boolean;
 }
 
-class Item extends React.Component<IActionProps & IProps> {
+class ItemView extends React.Component<IActionProps & IProps> {
 
   public constructor(props: IActionProps & IProps) {
     super(props);
@@ -44,10 +46,7 @@ class Item extends React.Component<IActionProps & IProps> {
             {loading || !item ? (
               <CircularProgress size={25} />
             ) : (
-                <div>
-                  <span>{item.title}</span>
-                  <p>{item.content}</p>
-                </div>
+                <Item item={item} loggedIn={this.props.loggedIn} />
               )}
           </div>
         )
@@ -59,7 +58,8 @@ const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   return {
     itemError: state.items.itemError,
     item: state.items.item,
-    loadingItem: state.items.loadingItem
+    loadingItem: state.items.loadingItem,
+    loggedIn: state.auth.loggedIn
   };
 };
 
@@ -73,4 +73,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(Item));
+)(withRouter(ItemView));

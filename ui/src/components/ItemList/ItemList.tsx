@@ -5,6 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import WebAsset from '@material-ui/icons/WebAsset';
 import * as React from 'react';
+import { history } from 'store';
 import styled from 'styled-components';
 import theme from 'theme';
 import { IItemListItem } from 'types';
@@ -20,6 +21,10 @@ class ItemList extends React.Component<IProps> {
     super(props);
   }
 
+  public itemClicked = (itemId: number) => () => {
+    history.push('items/' + itemId);
+  }
+
   public render() {
     const items = this.props.items || [];
 
@@ -31,7 +36,7 @@ class ItemList extends React.Component<IProps> {
 
     const convertedItems = items.map((item: IItemListItem, index: number) => {
       return (
-        <ListItem button={true} key={index}>
+        <ListItem button={true} key={index} onClick={this.itemClicked(item.id)}>
           <ListItemIcon>
             <WebAsset />
           </ListItemIcon>

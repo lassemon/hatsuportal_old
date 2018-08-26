@@ -14,6 +14,7 @@ export interface IItemsState {
   item?: IItem;
   itemsError: boolean;
   itemError: boolean;
+  loggedIn: boolean;
 }
 
 export interface ITagsState {
@@ -51,6 +52,7 @@ export type GetItemPayload = IItem;
 export type GetTagsPayload = ITag[];
 
 export interface IItemListItem {
+  id: number;
   title: string;
   description: string;
 }

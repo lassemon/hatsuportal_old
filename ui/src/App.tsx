@@ -5,9 +5,9 @@ import RootLayout from 'layouts/RootLayout';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router-dom';
+import Calendar from 'routes/Calendar';
 import Home from 'routes/Home';
 import Item from 'routes/Item';
-import Tags from 'routes/Tags';
 import store, { history } from 'store';
 import theme from 'theme';
 
@@ -20,7 +20,7 @@ class App extends React.Component {
             <CssBaseline />
             <RootLayout>
               <Route exact={true} path="/" component={Home} key="home" />
-              <Route path="/tags" component={Tags} key="tags" />
+              <Route path="/calendar" component={Calendar} key="tags" />
               <Route path="/items/:id" component={Item} key="item" />
             </RootLayout>
           </MuiThemeProvider>

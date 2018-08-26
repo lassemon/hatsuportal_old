@@ -74,7 +74,6 @@ class NavBar extends React.Component<IProps, IState> {
           className={classes.tabs}
         >
           <Tab label="Items" />
-          <Tab label="Tags" />
         </StyledTabs>
       </AppBar>
     );
@@ -85,8 +84,8 @@ class NavBar extends React.Component<IProps, IState> {
     if (path === '/') {
       return 0;
     }
-    else if (path === '/tags') {
-      return 1;
+    else if (path.includes('items')) {
+      return 0;
     }
     else {
       return -1;

@@ -17,7 +17,8 @@ const initialState = {
   items: [],
   item: undefined,
   itemsError: false,
-  itemError: false
+  itemError: false,
+  loggedIn: false
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {

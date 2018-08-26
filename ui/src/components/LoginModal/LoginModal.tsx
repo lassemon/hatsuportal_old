@@ -115,6 +115,7 @@ class LoginModal extends React.PureComponent<IProps, IState> {
 
   public handleLogout = () => {
     this.handleClose();
+    this.closeDrawer();
     this.props.handleLogout();
   }
 

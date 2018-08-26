@@ -16,7 +16,7 @@ interface IProps {
   loadingItems: boolean;
 }
 
-class Home extends React.Component<IActionProps & IProps> {
+class HomeView extends React.Component<IActionProps & IProps> {
 
   public constructor(props: IActionProps & IProps) {
     super(props);
@@ -30,6 +30,7 @@ class Home extends React.Component<IActionProps & IProps> {
     const loading = this.props.loadingItems;
     const items = this.props.items ? this.props.items.map(item => (
       {
+        id: item.id,
         title: item.title,
         description: item.description
       }
@@ -68,4 +69,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home);
+)(HomeView);
