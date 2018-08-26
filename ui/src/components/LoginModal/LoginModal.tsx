@@ -1,16 +1,19 @@
-import { FormControl, IconButton, Input, InputAdornment, InputLabel } from '@material-ui/core';
+import { Drawer, FormControl, IconButton, Input, InputAdornment, InputLabel } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Theme } from '@material-ui/core/styles';
 import withStyles, { StyleRulesCallback, WithStyles } from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
+import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Modal from 'components/Modal';
 import * as React from 'react';
+import styled from 'styled-components';
 import { IUser } from 'types';
 
-type ClassNames = 'loginLogoutContainer' | 'loginTitle' | 'loginInput' | 'loginButtonLoader' | 'loginButtonBar' | 'loginModalButton' | 'logoutButton';
+type ClassNames = 'loginLogoutContainer' | 'loginTitle' | 'loginInput' | 'loginButtonLoader' | 'loginButtonBar' | 'loginModalButton' | 'logoutButton' | 'drawerContent';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   loginLogoutContainer: {
@@ -47,8 +50,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     boxShadow: 'none'
   },
   logoutButton: {
-    marginLeft: theme.spacing.unit,
+    marginTop: 'auto',
     boxShadow: 'none'
+  },
+  drawerContent: {
+    display: 'flex',
+    flex: '0 0 100%',
+    flexDirection: 'column',
+    padding: '1em',
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText
   }
 });
 
@@ -69,6 +80,7 @@ interface IProps extends WithStyles<typeof styles> {
 
 interface IState {
   open: boolean;
+  drawerOpen: boolean;
   showPassword: boolean;
 }
 
@@ -78,6 +90,7 @@ class LoginModal extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       open: false,
+      drawerOpen: false,
       showPassword: false
     };
   }
@@ -105,15 +118,47 @@ class LoginModal extends React.PureComponent<IProps, IState> {
     this.props.handleLogout();
   }
 
+  public openDrawer = () => {
+    this.setState({
+      'drawerOpen': true
+    });
+  }
+
+  public closeDrawer = () => {
+    this.setState({
+      'drawerOpen': false
+    });
+  }
+
   public render() {
     const { classes } = this.props;
+
+    const UserDrawer = styled('div')`
+      > button {
+        margin-bottom: .8em;
+      }
+    `;
 
     return (
       <div>
         {this.props.loggedIn && this.props.user ? (
-          <div className={classes.loginLogoutContainer}>
-            <Typography variant="subheading" color="inherit">{this.props.user.email}</Typography>
-            <Button color="primary" variant="contained" className={classes.logoutButton} onClick={this.handleLogout}>Logout</Button>
+          <div>
+            <div className={classes.loginLogoutContainer}>
+              <IconButton color="inherit" aria-label="Menu" onClick={this.openDrawer}>
+                <MenuIcon />
+              </IconButton>
+            </div>
+            <Drawer anchor="right" open={this.state.drawerOpen} onClose={this.closeDrawer}>
+              <UserDrawer className={classes.drawerContent} role="button">
+                <Typography variant="subheading" color="inherit" align="center" gutterBottom={true}>{this.props.user.name}</Typography>
+                <Button color="secondary">
+                  Settings<SettingsIcon />
+                </Button>
+                <Button color="secondary">Manage Items</Button>
+                <Button color="secondary">Manage Tags</Button>
+                <Button color="secondary" className={classes.logoutButton} onClick={this.handleLogout}>Logout</Button>
+              </UserDrawer>
+            </Drawer>
           </div>
         ) : (
             <Button color="inherit" onClick={this.handleOpen}>Login</Button>
