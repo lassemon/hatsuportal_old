@@ -11,9 +11,9 @@ interface IActionProps {
 }
 
 interface IProps {
-  error: boolean;
+  itemsError: boolean;
   items: IItem[];
-  loading: boolean;
+  loadingItems: boolean;
 }
 
 class Home extends React.Component<IActionProps & IProps> {
@@ -27,7 +27,7 @@ class Home extends React.Component<IActionProps & IProps> {
   }
 
   public render() {
-    const loading = this.props.loading;
+    const loading = this.props.loadingItems;
     const items = this.props.items ? this.props.items.map(item => (
       {
         title: item.title,
@@ -37,7 +37,7 @@ class Home extends React.Component<IActionProps & IProps> {
 
     return (
       <div>
-        {loading ? (
+        {loading || items.length < 1 ? (
           <CircularProgress size={25} />
         ) : (
             <ItemList
@@ -52,9 +52,9 @@ class Home extends React.Component<IActionProps & IProps> {
 
 const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   return {
-    error: state.items.error,
+    itemsError: state.items.itemsError,
     items: state.items.items,
-    loading: state.items.loading
+    loadingItems: state.items.loadingItems
   };
 };
 

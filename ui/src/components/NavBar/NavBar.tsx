@@ -81,19 +81,15 @@ class NavBar extends React.Component<IProps, IState> {
   }
 
   private deduceTabValue = () => {
-    if (this.props && this.props.location) {
-      const path = this.props.location.pathname;
-      if (path === '/') {
-        return 0;
-      }
-      else if (path === '/tags') {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    } else {
+    const path = this.props.location.pathname;
+    if (path === '/') {
       return 0;
+    }
+    else if (path === '/tags') {
+      return 1;
+    }
+    else {
+      return -1;
     }
   }
 }

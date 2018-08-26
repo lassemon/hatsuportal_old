@@ -1,4 +1,8 @@
 import {
+  FETCH_ITEM_COMPLETE,
+  FETCH_ITEM_ERROR,
+  FETCH_ITEM_LOADING,
+  FETCH_ITEM_SUCCESS,
   FETCH_ITEMS_COMPLETE,
   FETCH_ITEMS_ERROR,
   FETCH_ITEMS_LOADING,
@@ -8,18 +12,42 @@ import {
 import { IItemsState } from 'types';
 
 const initialState = {
-  error: false,
+  loadingItems: false,
+  loadingItem: false,
   items: [],
-  loading: false
+  item: undefined,
+  itemsError: false,
+  itemError: false
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {
   switch (action.type) {
+    case FETCH_ITEM_LOADING:
+      return {
+        ...state,
+        itemError: false,
+        loadingItem: true
+      };
+    case FETCH_ITEM_SUCCESS:
+      return {
+        ...state,
+        item: action.payload
+      };
+    case FETCH_ITEM_ERROR:
+      return {
+        ...state,
+        itemError: true
+      };
+    case FETCH_ITEM_COMPLETE:
+      return {
+        ...state,
+        loadingItem: false
+      };
     case FETCH_ITEMS_LOADING:
       return {
         ...state,
-        error: false,
-        loading: true
+        itemsError: false,
+        loadingItems: true
       };
     case FETCH_ITEMS_SUCCESS:
       return {
@@ -29,12 +57,12 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
     case FETCH_ITEMS_ERROR:
       return {
         ...state,
-        error: true
+        itemsError: true
       };
     case FETCH_ITEMS_COMPLETE:
       return {
         ...state,
-        loading: false
+        loadingItems: false
       };
     default:
       return state;

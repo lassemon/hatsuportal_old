@@ -8,9 +8,12 @@ export interface IRootState {
 }
 
 export interface IItemsState {
-  loading: boolean;
+  loadingItems: boolean;
+  loadingItem: boolean;
   items: IItem[];
-  error: boolean;
+  item?: IItem;
+  itemsError: boolean;
+  itemError: boolean;
 }
 
 export interface ITagsState {
@@ -43,8 +46,9 @@ export interface IPayloadAction<T> {
   payload: T;
 }
 
-export type GetItemsPayload = string[];
-export type GetTagsPayload = string[];
+export type GetItemsPayload = IItem[];
+export type GetItemPayload = IItem;
+export type GetTagsPayload = ITag[];
 
 export interface IItemListItem {
   title: string;
