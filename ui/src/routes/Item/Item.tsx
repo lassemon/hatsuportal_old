@@ -1,5 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { fetchItem } from 'actions/items';
+import { fetchItem, updateItem } from 'actions/items';
 import Item from 'components/Item';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import { IItem, IItemsState, IRootState } from 'types';
 
 interface IActionProps {
   fetchItem: typeof fetchItem;
+  updateItem: typeof updateItem;
 }
 
 interface IItemParams {
@@ -46,7 +47,11 @@ class ItemView extends React.Component<IActionProps & IProps> {
             {loading || !item ? (
               <CircularProgress size={25} />
             ) : (
-                <Item item={item} loggedIn={this.props.loggedIn} />
+                <Item
+                  item={item}
+                  loggedIn={this.props.loggedIn}
+                  update={this.props.updateItem}
+                />
               )}
           </div>
         )
@@ -59,13 +64,15 @@ const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
     itemError: state.items.itemError,
     item: state.items.item,
     loadingItem: state.items.loadingItem,
+    loadingItemUpdate: state.items.loadingItemUpdate,
+    itemUpdateError: state.items.itemUpdateError,
     loggedIn: state.auth.loggedIn
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
   return bindActionCreators(
-    { fetchItem },
+    { fetchItem, updateItem },
     dispatch
   );
 };

@@ -34,5 +34,6 @@ export const globalError: ActionCreator<Action> = (payload: IError) => {
   };
 };
 
-export type ErrorAction = IGlobalErrorAction
+export type ErrorAction =
+  IGlobalErrorAction
   | IAuthErrorAction; 

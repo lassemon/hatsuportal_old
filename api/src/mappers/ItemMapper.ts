@@ -59,7 +59,7 @@ export default class ItemMapper {
       modified: item.modified || null,
       authorId: item.author_id,
       authorName: item.author_name,
-      tags: []
+      tags: item.tags
     };
   }
 

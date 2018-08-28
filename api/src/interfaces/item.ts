@@ -1,4 +1,4 @@
-import { ITag } from 'interfaces/tag';
+import { IDBTag, ITag } from 'interfaces/tag';
 
 /**
  * @tsoaModel
@@ -29,4 +29,5 @@ export interface IDBItem {
   modified?: Date;
   author_id: number;
   author_name: string;
+  tags: IDBTag[];
 }

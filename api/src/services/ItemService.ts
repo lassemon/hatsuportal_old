@@ -34,28 +34,9 @@ export default class ItemService {
   public async getAll(): Promise<IItem[]> {
     try {
       const dbItems = await this.itemModel.getAll();
-      let items: IItem[] = this.itemMapper.serializeAll(dbItems);
-      items = await this.getTagsForAll(items);
+      const items: IItem[] = this.itemMapper.serializeAll(dbItems);
       return items;
     } catch (error) {
-      log.error(error);
-      throw new ApiError(404, 'ItemNotFound', 'Items not found');
-    }
-  }
-
-  public async find(filter): Promise<IItem[]> {
-    try {
-      const dbItems = await this.itemModel.find(filter) as IDBItem[];
-      if (isEmpty(dbItems)) {
-        throw new ApiError(404, 'ItemNotFound', 'Items not found');
-      }
-      let items: IItem[] = this.itemMapper.serializeAll(dbItems);
-      items = await this.getTagsForAll(items);
-      return items;
-    } catch (error) {
-      if (error instanceof ApiError) {
-        throw error;
-      }
       log.error(error);
       throw new ApiError(404, 'ItemNotFound', 'Items not found');
     }
@@ -65,10 +46,9 @@ export default class ItemService {
     try {
       const dbItem = await this.itemModel.findById(id) as IDBItem;
       if (isEmpty(dbItem)) {
-        throw new ApiError(404, 'ItemNotFound', 'Items not found');
+        throw new ApiError(404, 'ItemNotFound', 'Item not found with id: ' + id);
       }
-      let item: IItem = this.itemMapper.serialize(dbItem);
-      item = await this.getTags(item);
+      const item: IItem = this.itemMapper.serialize(dbItem);
       return item;
     } catch (error) {
       if (error instanceof ApiError) {
@@ -170,12 +150,6 @@ export default class ItemService {
     const tags = await this.tagService.findByItem(item.id);
     item.tags = tags;
     return item;
-  }
-
-  public async getTagsForAll(items: IItem[]): Promise<IItem[]> {
-    const promises = items.map(this.getTags, this);
-    await Promise.all(promises);
-    return items;
   }
 
   public setModel(model: ItemModel) {

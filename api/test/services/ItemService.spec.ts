@@ -23,7 +23,8 @@ describe('ItemService', () => {
       created: new Date(),
       modified: new Date(),
       author_id: 69,
-      author_name: 'jykajee'
+      author_name: 'jykajee',
+      tags: [{ id: 1, name: 'resepti' }]
     },
     {
       id: 420,
@@ -34,7 +35,8 @@ describe('ItemService', () => {
       created: new Date(),
       modified: new Date(),
       author_id: 78,
-      author_name: 'Mister Thane'
+      author_name: 'Mister Thane',
+      tags: [{ id: 2, name: 'musiikki' }]
     }
   ];
 
@@ -49,7 +51,7 @@ describe('ItemService', () => {
       modified: TEST_ITEMS_DB_RESULT[0].modified,
       authorId: TEST_ITEMS_DB_RESULT[0].author_id,
       authorName: TEST_ITEMS_DB_RESULT[0].author_name,
-      tags: []
+      tags: TEST_ITEMS_DB_RESULT[0].tags
     },
     {
       id: TEST_ITEMS_DB_RESULT[1].id,
@@ -61,16 +63,16 @@ describe('ItemService', () => {
       modified: TEST_ITEMS_DB_RESULT[1].modified,
       authorId: TEST_ITEMS_DB_RESULT[1].author_id,
       authorName: TEST_ITEMS_DB_RESULT[1].author_name,
-      tags: []
+      tags: TEST_ITEMS_DB_RESULT[1].tags
     }
   ];
 
-  const ITEM_IMSERT_TEST_REQUEST: IItemInsertRequest = {
+  const ITEM_INSERT_TEST_REQUEST: IItemInsertRequest = {
     type: TEST_ITEM_LIST[0].type,
     title: TEST_ITEM_LIST[0].title,
     description: TEST_ITEM_LIST[0].description,
     content: TEST_ITEM_LIST[0].content,
-    tags: []
+    tags: TEST_ITEM_LIST[0].tags
   };
 
   const TEST_ERROR_MESSAGE = new ApiError(404, 'ItemNotFound', 'Item not found');
@@ -78,9 +80,9 @@ describe('ItemService', () => {
   beforeEach(() => {
     itemService = new ItemService();
     tagService = mock(TagService);
-    when(tagService.findByItem(anyNumber())).thenReturn(Promise.resolve([]));
-    when(tagService.addTagsToItem(anything())).thenReturn(Promise.resolve([]));
+    when(tagService.findByItem(anyNumber())).thenReturn(Promise.resolve(TEST_ITEMS_DB_RESULT[0].tags));
     when(tagService.removeAllFromItem(anything())).thenReturn(Promise.resolve(true));
+    when(tagService.allTagsExist(anything())).thenReturn(Promise.resolve(true));
     itemService.setTagService(instance(tagService));
     itemModel = mock(ItemModel);
   });
@@ -123,7 +125,7 @@ describe('ItemService', () => {
     when(itemModel.insert(anything())).thenReturn(Promise.resolve(TEST_ITEMS_DB_RESULT));
     itemService.setModel(instance(itemModel));
 
-    await expect(itemService.insert(ITEM_IMSERT_TEST_REQUEST)).resolves.toEqual(TEST_ITEM_LIST[0]);
+    await expect(itemService.insert(ITEM_INSERT_TEST_REQUEST)).resolves.toEqual(TEST_ITEM_LIST[0]);
   });
 
   it('should delete an item', async () => {

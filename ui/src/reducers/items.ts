@@ -7,17 +7,23 @@ import {
   FETCH_ITEMS_ERROR,
   FETCH_ITEMS_LOADING,
   FETCH_ITEMS_SUCCESS,
-  ItemAction
+  ItemAction,
+  UPDATE_ITEM_COMPLETE,
+  UPDATE_ITEM_ERROR,
+  UPDATE_ITEM_LOADING,
+  UPDATE_ITEM_SUCCESS
 } from 'actions/items';
 import { IItemsState } from 'types';
 
 const initialState = {
   loadingItems: false,
   loadingItem: false,
+  loadingItemUpdate: false,
   items: [],
   item: undefined,
   itemsError: false,
   itemError: false,
+  itemUpdateError: false,
   loggedIn: false
 };
 
@@ -64,6 +70,27 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
       return {
         ...state,
         loadingItems: false
+      };
+    case UPDATE_ITEM_LOADING:
+      return {
+        ...state,
+        itemUpdateError: false,
+        loadingItemUpdate: true
+      };
+    case UPDATE_ITEM_SUCCESS:
+      return {
+        ...state,
+        item: action.payload
+      };
+    case UPDATE_ITEM_ERROR:
+      return {
+        ...state,
+        itemUpdateError: true
+      };
+    case UPDATE_ITEM_COMPLETE:
+      return {
+        ...state,
+        loadingItemUpdate: false
       };
     default:
       return state;

@@ -10,10 +10,12 @@ export interface IRootState {
 export interface IItemsState {
   loadingItems: boolean;
   loadingItem: boolean;
+  loadingItemUpdate: boolean;
   items: IItem[];
   item?: IItem;
   itemsError: boolean;
   itemError: boolean;
+  itemUpdateError: boolean;
   loggedIn: boolean;
 }
 
@@ -89,6 +91,15 @@ export interface IItem {
   authorId: number;
   authorName: string;
   tags: ITag[];
+}
+
+export interface IItemUpdateRequest {
+  id: number;
+  type: string;
+  title: string;
+  description: string;
+  content: string;
+  tags: number[];
 }
 
 export interface ITag {

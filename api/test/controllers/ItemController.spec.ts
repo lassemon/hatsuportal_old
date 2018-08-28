@@ -20,7 +20,7 @@ describe('ItemController', () => {
       created: new Date(),
       authorId: 69,
       authorName: 'jykajee',
-      tags: []
+      tags: [{ id: 1, name: 'resepti' }]
     },
     {
       id: 420,
@@ -31,7 +31,7 @@ describe('ItemController', () => {
       created: new Date(),
       authorId: 69,
       authorName: 'Mister Thane',
-      tags: []
+      tags: [{ id: 2, name: 'musiikki' }]
     }
   ];
 
@@ -44,7 +44,6 @@ describe('ItemController', () => {
   it('should return a list of items', async () => {
     expect.assertions(1);
     when(itemService.getAll()).thenReturn(Promise.resolve(TEST_ITEM_LIST));
-    when(itemService.getTagsForAll(TEST_ITEM_LIST)).thenReturn(Promise.resolve(TEST_ITEM_LIST));
     controller.setService(instance(itemService));
 
     await expect(controller.getAll()).resolves.toEqual(TEST_ITEM_LIST);
