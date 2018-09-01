@@ -54,7 +54,7 @@ export class ItemController extends Controller {
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
   public async put(@Body() request: IItemUpdateRequest): Promise<IItemResponse> {
-    log.debug('updating item with id: ' + request.id);
+    log.debug('updating item: ' + JSON.stringify(request));
     return this.itemMapper.mapToResponse(await this.itemService.update(request));
   }
 

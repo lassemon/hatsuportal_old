@@ -112,6 +112,9 @@ export class UserController extends Controller {
           }
         }
       });
+
+      refreshTokenList[newRefreshToken] = user;
+
     } else {
       throw new ApiError(401, 'Unauthorized');
     }

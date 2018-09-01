@@ -72,9 +72,6 @@ export default class TagService {
   public async findByItem(itemId: number): Promise<ITag[]> {
     try {
       const tags = await this.tagModel.findByItemId(itemId);
-      if (isEmpty(tags)) {
-        throw new ApiError(404, 'ItemNotFound', 'Items not found');
-      }
       return this.tagMapper.serializeAll(tags);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -162,15 +159,12 @@ export default class TagService {
     }
   }
 
-  public async removeAllFromItem(itemId: number): Promise<boolean> {
+  public async removeAllFromItem(itemId: number): Promise<void> {
     try {
       const success = await this.tagModel.removeAllFromItem(itemId);
-
       if (!success) {
-        throw new ApiError(404, 'NotFound', 'Removing all tags from item ' + itemId + ' failed');
+        log.debug('Item with id: ' + itemId + ' has no tags to remove');
       }
-
-      return success;
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;

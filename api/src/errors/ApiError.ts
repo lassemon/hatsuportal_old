@@ -14,7 +14,7 @@ export default class ApiError extends Error {
     this.status = status;
     this.statusText = statusText;
     this.response = response;
-    this.message = `${status} - ${statusText}`;
+    this.message = `${status} - ${statusText} - ${response}`;
   }
 }
 

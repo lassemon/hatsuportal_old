@@ -76,11 +76,12 @@ export default class ItemService {
 
       const item: IItem = this.itemMapper.serialize(head(dbItem));
 
-      await this.tagService.addTagsToItem({
-        itemId: item.id,
-        tags: itemInsert.tags
-      } as ITagsForItemQuery);
-
+      if (itemInsert.tags.length > 0) {
+        await this.tagService.addTagsToItem({
+          itemId: item.id,
+          tags: itemInsert.tags
+        } as ITagsForItemQuery);
+      }
       return await this.getTags(item);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -111,11 +112,12 @@ export default class ItemService {
       const item: IItem = this.itemMapper.serialize(dbItem);
 
       await this.tagService.removeAllFromItem(item.id);
-      await this.tagService.addTagsToItem({
-        itemId: item.id,
-        tags: itemUpdate.tags
-      } as ITagsForItemQuery);
-
+      if (itemUpdate.tags.length > 0) {
+        await this.tagService.addTagsToItem({
+          itemId: item.id,
+          tags: itemUpdate.tags
+        } as ITagsForItemQuery);
+      }
       return await this.getTags(item);
     } catch (error) {
       if (error instanceof ApiError) {
@@ -128,13 +130,13 @@ export default class ItemService {
 
   public async remove(id: number): Promise<boolean> {
     try {
-      let success = await this.itemModel.remove(id);
+      const success = await this.itemModel.remove(id);
 
       if (!success) {
         throw new ApiError(404, 'NotFound', 'Item remove failed');
       }
 
-      success = await this.tagService.removeAllFromItem(id);
+      await this.tagService.removeAllFromItem(id);
 
       return success;
     } catch (error) {
