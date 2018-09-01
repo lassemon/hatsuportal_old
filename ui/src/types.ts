@@ -16,6 +16,7 @@ export interface IItemsState {
   itemsError: boolean;
   itemError: boolean;
   itemUpdateError: boolean;
+  editingItem: boolean;
   loggedIn: boolean;
 }
 
@@ -53,12 +54,6 @@ export type GetItemsPayload = IItem[];
 export type GetItemPayload = IItem;
 export type GetTagsPayload = ITag[];
 
-export interface IItemListItem {
-  id: number;
-  title: string;
-  description: string;
-}
-
 export interface IAsyncChainOptions {
   loading: string;
   success: string;
@@ -91,6 +86,12 @@ export interface IItem {
   authorId: number;
   authorName: string;
   tags: ITag[];
+}
+
+export interface IEditableItem {
+  title: string;
+  description: string;
+  content: string;
 }
 
 export interface IItemUpdateRequest {

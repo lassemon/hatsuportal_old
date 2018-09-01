@@ -1,16 +1,11 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { fetchItem, updateItem } from 'actions/items';
+import { fetchItem } from 'actions/items';
 import Item from 'components/Item';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Action, bindActionCreators, Dispatch } from 'redux';
+import { Action, bindActionCreators } from 'redux';
 import { IItem, IItemsState, IRootState } from 'types';
-
-interface IActionProps {
-  fetchItem: typeof fetchItem;
-  updateItem: typeof updateItem;
-}
 
 interface IItemParams {
   id: number;
@@ -20,7 +15,10 @@ interface IProps extends RouteComponentProps<IItemParams> {
   itemError: boolean;
   item: IItem;
   loadingItem: boolean;
-  loggedIn: boolean;
+}
+
+interface IActionProps {
+  fetchItem: typeof fetchItem;
 }
 
 class ItemView extends React.Component<IActionProps & IProps> {
@@ -47,11 +45,7 @@ class ItemView extends React.Component<IActionProps & IProps> {
             {loading || !item ? (
               <CircularProgress size={25} />
             ) : (
-                <Item
-                  item={item}
-                  loggedIn={this.props.loggedIn}
-                  update={this.props.updateItem}
-                />
+                <Item item={item} />
               )}
           </div>
         )
@@ -63,16 +57,13 @@ const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   return {
     itemError: state.items.itemError,
     item: state.items.item,
-    loadingItem: state.items.loadingItem,
-    loadingItemUpdate: state.items.loadingItemUpdate,
-    itemUpdateError: state.items.itemUpdateError,
-    loggedIn: state.auth.loggedIn
+    loadingItem: state.items.loadingItem
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
   return bindActionCreators(
-    { fetchItem, updateItem },
+    { fetchItem },
     dispatch
   );
 };

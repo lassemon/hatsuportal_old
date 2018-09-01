@@ -23,7 +23,7 @@ export default class Ajax {
         if (error.response) {
           if (error.response.status === 401 && !options.noRefresh) {
             await this.refreshToken();
-            return this.retryOperation(axios.delete, url, options);
+            return this.retryOperation(axios.get, url, options);
           }
           throw new ApiError(error.response.status, error.response.statusText);
         } else {
@@ -59,7 +59,7 @@ export default class Ajax {
         if (error.response) {
           if (error.response.status === 401 && !options.noRefresh) {
             await this.refreshToken();
-            return this.retryOperation(axios.delete, url, options);
+            return this.retryOperation(axios.put, url, options);
           }
           throw new ApiError(error.response.status, error.response.statusText);
         } else {

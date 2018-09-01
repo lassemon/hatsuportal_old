@@ -8,6 +8,7 @@ import {
   FETCH_ITEMS_LOADING,
   FETCH_ITEMS_SUCCESS,
   ItemAction,
+  TOGGLE_EDIT_ITEM,
   UPDATE_ITEM_COMPLETE,
   UPDATE_ITEM_ERROR,
   UPDATE_ITEM_LOADING,
@@ -24,6 +25,7 @@ const initialState = {
   itemsError: false,
   itemError: false,
   itemUpdateError: false,
+  editingItem: false,
   loggedIn: false
 };
 
@@ -71,6 +73,12 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
         ...state,
         loadingItems: false
       };
+    case TOGGLE_EDIT_ITEM:
+      return {
+        ...state,
+        editingItem: action.payload,
+        itemUpdateError: action.payload ? state.itemUpdateError : false
+      };
     case UPDATE_ITEM_LOADING:
       return {
         ...state,
@@ -80,7 +88,8 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
     case UPDATE_ITEM_SUCCESS:
       return {
         ...state,
-        item: action.payload
+        item: action.payload,
+        editingItem: false
       };
     case UPDATE_ITEM_ERROR:
       return {

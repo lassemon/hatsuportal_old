@@ -28,13 +28,7 @@ class HomeView extends React.Component<IActionProps & IProps> {
 
   public render() {
     const loading = this.props.loadingItems;
-    const items = this.props.items ? this.props.items.map(item => (
-      {
-        id: item.id,
-        title: item.title,
-        description: item.description
-      }
-    )) : [];
+    const items = this.props.items ? this.props.items : [];
 
     return (
       <div>
@@ -43,7 +37,7 @@ class HomeView extends React.Component<IActionProps & IProps> {
         ) : (
             <ItemList
               header="Items"
-              items={items}
+              items={this.props.items}
             />
           )}
       </div>

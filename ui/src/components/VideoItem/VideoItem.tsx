@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, Chip, IconButton, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { Card, CardContent, Chip, IconButton, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
@@ -36,7 +36,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface IProps extends WithStyles<typeof styles> {
   item: IItem;
-  loggedIn: boolean;
 }
 
 class VideoItem extends React.PureComponent<IProps> {
@@ -90,11 +89,6 @@ class VideoItem extends React.PureComponent<IProps> {
         <div className={classes.chipsContainer}>
           {tags}
         </div>
-        <CardActions>
-          {this.props.loggedIn &&
-            <Button size="small">Edit</Button>
-          }
-        </CardActions>
       </Card>
     );
   }

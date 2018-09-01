@@ -1,2 +1,2 @@
-import ItemContainer from './ItemContainer';
-export default ItemContainer;
+import Item from './Item';
+export default Item;

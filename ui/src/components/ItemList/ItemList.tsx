@@ -4,14 +4,15 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import WebAsset from '@material-ui/icons/WebAsset';
+import Tags from 'components/Tags';
 import * as React from 'react';
 import { history } from 'store';
 import styled from 'styled-components';
 import theme from 'theme';
-import { IItemListItem } from 'types';
+import { IItem } from 'types';
 
 interface IProps {
-  items: IItemListItem[];
+  items: IItem[];
   header: string;
 }
 
@@ -34,7 +35,7 @@ class ItemList extends React.Component<IProps> {
       }
     `;
 
-    const convertedItems = items.map((item: IItemListItem, index: number) => {
+    const convertedItems = items.map((item: IItem, index: number) => {
       return (
         <ListItem button={true} key={index} onClick={this.itemClicked(item.id)}>
           <ListItemIcon>
@@ -44,6 +45,7 @@ class ItemList extends React.Component<IProps> {
             primary={item.title}
             secondary={item.description}
           />
+          <Tags tags={item.tags} />
         </ListItem>
       );
     });

@@ -56,6 +56,14 @@ interface IFetchItemsCompleteAction extends Action {
   readonly type: FETCH_ITEMS_COMPLETE_TYPE;
 }
 
+// ITEM EDIT
+export const TOGGLE_EDIT_ITEM = 'TOGGLE_EDIT_ITEM';
+export type TOGGLE_EDIT_ITEM_TYPE = typeof TOGGLE_EDIT_ITEM;
+interface IToggleEditItemAction extends IPayloadAction<boolean> {
+  readonly type: TOGGLE_EDIT_ITEM_TYPE;
+  payload: boolean;
+}
+
 // ITEM UPDATE
 export const UPDATE_ITEM_LOADING = 'UPDATE_ITEM_LOADING';
 export type UPDATE_ITEM_LOADING_TYPE = typeof UPDATE_ITEM_LOADING;
@@ -91,10 +99,18 @@ export type ItemAction =
   | IFetchItemsSuccessAction
   | IFetchItemsErrorAction
   | IFetchItemsCompleteAction
+  | IToggleEditItemAction
   | IUpdateItemLoadingAction
   | IUpdateItemSuccessAction
   | IUpdateItemErrorAction
   | IUpdateItemCompleteAction;
+
+export const toggleEditItem: ActionCreator<Action> = (edit: boolean) => {
+  return {
+    type: TOGGLE_EDIT_ITEM,
+    payload: edit
+  };
+};
 
 export const fetchItem: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
