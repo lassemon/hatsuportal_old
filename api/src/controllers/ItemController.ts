@@ -64,9 +64,9 @@ export class ItemController extends Controller {
   @Response(401, 'Unauthorized')
   @Response(404, 'Not Found')
   @SuccessResponse(200, 'Ok')
-  public async delete(id: number): Promise<boolean> {
+  public async delete(id: number): Promise<IItemResponse> {
     log.debug('removing item with id: ' + id);
-    return this.itemService.remove(id);
+    return this.itemMapper.mapToResponse(await this.itemService.remove(id));
   }
 
   public setService(service: ItemService) {

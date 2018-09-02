@@ -128,8 +128,9 @@ export default class ItemService {
     }
   }
 
-  public async remove(id: number): Promise<boolean> {
+  public async remove(id: number): Promise<IItem> {
     try {
+      const dbItem = await this.itemModel.findById(id) as IDBItem;
       const success = await this.itemModel.remove(id);
 
       if (!success) {
@@ -138,7 +139,7 @@ export default class ItemService {
 
       await this.tagService.removeAllFromItem(id);
 
-      return success;
+      return this.itemMapper.serialize(dbItem);
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
