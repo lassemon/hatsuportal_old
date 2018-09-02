@@ -1,8 +1,8 @@
-import asyncChain from 'actions/asyncChain';
 import authAPI from 'api/auth';
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { IPayloadAction, IRootState, IUser } from 'types';
+import ActionUtil from 'utils/ActionUtil';
 
 export const LOGIN_LOADING = 'LOGIN_LOADING';
 export type LOGIN_LOADING_TYPE = typeof LOGIN_LOADING;
@@ -44,7 +44,7 @@ interface ITokenRefreshSuccessAction extends Action {
 export const login: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = (username: string, password: string) => {
-    return asyncChain(
+    return ActionUtil.createAsyncChain(
       authAPI.login,
       {
         loading: LOGIN_LOADING,
@@ -116,7 +116,7 @@ interface ILogoutResetAction extends Action {
 export const logout: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = () => {
-    return asyncChain(
+    return ActionUtil.createAsyncChain(
       authAPI.logout,
       {
         loading: LOGOUT_LOADING,

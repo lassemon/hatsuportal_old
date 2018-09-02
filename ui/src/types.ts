@@ -10,12 +10,16 @@ export interface IRootState {
 export interface IItemsState {
   loadingItems: boolean;
   loadingItem: boolean;
+  loadingItemInsert: boolean;
   loadingItemUpdate: boolean;
+  loadingItemDelete: boolean;
   items: IItem[];
   item?: IItem;
   itemsError: boolean;
   itemError: boolean;
+  itemInsertError: boolean;
   itemUpdateError: boolean;
+  itemDeleteError: boolean;
   editingItem: boolean;
   loggedIn: boolean;
 }
@@ -52,6 +56,9 @@ export interface IPayloadAction<T> {
 
 export type GetItemsPayload = IItem[];
 export type GetItemPayload = IItem;
+export type InsertItemPayload = IItem;
+export type UpdateItemPayload = IItem;
+export type DeleteItemPayload = IItem;
 export type GetTagsPayload = ITag[];
 
 export interface IAsyncChainOptions {
@@ -88,10 +95,12 @@ export interface IItem {
   tags: ITag[];
 }
 
-export interface IEditableItem {
+export interface IItemInsertRequest {
+  type: string;
   title: string;
   description: string;
   content: string;
+  tags: number[];
 }
 
 export interface IItemUpdateRequest {

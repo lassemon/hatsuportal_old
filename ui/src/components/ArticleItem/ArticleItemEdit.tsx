@@ -1,12 +1,15 @@
 import { StyleRulesCallback, TextField, Theme, WithStyles, withStyles } from '@material-ui/core';
 import * as React from 'react';
-import { IEditableItem, IItem } from 'types';
+import { } from 'types';
+import EditableItem from 'utils/EditableItem';
 
-type ClassNames = 'card' | 'description' | 'actionButton' | 'textField' | 'textArea' | 'chipsContainer' | 'chip';
+type ClassNames = 'root' | 'description' | 'actionButton' | 'textField' | 'textArea' | 'chipsContainer' | 'chip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  card: {
-    minWidth: 275
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: '0 0 1em 0'
   },
   description: {
     marginBottom: 12
@@ -31,73 +34,82 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface IProps extends WithStyles<typeof styles> {
-  item: IItem;
-  itemChanged: (item: IEditableItem) => void;
+  item: EditableItem;
+  itemChanged: (item: EditableItem) => void;
 }
 
 interface IState {
   edit: boolean;
-  title: string;
-  description: string;
-  content: string;
+  item: EditableItem;
 }
 
 class ArticleItem extends React.PureComponent<IProps, IState> {
 
-  public item: IItem = this.props.item;
+  public item: EditableItem = this.props.item;
 
   public constructor(props: IProps) {
     super(props);
     this.state = {
       edit: false,
-      title: this.item.title,
-      description: this.item.description,
-      content: this.item.content
+      item: props.item
     };
   }
 
+  public componentWillReceiveProps(nextProps: IProps) {
+    if (nextProps.item !== this.props.item) {
+      this.setState({ item: nextProps.item });
+    }
+  }
+
   public handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    // @ts-ignore
+    let newItem;
+    newItem = new EditableItem(this.state.item);
+    newItem[name] = event.target.value;
+    newItem.validate(name);
     this.setState({
-      [name]: event.target.value
+      item: newItem
     });
-    this.props.itemChanged({
-      title: this.state.title,
-      description: this.state.description,
-      content: this.state.content
-    });
+    this.props.itemChanged(newItem);
   }
 
   public render() {
     const { classes } = this.props;
 
-    return [
-      <TextField
-        label="Title"
-        value={this.state.title}
-        onChange={this.handleChange('title')}
-        className={classes.textField}
-        margin="normal"
-        key="title"
-      />,
-      <TextField
-        label="Description"
-        value={this.state.description}
-        onChange={this.handleChange('description')}
-        className={classes.textField}
-        margin="normal"
-        key="description"
-      />,
-      <TextField
-        label="Content"
-        multiline={true}
-        value={this.state.content}
-        onChange={this.handleChange('content')}
-        className={classes.textArea}
-        margin="normal"
-        key="content"
-      />
-    ];
+    return (
+      <div className={classes.root}>
+        <TextField
+          error={this.state.item.titleError}
+          required={true}
+          label="Title"
+          value={this.state.item.title}
+          onChange={this.handleChange('title')}
+          className={classes.textField}
+          margin="normal"
+          key="title"
+        />
+        <TextField
+          error={this.state.item.descriptionError}
+          required={true}
+          label="Description"
+          value={this.state.item.description}
+          onChange={this.handleChange('description')}
+          className={classes.textField}
+          margin="normal"
+          key="description"
+        />
+        <TextField
+          error={this.state.item.contentError}
+          required={true}
+          label="Content"
+          multiline={true}
+          value={this.state.item.content}
+          onChange={this.handleChange('content')}
+          className={classes.textArea}
+          margin="normal"
+          key="content"
+        />
+      </div>
+    );
   }
 }
 

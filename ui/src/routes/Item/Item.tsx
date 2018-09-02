@@ -1,6 +1,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { fetchItem } from 'actions/items';
-import Item from 'components/Item';
+import ItemContainer from 'components/ItemContainer';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -45,7 +45,7 @@ class ItemView extends React.Component<IActionProps & IProps> {
             {loading || !item ? (
               <CircularProgress size={25} />
             ) : (
-                <Item item={item} />
+                <ItemContainer item={item} />
               )}
           </div>
         )

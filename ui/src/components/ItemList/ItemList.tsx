@@ -23,7 +23,7 @@ class ItemList extends React.Component<IProps> {
   }
 
   public itemClicked = (itemId: number) => () => {
-    history.push('items/' + itemId);
+    history.push('/items/' + itemId);
   }
 
   public render() {

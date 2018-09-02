@@ -10,6 +10,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Modal from 'components/Modal';
 import * as React from 'react';
+import { history } from 'store';
 import styled from 'styled-components';
 import { IUser } from 'types';
 
@@ -131,6 +132,13 @@ class LoginModal extends React.PureComponent<IProps, IState> {
     });
   }
 
+  public manageItems = () => {
+    history.push('/items/manage');
+    this.setState({
+      'drawerOpen': false
+    });
+  }
+
   public render() {
     const { classes } = this.props;
 
@@ -155,7 +163,7 @@ class LoginModal extends React.PureComponent<IProps, IState> {
                 <Button color="secondary">
                   Settings<SettingsIcon />
                 </Button>
-                <Button color="secondary">Manage Items</Button>
+                <Button color="secondary" onClick={this.manageItems}>Manage Items</Button>
                 <Button color="secondary">Manage Tags</Button>
                 <Button color="secondary" className={classes.logoutButton} onClick={this.handleLogout}>Logout</Button>
               </UserDrawer>

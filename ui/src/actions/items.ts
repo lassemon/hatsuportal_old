@@ -1,8 +1,8 @@
-import asyncChain from 'actions/asyncChain';
 import itemAPI from 'api/items';
 import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { GetItemPayload, GetItemsPayload, IItemUpdateRequest, IPayloadAction, IRootState } from 'types';
+import { DeleteItemPayload, GetItemPayload, GetItemsPayload, IItemInsertRequest, IItemUpdateRequest, InsertItemPayload, IPayloadAction, IRootState, UpdateItemPayload } from 'types';
+import ActionUtil from 'utils/ActionUtil';
 
 // ITEM
 export const FETCH_ITEM_LOADING = 'FETCH_ITEM_LOADING';
@@ -64,6 +64,32 @@ interface IToggleEditItemAction extends IPayloadAction<boolean> {
   payload: boolean;
 }
 
+// ITEM INSERT
+export const INSERT_ITEM_LOADING = 'INSERT_ITEM_LOADING';
+export type INSERT_ITEM_LOADING_TYPE = typeof INSERT_ITEM_LOADING;
+interface IInsertItemLoadingAction extends Action {
+  readonly type: INSERT_ITEM_LOADING_TYPE;
+}
+
+export const INSERT_ITEM_SUCCESS = 'INSERT_ITEM_SUCCESS';
+export type INSERT_ITEM_SUCCESS_TYPE = typeof INSERT_ITEM_SUCCESS;
+interface IInsertItemSuccessAction extends IPayloadAction<InsertItemPayload> {
+  readonly type: INSERT_ITEM_SUCCESS_TYPE;
+  payload: InsertItemPayload;
+}
+
+export const INSERT_ITEM_ERROR = 'INSERT_ITEM_ERROR';
+export type INSERT_ITEM_ERROR_TYPE = typeof INSERT_ITEM_ERROR;
+interface IInsertItemErrorAction extends Action {
+  readonly type: INSERT_ITEM_ERROR_TYPE;
+}
+
+export const INSERT_ITEM_COMPLETE = 'INSERT_ITEM_COMPLETE';
+export type INSERT_ITEM_COMPLETE_TYPE = typeof INSERT_ITEM_COMPLETE;
+interface IInsertItemCompleteAction extends Action {
+  readonly type: INSERT_ITEM_COMPLETE_TYPE;
+}
+
 // ITEM UPDATE
 export const UPDATE_ITEM_LOADING = 'UPDATE_ITEM_LOADING';
 export type UPDATE_ITEM_LOADING_TYPE = typeof UPDATE_ITEM_LOADING;
@@ -73,9 +99,9 @@ interface IUpdateItemLoadingAction extends Action {
 
 export const UPDATE_ITEM_SUCCESS = 'UPDATE_ITEM_SUCCESS';
 export type UPDATE_ITEM_SUCCESS_TYPE = typeof UPDATE_ITEM_SUCCESS;
-interface IUpdateItemSuccessAction extends IPayloadAction<GetItemPayload> {
+interface IUpdateItemSuccessAction extends IPayloadAction<UpdateItemPayload> {
   readonly type: UPDATE_ITEM_SUCCESS_TYPE;
-  payload: GetItemPayload;
+  payload: UpdateItemPayload;
 }
 
 export const UPDATE_ITEM_ERROR = 'UPDATE_ITEM_ERROR';
@@ -90,20 +116,31 @@ interface IUpdateItemCompleteAction extends Action {
   readonly type: UPDATE_ITEM_COMPLETE_TYPE;
 }
 
-export type ItemAction =
-  IFetchItemLoadingAction
-  | IFetchItemSuccessAction
-  | IFetchItemErrorAction
-  | IFetchItemCompleteAction
-  | IFetchItemsLoadingAction
-  | IFetchItemsSuccessAction
-  | IFetchItemsErrorAction
-  | IFetchItemsCompleteAction
-  | IToggleEditItemAction
-  | IUpdateItemLoadingAction
-  | IUpdateItemSuccessAction
-  | IUpdateItemErrorAction
-  | IUpdateItemCompleteAction;
+// ITEM DELETE
+export const DELETE_ITEM_LOADING = 'DELETE_ITEM_LOADING';
+export type DELETE_ITEM_LOADING_TYPE = typeof DELETE_ITEM_LOADING;
+interface IDeleteItemLoadingAction extends Action {
+  readonly type: DELETE_ITEM_LOADING_TYPE;
+}
+
+export const DELETE_ITEM_SUCCESS = 'DELETE_ITEM_SUCCESS';
+export type DELETE_ITEM_SUCCESS_TYPE = typeof DELETE_ITEM_SUCCESS;
+interface IDeleteItemSuccessAction extends IPayloadAction<DeleteItemPayload> {
+  readonly type: DELETE_ITEM_SUCCESS_TYPE;
+  payload: DeleteItemPayload;
+}
+
+export const DELETE_ITEM_ERROR = 'DELETE_ITEM_ERROR';
+export type DELETE_ITEM_ERROR_TYPE = typeof DELETE_ITEM_ERROR;
+interface IDeleteItemErrorAction extends Action {
+  readonly type: DELETE_ITEM_ERROR_TYPE;
+}
+
+export const DELETE_ITEM_COMPLETE = 'DELETE_ITEM_COMPLETE';
+export type DELETE_ITEM_COMPLETE_TYPE = typeof DELETE_ITEM_COMPLETE;
+interface IDeleteItemCompleteAction extends Action {
+  readonly type: DELETE_ITEM_COMPLETE_TYPE;
+}
 
 export const toggleEditItem: ActionCreator<Action> = (edit: boolean) => {
   return {
@@ -115,7 +152,7 @@ export const toggleEditItem: ActionCreator<Action> = (edit: boolean) => {
 export const fetchItem: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = (itemId: number) => {
-    return asyncChain(
+    return ActionUtil.createAsyncChain(
       itemAPI.get,
       {
         loading: FETCH_ITEM_LOADING,
@@ -130,7 +167,7 @@ export const fetchItem: ActionCreator<
 export const fetchItems: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = () => {
-    return asyncChain(
+    return ActionUtil.createAsyncChain(
       itemAPI.getAll,
       {
         loading: FETCH_ITEMS_LOADING,
@@ -141,10 +178,26 @@ export const fetchItems: ActionCreator<
     );
   };
 
+export const createItem: ActionCreator<
+  ThunkAction<Promise<Action>, IRootState, void, Action>
+  > = (payload: IItemInsertRequest) => {
+    return ActionUtil.createAsyncChain(
+      itemAPI.insert,
+      {
+        loading: INSERT_ITEM_LOADING,
+        success: INSERT_ITEM_SUCCESS,
+        error: INSERT_ITEM_ERROR,
+        complete: INSERT_ITEM_COMPLETE
+      },
+      payload
+    );
+  };
+
+
 export const updateItem: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = (payload: IItemUpdateRequest) => {
-    return asyncChain(
+    return ActionUtil.createAsyncChain(
       itemAPI.update,
       {
         loading: UPDATE_ITEM_LOADING,
@@ -155,3 +208,41 @@ export const updateItem: ActionCreator<
       payload
     );
   };
+
+export const deleteItem: ActionCreator<
+  ThunkAction<Promise<Action>, IRootState, void, Action>
+  > = (itemId: number) => {
+    return ActionUtil.createAsyncChain(
+      itemAPI.delete,
+      {
+        loading: DELETE_ITEM_LOADING,
+        success: DELETE_ITEM_SUCCESS,
+        error: DELETE_ITEM_ERROR,
+        complete: DELETE_ITEM_COMPLETE
+      },
+      itemId
+    );
+  };
+
+export type ItemAction =
+  IFetchItemLoadingAction
+  | IFetchItemSuccessAction
+  | IFetchItemErrorAction
+  | IFetchItemCompleteAction
+  | IFetchItemsLoadingAction
+  | IFetchItemsSuccessAction
+  | IFetchItemsErrorAction
+  | IFetchItemsCompleteAction
+  | IToggleEditItemAction
+  | IInsertItemLoadingAction
+  | IInsertItemSuccessAction
+  | IInsertItemErrorAction
+  | IInsertItemCompleteAction
+  | IUpdateItemLoadingAction
+  | IUpdateItemSuccessAction
+  | IUpdateItemErrorAction
+  | IUpdateItemCompleteAction
+  | IDeleteItemLoadingAction
+  | IDeleteItemSuccessAction
+  | IDeleteItemErrorAction
+  | IDeleteItemCompleteAction;

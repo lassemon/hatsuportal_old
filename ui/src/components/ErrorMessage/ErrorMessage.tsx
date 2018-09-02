@@ -36,7 +36,7 @@ interface IProps extends WithStyles<typeof styles> {
   error: IError;
 }
 
-class ErrorBox extends React.PureComponent<IProps> {
+class ErrorMessage extends React.PureComponent<IProps> {
 
   public constructor(props: IProps) {
     super(props);
@@ -52,7 +52,7 @@ class ErrorBox extends React.PureComponent<IProps> {
           </Typography>
         <div className={classes.errorContent}>
           <Typography variant="title" gutterBottom={true} className={classes.errorTitle}>
-            {this.props.error.title}
+            {this.props.error.title || 'Oh no!'}
           </Typography>
           <Typography variant="body2">
             <p className={classes.errorMessage}>{this.props.error.message}</p>
@@ -63,4 +63,4 @@ class ErrorBox extends React.PureComponent<IProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(ErrorBox);
+export default withStyles(styles, { withTheme: true })(ErrorMessage);

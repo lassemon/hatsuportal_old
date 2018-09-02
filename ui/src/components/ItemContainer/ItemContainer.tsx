@@ -6,11 +6,12 @@ import Tags from 'components/Tags';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import { IEditableItem, IItem, IItemUpdateRequest, IRootState, ITag } from 'types';
+import { IItem, IItemUpdateRequest, IRootState, ITag } from 'types';
+import EditableItem from 'utils/EditableItem';
 import ArticleItemEdit from '../ArticleItem/ArticleItemEdit';
 import VideoItem from '../VideoItem/VideoItem';
 
-type ClassNames = 'card' | 'actionButton' | 'editContainer';
+type ClassNames = 'card' | 'actionButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   card: {
@@ -18,10 +19,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   actionButton: {
     boxShadow: 'none'
-  },
-  editContainer: {
-    display: 'flex',
-    flexDirection: 'column'
   }
 });
 
@@ -42,7 +39,8 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 interface IState {
-  item: IItem;
+  item: EditableItem;
+  itemNotValidError: boolean;
 }
 
 class ItemContainer extends React.Component<IActionProps & IStateProps & IProps, IState> {
@@ -50,8 +48,13 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
   public constructor(props: IActionProps & IStateProps & IProps) {
     super(props);
     this.state = {
-      item: this.props.item
+      item: new EditableItem(this.props.item),
+      itemNotValidError: false
     };
+  }
+
+  public componentWillUnmount() {
+    this.cancel();
   }
 
   public openEditMode = () => {
@@ -60,43 +63,52 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
 
   public cancel = () => {
     this.setState({
-      item: this.props.item
+      item: new EditableItem(this.props.item)
     });
     this.props.toggleEditItem(false);
   }
 
   public save = () => {
-    this.props.updateItem(this.createUpdatePayload());
+    this.setState({
+      itemNotValidError: false
+    });
+
+    const item = this.state.item;
+    if (!item.hasErrors()) {
+      this.props.updateItem(this.createUpdatePayload());
+    } else {
+      this.setState({
+        item: item.validateAll(),
+        itemNotValidError: true
+      });
+    }
   }
 
-  public itemChanged = (newItem: IEditableItem) => {
+  public itemChanged = (newItem: EditableItem) => {
     this.setState({
-      item: {
-        ...this.state.item,
-        ...newItem
-      }
+      item: Object.assign(this.state.item, newItem)
     });
   }
 
   public tagsChanged = (tags: ITag[]) => {
+    const newItem = new EditableItem(this.state.item);
+    newItem.tags = tags;
     this.setState({
-      item: {
-        ...this.state.item,
-        tags
-      }
+      item: newItem
     });
   }
 
   public createUpdatePayload = (): IItemUpdateRequest => {
     const item = this.state.item;
+    const tagUpdate = item.tags ? item.tags.map(tag => tag.id) : [];
     if (item) {
       return {
-        id: item.id,
-        type: item.type,
+        id: this.props.item.id,
+        type: this.props.item.type,
         title: item.title,
         description: item.description,
         content: item.content,
-        tags: item.tags.map(tag => tag.id)
+        tags: tagUpdate
       };
     } else {
       throw new Error("Item is not valid for update");
@@ -131,12 +143,13 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
     const articleItem = (
       <Card className={classes.card}>
         <CardContent>
-          {this.props.editingItem ? (
-            <div className={classes.editContainer}>
-              <ArticleItemEdit item={item} itemChanged={this.itemChanged} />
-              <Tags tags={item.tags} edit={this.props.editingItem} tagsChanged={this.tagsChanged} />
-            </div>
-          ) : (
+          {this.props.editingItem ?
+            (
+              <div>
+                <ArticleItemEdit item={this.state.item} itemChanged={this.itemChanged} />
+                <Tags tags={item.tags} edit={this.props.editingItem} tagsChanged={this.tagsChanged} />
+              </div>
+            ) : (
               <div>
                 <ArticleItem item={item} />
                 <Tags tags={item.tags} />
@@ -144,7 +157,8 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
             )
           }
           {this.props.loadingItemUpdate && <CircularProgress size={25} />}
-          {this.props.itemUpdateError && <ErrorMessage error={{ title: 'Oh no!', message: 'Item update failed' }} />}
+          {this.state.itemNotValidError && <ErrorMessage error={{ message: 'Item is not valid' }} />}
+          {this.props.itemUpdateError && <ErrorMessage error={{ message: 'Item update failed' }} />}
         </CardContent>
         {actions}
       </Card>

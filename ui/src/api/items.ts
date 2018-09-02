@@ -1,4 +1,4 @@
-import { IItemUpdateRequest } from 'types';
+import { IItemInsertRequest, IItemUpdateRequest } from 'types';
 import Ajax from 'utils/Ajax';
 
 const ajax = new Ajax();
@@ -14,10 +14,21 @@ const itemsApi = {
       endpoint: 'v1/items/' + itemId
     });
   },
+  insert: (payload: IItemInsertRequest): Promise<void> => {
+    return ajax.post({
+      payload,
+      endpoint: 'v1/items/'
+    });
+  },
   update: (payload: IItemUpdateRequest): Promise<void> => {
     return ajax.put({
       payload,
       endpoint: 'v1/items/'
+    });
+  },
+  delete: (itemId: number): Promise<void> => {
+    return ajax.delete({
+      endpoint: 'v1/items/' + itemId
     });
   }
 };
