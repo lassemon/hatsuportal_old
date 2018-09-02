@@ -1,7 +1,6 @@
 import createHistory from 'history/createBrowserHistory';
 import { tokenMiddleware, userMiddleware } from 'middleware';
 import { Store } from 'react-redux';
-import { routerMiddleware } from 'react-router-redux';
 import rootReducer from 'reducers/root';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -20,8 +19,7 @@ const persistedState = {
 const middleware = [
   thunk,
   userMiddleware,
-  tokenMiddleware,
-  routerMiddleware(history)
+  tokenMiddleware
 ];
 
 const composedEnhancers = composeWithDevTools(
