@@ -6,7 +6,7 @@ services:
     environment:
       ENV: dev
       LOG_LEVEL: DEBUG
-      TOKEN_EXP_TIME_MINUTES: 10
+      TOKEN_EXP_TIME_MINUTES: 1
       REFRESH_TOKEN_EXP_TIME_MINUTES: 30
   db:
     volumes:
