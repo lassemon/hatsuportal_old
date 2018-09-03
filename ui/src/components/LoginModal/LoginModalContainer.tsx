@@ -1,4 +1,4 @@
-import { login, loginReset, logout } from 'actions/auth';
+import { checkLoginStatus, login, loginReset, logout } from 'actions/auth';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
@@ -9,6 +9,7 @@ interface IActionProps {
   login: typeof login;
   loginReset: typeof loginReset;
   logout: typeof logout;
+  checkLoginStatus: typeof checkLoginStatus;
 }
 
 interface IProps {
@@ -57,9 +58,18 @@ class LoginModalContainer extends React.PureComponent<IActionProps & IProps, ISt
 
   public handleLogin = () => {
     this.props.login(this.state.username, this.state.password);
+    let timer: number;
+    timer = window.setInterval(() => {
+      if (this.props.loggedIn) {
+        this.props.checkLoginStatus();
+      } else {
+        clearInterval(timer);
+      }
+    }, 10000);
   }
 
   public handleLogout = () => {
+
     this.props.logout();
   }
 
@@ -95,7 +105,7 @@ const mapStateToProps = (state: IRootState): Partial<IAuthState> => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): IActionProps => {
   return bindActionCreators(
-    { login, loginReset, logout },
+    { login, loginReset, logout, checkLoginStatus },
     dispatch
   );
 };

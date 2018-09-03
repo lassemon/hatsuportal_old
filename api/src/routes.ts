@@ -1,6 +1,7 @@
 /* tslint:disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { ItemController } from './controllers/ItemController';
+import { StatusController } from './controllers/StatusController';
 import { TagController } from './controllers/TagController';
 import { UserController } from './controllers/UserController';
 
@@ -177,6 +178,24 @@ export function RegisterRoutes(app: any, authMiddleware: Function) {
       const controller = new ItemController();
 
       const promise = controller.delete.apply(controller, validatedArgs);
+      promiseHandler(controller, promise, response, next);
+    });
+  app.get('/api/v1/status',
+    authenticateMiddleware([{ "name": "jwt" }]),
+    function(request: any, response: any, next: any) {
+      const args = {
+      };
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = getValidatedArgs(args, request);
+      } catch (err) {
+        return next(err);
+      }
+
+      const controller = new StatusController();
+
+      const promise = controller.status.apply(controller, validatedArgs);
       promiseHandler(controller, promise, response, next);
     });
   app.get('/api/v1/tags',

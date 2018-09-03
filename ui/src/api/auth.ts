@@ -1,6 +1,5 @@
 import { ILoginRequest } from 'types';
 import Ajax from 'utils/Ajax';
-// import RefreshTokenError from './RefreshTokenError';
 
 const ajax = new Ajax();
 
@@ -17,10 +16,9 @@ const authApi = {
       endpoint: 'v1/users/logout'
     });
   },
-  refreshToken: (): Promise<void> => {
-    return ajax.post({
-      endpoint: 'v1/users/refresh',
-      noRefresh: true
+  status: (): Promise<void> => {
+    return ajax.get({
+      endpoint: 'v1/status'
     });
   }
 };

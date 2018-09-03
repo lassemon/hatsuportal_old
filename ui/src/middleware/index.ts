@@ -19,8 +19,8 @@ export const userMiddleware = (store: Store<IRootState>) => (next: Dispatch<AnyA
 export const tokenMiddleware = (store: Store<IRootState>) => (next: Dispatch<AnyAction>) => (action: AnyAction) => {
   const isLoggedIn = store.getState().auth.loggedIn;
   if (action.error && action.payload.status === 401 && isLoggedIn) {
-    store.dispatch(globalError({ title: 'Oh no!', message: 'It seems your login expired.' }));
     store.dispatch(logoutReset());
+    store.dispatch(globalError({ title: 'Oh no!', message: 'It seems your login expired.' }));
   } else {
     next(action);
   }

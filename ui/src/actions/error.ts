@@ -26,11 +26,15 @@ export const authError: ActionCreator<Action> = (payload: IError) => {
 export const globalError: ActionCreator<Action> = (payload: IError) => {
   return {
     type: GLOBAL_ERROR,
-    payload: {
-      title: payload.title ? payload.title : 'Error',
-      message: payload.message,
-      errorCode: payload.errorCode ? payload.errorCode : 400
-    } as IError
+    payload: createErrorPayload(payload)
+  };
+};
+
+export const createErrorPayload = (payload: IError) => {
+  return {
+    title: payload.title ? payload.title : 'Error',
+    message: payload.message,
+    errorCode: payload.errorCode ? payload.errorCode : 400
   };
 };
 

@@ -1,7 +1,7 @@
 import ApiError from 'errors/ApiError';
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
 import UserMapper from 'mappers/UserMapper';
+import * as moment from 'moment';
 import Authorization from 'security/Authorization';
 import Encryption from 'security/Encryption';
 import UserService from 'services/UserService';
@@ -91,12 +91,12 @@ export class UserController extends Controller {
       const refreshToken = this.authorization.decodeToken(request.cookies.refreshToken);
 
       if (!this.authorization.validateToken(refreshToken)) {
+        log.debug('REFRESH TOKEN EXPIRED ' + moment.unix(refreshToken.exp).format('dd HH:mm:ss'));
         throw new ApiError(401, 'Unauthorized');
       }
 
       const user: IUser = await this.userService.findById(refreshToken.user);
       const newAuthToken = this.authorization.createAuthToken(user);
-      const newRefreshToken = this.authorization.createRefreshToken(user);
 
       this.setCookies({
         token: {
@@ -104,18 +104,10 @@ export class UserController extends Controller {
           options: {
             httpOnly: true
           }
-        },
-        refreshToken: {
-          value: newRefreshToken,
-          options: {
-            httpOnly: true
-          }
         }
       });
-
-      refreshTokenList[newRefreshToken] = user;
-
     } else {
+      log.debug('REFRESH TOKEN NOT IN LIST');
       throw new ApiError(401, 'Unauthorized');
     }
     return true;

@@ -84,10 +84,10 @@ describe('ItemController', () => {
 
   it('should delete an item', async () => {
     expect.assertions(1);
-    when(itemService.remove(TEST_ITEM_LIST[0].id)).thenReturn(Promise.resolve(true));
+    when(itemService.remove(TEST_ITEM_LIST[0].id)).thenReturn(Promise.resolve(TEST_ITEM_LIST[0]));
     controller.setService(instance(itemService));
 
-    await expect(controller.delete(TEST_ITEM_LIST[0].id)).resolves.toEqual(true);
+    await expect(controller.delete(TEST_ITEM_LIST[0].id)).resolves.toEqual(TEST_ITEM_LIST[0]);
   });
 
   it('should update an item', async () => {

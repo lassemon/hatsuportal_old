@@ -32,6 +32,4 @@ const store = createStore(
   composedEnhancers
 );
 
-// observeStore(store, saveUser);
-
 export default store as Store<IRootState>;

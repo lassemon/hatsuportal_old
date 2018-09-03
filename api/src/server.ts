@@ -7,6 +7,7 @@ import Authentication from 'security/Authentication';
 import * as swaggerUI from 'swagger-ui-express';
 
 import './controllers/ItemController';
+import './controllers/StatusController';
 import './controllers/TagController';
 import './controllers/UserController';
 

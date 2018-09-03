@@ -1,5 +1,6 @@
 import authAPI from 'api/auth';
-import { Action, ActionCreator, Dispatch } from 'redux';
+import { Dispatch } from 'react-redux';
+import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { IPayloadAction, IRootState, IUser } from 'types';
 import ActionUtil from 'utils/ActionUtil';
@@ -35,12 +36,6 @@ interface ILoginResetAction extends Action {
   readonly type: LOGIN_RESET_TYPE;
 }
 
-export const TOKEN_REFRESH_SUCCESS = 'TOKEN_REFRESH_SUCCESS';
-export type TOKEN_REFRESH_SUCCESS_TYPE = typeof TOKEN_REFRESH_SUCCESS;
-interface ITokenRefreshSuccessAction extends Action {
-  readonly type: TOKEN_REFRESH_SUCCESS_TYPE;
-}
-
 export const login: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
   > = (username: string, password: string) => {
@@ -63,24 +58,6 @@ export const loginReset: ActionCreator<Action> = () => {
     type: LOGIN_RESET
   };
 };
-
-export const refreshToken: ActionCreator<
-  ThunkAction<Promise<Action>, IRootState, void, Action>
-  > = (retryAction: Action) => {
-    return async (dispatch: Dispatch<Action>): Promise<Action> => {
-      try {
-        await authAPI.refreshToken();
-        dispatch(retryAction);
-        return dispatch({
-          type: TOKEN_REFRESH_SUCCESS
-        });
-      } catch (error) {
-        return dispatch({
-          type: LOGOUT_RESET
-        });
-      }
-    };
-  };
 
 export const LOGOUT_LOADING = 'LOGOUT_LOADING';
 export type LOGOUT_LOADING_TYPE = typeof LOGOUT_LOADING;
@@ -133,15 +110,50 @@ export const logoutReset: ActionCreator<Action> = () => {
   };
 };
 
+export const LOGIN_VALID = 'LOGIN_VALID';
+export type LOGIN_VALID_TYPE = typeof LOGIN_VALID;
+interface ILoginValidAction extends Action {
+  readonly type: LOGIN_VALID_TYPE;
+}
+
+export const LOGIN_EXPIRED = 'LOGIN_EXPIRED';
+export type LOGIN_EXPIRED_TYPE = typeof LOGIN_EXPIRED;
+interface ILoginExpiredAction extends Action {
+  readonly type: LOGIN_EXPIRED_TYPE;
+}
+
+export const checkLoginStatus: ActionCreator<
+  ThunkAction<Promise<Action>, IRootState, void, Action>
+  > = () => {
+    return async (dispatch: Dispatch<Action>): Promise<Action> => {
+      try {
+        await authAPI.status();
+        return dispatch({
+          type: LOGIN_VALID
+        });
+      } catch (error) {
+        return dispatch({
+          type: LOGIN_EXPIRED,
+          error: true,
+          payload: {
+            status: 401,
+            error
+          }
+        });
+      }
+    };
+  };
+
 export type AuthAction =
   ILoginLoadingAction
   | ILoginSuccessAction
   | ILoginErrorAction
   | ILoginCompleteAction
   | ILoginResetAction
-  | ITokenRefreshSuccessAction
   | ILogoutLoadingAction
   | ILogoutSuccessAction
   | ILogoutErrorAction
   | ILogoutCompleteAction
-  | ILogoutResetAction;
+  | ILogoutResetAction
+  | ILoginValidAction
+  | ILoginExpiredAction;
