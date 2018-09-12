@@ -11,7 +11,7 @@ services:
     depends_on:
       - api
     environment:
-      TZ: 'Europe/Helsinki'
+      TZ: Europe/Helsinki
   api:
     build:
       context: ./api
@@ -40,7 +40,7 @@ services:
     volumes:
       - ./ui:/usr/src/app
     environment:
-      TZ: 'Europe/Helsinki'
+      TZ: Europe/Helsinki
   db:
     image: postgres:10.4
     restart: always
@@ -50,3 +50,4 @@ services:
       POSTGRES_USER: hatsurebals
       POSTGRES_PASSWORD: hatsurebals123
       POSTGRES_DB: hatsuportal
+      TZ: Europe/Helsinki

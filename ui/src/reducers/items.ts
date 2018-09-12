@@ -24,7 +24,8 @@ import {
   UPDATE_ITEM_LOADING,
   UPDATE_ITEM_SUCCESS
 } from 'actions/items';
-import { IItemsState } from 'types';
+import { orderBy } from 'lodash';
+import { IItem, IItemsState } from 'types';
 
 const initialState = {
   loadingItems: false,
@@ -41,6 +42,11 @@ const initialState = {
   itemDeleteError: false,
   editingItem: false,
   managingItem: false
+};
+
+
+const sortItems = (items: IItem[]) => {
+  return orderBy(items, [(o) => o.created || '', (o) => o.modified || ''], ['desc', 'desc']);
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {
@@ -111,12 +117,13 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
         loadingItemInsert: true
       };
     case INSERT_ITEM_SUCCESS:
-      const newItems = state.items;
-      newItems.push(action.payload);
+      let itemsAfterInsert = state.items;
+      itemsAfterInsert.push(action.payload);
+      itemsAfterInsert = sortItems(itemsAfterInsert);
       return {
         ...state,
         item: action.payload,
-        items: newItems
+        items: itemsAfterInsert
       };
     case INSERT_ITEM_ERROR:
       return {
@@ -135,16 +142,18 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
         loadingItemUpdate: true
       };
     case UPDATE_ITEM_SUCCESS:
+      let itemsAfterUpdate = state.items.map(item => {
+        if (item.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return item;
+        }
+      });
+      itemsAfterUpdate = sortItems(itemsAfterUpdate);
       return {
         ...state,
         item: action.payload,
-        items: state.items.map(item => {
-          if (item.id === action.payload.id) {
-            return action.payload;
-          } else {
-            return item;
-          }
-        }),
+        items: itemsAfterUpdate,
         editingItem: false
       };
     case UPDATE_ITEM_ERROR:

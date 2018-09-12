@@ -12,7 +12,9 @@ export default class ItemModel extends Model {
     return new Promise((resolve, reject) => {
       const itemsPromise = this.knex('items as items')
         .join('users as users', 'users.id', 'items.author_id')
-        .select(['items.*', 'users.name as author_name']);
+        .select(['items.*', 'users.name as author_name'])
+        .orderByRaw('created DESC NULLS LAST')
+        .orderByRaw('modified DESC NULLS LAST');
 
       const tagsPromise = itemsPromise.then(async (items) => {
         const itemTags = {};
