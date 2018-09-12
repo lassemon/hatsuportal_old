@@ -8,7 +8,7 @@ import { Action, bindActionCreators } from 'redux';
 import { IItem, IItemsState, IRootState } from 'types';
 
 interface IItemParams {
-  id: number;
+  id: string;
 }
 
 interface IProps extends RouteComponentProps<IItemParams> {

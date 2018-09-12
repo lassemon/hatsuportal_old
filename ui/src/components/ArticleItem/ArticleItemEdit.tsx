@@ -63,7 +63,7 @@ class ArticleItem extends React.PureComponent<IProps, IState> {
 
   public handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     let newItem;
-    newItem = new EditableItem(this.state.item);
+    newItem = new EditableItem(this.state.item || {});
     newItem[name] = event.target.value;
     newItem.validate(name);
     this.setState({

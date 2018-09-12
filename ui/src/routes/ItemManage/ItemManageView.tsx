@@ -13,7 +13,6 @@ interface IActionProps {
 interface IProps {
   itemsError: boolean;
   items: IItem[];
-  item: IItem;
   loadingItems: boolean;
 }
 
@@ -36,7 +35,7 @@ class ItemManageView extends React.Component<IActionProps & IProps> {
         {loading || items.length < 1 ? (
           <CircularProgress size={25} />
         ) : (
-            <ItemManage item={this.props.item} items={this.props.items} />
+            <ItemManage items={this.props.items} />
           )}
       </div>
     );
@@ -47,7 +46,6 @@ const mapStateToProps = (state: IRootState): Partial<IItemsState> => {
   return {
     itemsError: state.items.itemsError,
     items: state.items.items,
-    item: state.items.item,
     loadingItems: state.items.loadingItems
   };
 };

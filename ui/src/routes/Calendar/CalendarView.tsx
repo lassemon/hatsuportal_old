@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import * as React from 'react';
 
@@ -20,7 +21,7 @@ class CalendarView extends React.Component<IProps> {
         {loading ? (
           <CircularProgress size={25} />
         ) : (
-            <span>TODO: Implement Calendar</span>
+            <Typography variant="subheading">TODO: Implement Calendar</Typography>
           )}
       </div>
     );

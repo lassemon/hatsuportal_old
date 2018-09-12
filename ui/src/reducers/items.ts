@@ -1,4 +1,5 @@
 import {
+  CLEAR_FETCHED_ITEM,
   DELETE_ITEM_COMPLETE,
   DELETE_ITEM_ERROR,
   DELETE_ITEM_LOADING,
@@ -17,6 +18,7 @@ import {
   INSERT_ITEM_SUCCESS,
   ItemAction,
   TOGGLE_EDIT_ITEM,
+  TOGGLE_MANAGE_ITEM,
   UPDATE_ITEM_COMPLETE,
   UPDATE_ITEM_ERROR,
   UPDATE_ITEM_LOADING,
@@ -38,7 +40,7 @@ const initialState = {
   itemUpdateError: false,
   itemDeleteError: false,
   editingItem: false,
-  loggedIn: false
+  managingItem: false
 };
 
 export default (state: IItemsState = initialState, action: ItemAction) => {
@@ -85,10 +87,21 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
         ...state,
         loadingItems: false
       };
+    case CLEAR_FETCHED_ITEM:
+      return {
+        ...state,
+        item: undefined
+      };
     case TOGGLE_EDIT_ITEM:
       return {
         ...state,
         editingItem: action.payload,
+        itemUpdateError: action.payload ? state.itemUpdateError : false
+      };
+    case TOGGLE_MANAGE_ITEM:
+      return {
+        ...state,
+        managingItem: action.payload,
         itemUpdateError: action.payload ? state.itemUpdateError : false
       };
     case INSERT_ITEM_LOADING:
@@ -125,6 +138,13 @@ export default (state: IItemsState = initialState, action: ItemAction) => {
       return {
         ...state,
         item: action.payload,
+        items: state.items.map(item => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          } else {
+            return item;
+          }
+        }),
         editingItem: false
       };
     case UPDATE_ITEM_ERROR:

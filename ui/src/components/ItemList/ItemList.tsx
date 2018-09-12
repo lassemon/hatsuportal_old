@@ -2,18 +2,20 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 import WebAsset from '@material-ui/icons/WebAsset';
 import Tags from 'components/Tags';
 import * as React from 'react';
-import { history } from 'store';
+import { RouteComponentProps, withRouter } from 'react-router';
 import styled from 'styled-components';
 import theme from 'theme';
 import { IItem } from 'types';
 
-interface IProps {
+interface IItemParams {
+  id: string;
+}
+
+interface IProps extends RouteComponentProps<IItemParams> {
   items: IItem[];
-  header: string;
 }
 
 class ItemList extends React.Component<IProps> {
@@ -23,7 +25,7 @@ class ItemList extends React.Component<IProps> {
   }
 
   public itemClicked = (itemId: number) => () => {
-    history.push('/items/' + itemId);
+    this.props.history.push('/items/' + itemId);
   }
 
   public render() {
@@ -52,7 +54,6 @@ class ItemList extends React.Component<IProps> {
 
     return (
       <div>
-        <Typography variant="title">{this.props.header}</Typography>
         <StyledList>
           {(
             convertedItems
@@ -63,4 +64,4 @@ class ItemList extends React.Component<IProps> {
   }
 }
 
-export default ItemList;
+export default withRouter(ItemList);

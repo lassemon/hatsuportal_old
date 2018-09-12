@@ -20,12 +20,7 @@ interface IPartialGlobalStateProps {
   allTags: ITag[];
 }
 
-interface IState {
-  username: string;
-  password: string;
-}
-
-class TagsContainer extends React.PureComponent<IActionProps & IPartialGlobalStateProps & IProps, & IState> {
+class TagsContainer extends React.Component<IActionProps & IPartialGlobalStateProps & IProps> {
 
   public constructor(props: IActionProps & IPartialGlobalStateProps & IProps) {
     super(props);

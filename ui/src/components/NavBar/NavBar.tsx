@@ -8,12 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import LoginModal from 'components/LoginModal';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { history } from 'store';
-import styled from 'styled-components';
 
-type ClassNames = 'flex' | 'toolbar' | 'tabs';
+type ClassNames = 'navRoot' | 'flex' | 'toolbar' | 'tabs' | 'tabsIndicator';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  navRoot: {
+    boxShadow: 'none'
+  },
   flex: {
     flexGrow: 1
   },
@@ -22,6 +23,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   tabs: {
     background: theme.palette.primary.main
+  },
+  tabsIndicator: {
+    height: 5
   }
 });
 
@@ -41,13 +45,12 @@ class NavBar extends React.Component<IProps, IState> {
   }
 
   public handleChange = (event: React.ChangeEvent<{}>, value: number) => {
-
     this.setState({ value });
 
     if (value === 0) {
-      history.push('/');
+      this.props.history.push('/');
     } else if (value === 1) {
-      history.push('/tags');
+      this.props.history.push('/calendar');
     }
 
   }
@@ -55,26 +58,24 @@ class NavBar extends React.Component<IProps, IState> {
   public render() {
     const { classes } = this.props;
 
-    const StyledTabs = styled(Tabs)`
-        [class*="indicator"]{
-          background: white;
-        }
-    `;
-
     return (
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        classes={{ root: classes.navRoot }}
+      >
         <Toolbar className={classes.toolbar}>
           <Typography variant="title" color="inherit" className={classes.flex}>
             HatsuPortal
           </Typography>
           <LoginModal />
         </Toolbar>
-        <StyledTabs value={this.state.value}
+        <Tabs value={this.state.value}
           onChange={this.handleChange}
-          className={classes.tabs}
+          classes={{ root: classes.tabs, indicator: classes.tabsIndicator }}
         >
           <Tab label="Items" />
-        </StyledTabs>
+          <Tab label="Calendar" />
+        </Tabs>
       </AppBar>
     );
   }

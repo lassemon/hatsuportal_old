@@ -56,12 +56,25 @@ interface IFetchItemsCompleteAction extends Action {
   readonly type: FETCH_ITEMS_COMPLETE_TYPE;
 }
 
-// ITEM EDIT
+// ITEM EDIT/MANAGE
 export const TOGGLE_EDIT_ITEM = 'TOGGLE_EDIT_ITEM';
 export type TOGGLE_EDIT_ITEM_TYPE = typeof TOGGLE_EDIT_ITEM;
 interface IToggleEditItemAction extends IPayloadAction<boolean> {
   readonly type: TOGGLE_EDIT_ITEM_TYPE;
   payload: boolean;
+}
+
+export const TOGGLE_MANAGE_ITEM = 'TOGGLE_MANAGE_ITEM';
+export type TOGGLE_MANAGE_ITEM_TYPE = typeof TOGGLE_MANAGE_ITEM;
+interface IToggleManageItemAction extends IPayloadAction<boolean> {
+  readonly type: TOGGLE_MANAGE_ITEM_TYPE;
+  payload: boolean;
+}
+
+export const CLEAR_FETCHED_ITEM = 'CLEAR_FETCHED_ITEM';
+export type CLEAR_FETCHED_ITEM_TYPE = typeof CLEAR_FETCHED_ITEM;
+interface IClearFetchedItemAction extends Action {
+  readonly type: CLEAR_FETCHED_ITEM_TYPE;
 }
 
 // ITEM INSERT
@@ -142,12 +155,12 @@ interface IDeleteItemCompleteAction extends Action {
   readonly type: DELETE_ITEM_COMPLETE_TYPE;
 }
 
-export const toggleEditItem: ActionCreator<Action> = (edit: boolean) => {
-  return {
-    type: TOGGLE_EDIT_ITEM,
-    payload: edit
-  };
-};
+
+export const ITEM_ERROR_CLEAR = 'ITEM_ERROR_CLEAR';
+export type ITEM_ERROR_CLEAR_TYPE = typeof ITEM_ERROR_CLEAR;
+interface IItemErrorClearAction extends Action {
+  readonly type: ITEM_ERROR_CLEAR_TYPE;
+}
 
 export const fetchItem: ActionCreator<
   ThunkAction<Promise<Action>, IRootState, void, Action>
@@ -224,6 +237,33 @@ export const deleteItem: ActionCreator<
     );
   };
 
+
+export const toggleEditItem: ActionCreator<Action> = (edit: boolean) => {
+  return {
+    type: TOGGLE_EDIT_ITEM,
+    payload: edit
+  };
+};
+
+export const toggleManageItem: ActionCreator<Action> = (manage: boolean) => {
+  return {
+    type: TOGGLE_MANAGE_ITEM,
+    payload: manage
+  };
+};
+
+export const clearFetchedItem: ActionCreator<Action> = () => {
+  return {
+    type: CLEAR_FETCHED_ITEM
+  };
+};
+
+export const clearItemErrors: ActionCreator<Action> = () => {
+  return {
+    type: ITEM_ERROR_CLEAR
+  };
+};
+
 export type ItemAction =
   IFetchItemLoadingAction
   | IFetchItemSuccessAction
@@ -234,6 +274,8 @@ export type ItemAction =
   | IFetchItemsErrorAction
   | IFetchItemsCompleteAction
   | IToggleEditItemAction
+  | IToggleManageItemAction
+  | IClearFetchedItemAction
   | IInsertItemLoadingAction
   | IInsertItemSuccessAction
   | IInsertItemErrorAction
@@ -245,4 +287,5 @@ export type ItemAction =
   | IDeleteItemLoadingAction
   | IDeleteItemSuccessAction
   | IDeleteItemErrorAction
-  | IDeleteItemCompleteAction;
+  | IDeleteItemCompleteAction
+  | IItemErrorClearAction;

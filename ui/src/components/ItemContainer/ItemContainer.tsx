@@ -48,7 +48,7 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
   public constructor(props: IActionProps & IStateProps & IProps) {
     super(props);
     this.state = {
-      item: new EditableItem(this.props.item),
+      item: new EditableItem(this.props.item || {}),
       itemNotValidError: false
     };
   }
@@ -63,7 +63,7 @@ class ItemContainer extends React.Component<IActionProps & IStateProps & IProps,
 
   public cancel = () => {
     this.setState({
-      item: new EditableItem(this.props.item)
+      item: new EditableItem(this.props.item || {})
     });
     this.props.toggleEditItem(false);
   }

@@ -46,7 +46,7 @@ interface IState {
   reloading: boolean;
 }
 
-class ErrorModal extends React.PureComponent<IProps, IState> {
+class ErrorModal extends React.Component<IProps, IState> {
 
   public constructor(props: IProps) {
     super(props);

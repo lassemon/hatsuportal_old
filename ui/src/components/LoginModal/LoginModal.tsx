@@ -10,7 +10,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Modal from 'components/Modal';
 import * as React from 'react';
-import { history } from 'store';
+import { RouteComponentProps, withRouter } from 'react-router';
 import styled from 'styled-components';
 import { IUser } from 'types';
 
@@ -64,7 +64,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-interface IProps extends WithStyles<typeof styles> {
+interface IItemParams {
+  id: string;
+}
+
+interface IProps extends WithStyles<typeof styles>, RouteComponentProps<IItemParams> {
   username: string;
   password: string;
   error: boolean;
@@ -133,7 +137,7 @@ class LoginModal extends React.PureComponent<IProps, IState> {
   }
 
   public manageItems = () => {
-    history.push('/items/manage');
+    this.props.history.push('/items/manage');
     this.setState({
       'drawerOpen': false
     });
@@ -236,4 +240,4 @@ class LoginModal extends React.PureComponent<IProps, IState> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(LoginModal);
+export default withStyles(styles, { withTheme: true })(withRouter(LoginModal));

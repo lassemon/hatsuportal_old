@@ -1,2 +1,2 @@
-import Home from './Home';
+import Home from './HomeView';
 export default Home;

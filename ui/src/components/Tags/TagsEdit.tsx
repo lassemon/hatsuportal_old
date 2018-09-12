@@ -1,5 +1,6 @@
 import { Chip, MenuItem, Paper, StyleRulesCallback, TextField, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import Select from 'react-select';
 import { classNames } from 'react-select/lib/utils';
@@ -177,7 +178,7 @@ const components = {
   Menu
 };
 
-class Tags extends React.PureComponent<IProps, IState> {
+class TagsEdit extends React.PureComponent<IProps, IState> {
 
   public constructor(props: IProps) {
     super(props);
@@ -186,8 +187,8 @@ class Tags extends React.PureComponent<IProps, IState> {
     };
   }
 
-  public componentWillReceiveProps(props: IProps) {
-    if (!props.edit) {
+  public componentDidUpdate(newProps: IProps) {
+    if (!newProps.edit && this.props.edit || !isEqual(newProps.tags, this.props.tags)) {
       this.setState({
         multi: this.convertTagsToLabels(this.props.tags)
       });
@@ -289,4 +290,4 @@ class Tags extends React.PureComponent<IProps, IState> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Tags);
+export default withStyles(styles, { withTheme: true })(TagsEdit);

@@ -35,10 +35,7 @@ class HomeView extends React.Component<IActionProps & IProps> {
         {loading || items.length < 1 ? (
           <CircularProgress size={25} />
         ) : (
-            <ItemList
-              header="Items"
-              items={this.props.items}
-            />
+            <ItemList items={this.props.items} />
           )}
       </div>
     );

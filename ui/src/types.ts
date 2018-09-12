@@ -21,7 +21,7 @@ export interface IItemsState {
   itemUpdateError: boolean;
   itemDeleteError: boolean;
   editingItem: boolean;
-  loggedIn: boolean;
+  managingItem: boolean;
 }
 
 export interface ITagsState {

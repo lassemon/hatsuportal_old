@@ -1,2 +1,2 @@
-import Calendar from './Calendar';
+import Calendar from './CalendarView';
 export default Calendar;

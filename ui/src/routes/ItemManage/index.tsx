@@ -1,2 +1,2 @@
-import ItemManage from './ItemManage';
+import ItemManage from './ItemManageView';
 export default ItemManage;

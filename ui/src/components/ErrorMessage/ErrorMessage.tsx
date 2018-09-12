@@ -8,7 +8,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   errorContainer: {
     display: 'flex',
     flexFlow: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    margin: '.5em 0'
   },
   errorIndicatorIcon: {
     flex: '1',

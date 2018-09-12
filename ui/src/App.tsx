@@ -23,7 +23,7 @@ class App extends React.Component {
               <Route exact={true} path="/" component={Home} key="home" />
               <Route exact={true} path="/calendar" component={Calendar} key="tags" />
               <Switch>
-                <Route exact={true} path="/items/manage" component={ItemManage} key="manageItem" />
+                <Route exact={true} path="/items/manage" component={ItemManage} key="manageItems" />
                 <Route exact={true} path="/items/:id" component={Item} key="item" />
               </Switch>
             </RootLayout>
