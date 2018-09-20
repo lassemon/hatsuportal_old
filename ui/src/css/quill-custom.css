@@ -1,0 +1,6 @@
+@import url('../../node_modules/react-quill/dist/quill.snow.css');
+
+.ql-editor .ql-video {
+    width: 70vw;
+    height: calc((9/16)*80vw);
+} 

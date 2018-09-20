@@ -1,11 +1,8 @@
-import { Card, CardContent, Chip, IconButton, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import { Card, CardContent, Chip, StyleRulesCallback, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
 import * as React from 'react';
 import { IItem } from 'types';
 
-type ClassNames = 'card' | 'description' | 'controls' | 'playIcon' | 'chipsContainer' | 'chip';
+type ClassNames = 'card' | 'description' | 'content' | 'controls' | 'playIcon' | 'chipsContainer' | 'chip';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   card: {
@@ -13,6 +10,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   description: {
     marginBottom: 12
+  },
+  content: {
+    whiteSpace: 'pre-wrap'
   },
   controls: {
     display: 'flex',
@@ -71,21 +71,8 @@ class VideoItem extends React.PureComponent<IProps> {
           <Typography className={classes.description} color="textSecondary">
             {item.description}
           </Typography>
-          <Typography paragraph={true}>
-            {item.content}
-          </Typography>
+          <p key="content" className={"ql-editor " + classes.content} dangerouslySetInnerHTML={{ __html: item.content }} />
         </CardContent>
-        <div className={classes.controls}>
-          <IconButton aria-label="Previous">
-            <SkipPreviousIcon />
-          </IconButton>
-          <IconButton aria-label="Play/pause">
-            <PlayArrowIcon className={classes.playIcon} />
-          </IconButton>
-          <IconButton aria-label="Next">
-            <SkipNextIcon />
-          </IconButton>
-        </div>
         <div className={classes.chipsContainer}>
           {tags}
         </div>

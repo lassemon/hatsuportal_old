@@ -1,15 +1,16 @@
 import { Button, Card, CardActions, CardContent, CircularProgress, StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core';
 import { toggleEditItem, updateItem } from 'actions/items';
 import ArticleItem from 'components/ArticleItem/ArticleItem';
+import ArticleItemEdit from 'components/ArticleItem/ArticleItemEdit';
 import ErrorMessage from 'components/ErrorMessage';
 import Tags from 'components/Tags';
+import VideoItem from 'components/VideoItem/VideoItem';
+import 'css/quill-custom.css';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
 import { IItem, IItemUpdateRequest, IRootState, ITag } from 'types';
 import EditableItem from 'utils/EditableItem';
-import ArticleItemEdit from '../ArticleItem/ArticleItemEdit';
-import VideoItem from '../VideoItem/VideoItem';
 
 type ClassNames = 'card' | 'actionButton';
 

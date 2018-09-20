@@ -1,4 +1,5 @@
 import { StyleRulesCallback, TextField, Theme, WithStyles, withStyles } from '@material-ui/core';
+import TextEditor from 'components/TextEditor';
 import * as React from 'react';
 import { } from 'types';
 import EditableItem from 'utils/EditableItem';
@@ -53,6 +54,7 @@ class ArticleItem extends React.PureComponent<IProps, IState> {
       edit: false,
       item: props.item
     };
+    this.handleContentChange = this.handleContentChange.bind(this);
   }
 
   public componentWillReceiveProps(nextProps: IProps) {
@@ -62,8 +64,7 @@ class ArticleItem extends React.PureComponent<IProps, IState> {
   }
 
   public handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newItem;
-    newItem = new EditableItem(this.state.item || {});
+    const newItem = new EditableItem(this.state.item || {});
     newItem[name] = event.target.value;
     newItem.validate(name);
     this.setState({
@@ -71,6 +72,14 @@ class ArticleItem extends React.PureComponent<IProps, IState> {
     });
     this.props.itemChanged(newItem);
   }
+
+  public handleContentChange(html: string) {
+    const newItem = new EditableItem(this.state.item || {});
+    newItem.content = html;
+    newItem.validate(name);
+    this.props.itemChanged(newItem);
+  }
+
 
   public render() {
     const { classes } = this.props;
@@ -97,16 +106,10 @@ class ArticleItem extends React.PureComponent<IProps, IState> {
           margin="normal"
           key="description"
         />
-        <TextField
-          error={this.state.item.contentError}
-          required={true}
-          label="Content"
-          multiline={true}
-          value={this.state.item.content}
-          onChange={this.handleChange('content')}
-          className={classes.textArea}
-          margin="normal"
-          key="content"
+        <TextEditor
+          themeName='snow'
+          onChange={this.handleContentChange}
+          content={this.state.item.content}
         />
       </div>
     );
