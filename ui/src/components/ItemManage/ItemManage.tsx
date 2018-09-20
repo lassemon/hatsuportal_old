@@ -9,9 +9,12 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ClearIcon from '@material-ui/icons/Clear';
 import { clearFetchedItem, clearItemErrors, createItem, deleteItem, toggleManageItem, updateItem } from 'actions/items';
-import classNames from 'classnames';
+import classnames from 'classnames';
+import ArticleItemEdit from 'components/ArticleItem/ArticleItemEdit';
+import ErrorMessage from 'components/ErrorMessage';
 import Modal from 'components/Modal';
 import Tags from 'components/Tags';
+import 'css/quill-custom.css';
 import { debounce } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -20,8 +23,6 @@ import styled from 'styled-components';
 import theme from 'theme';
 import { IItem, IItemInsertRequest, IItemUpdateRequest, IRootState, ITag } from 'types';
 import EditableItem from 'utils/EditableItem';
-import ArticleItemEdit from '../ArticleItem/ArticleItemEdit';
-import ErrorMessage from '../ErrorMessage';
 
 const drawerWidth = 240;
 const closedDrawerWidth = 48;
@@ -326,7 +327,7 @@ class ItemManage extends React.Component<IActionProps & IStateProps & IProps, IS
             <Button size="small" color="primary" variant="contained" className={classes.actionButton} onClick={this.newItem}>New Item</Button>
           </Drawer>
         </div>
-        <Card className={classNames(classes.card, {
+        <Card className={classnames(classes.card, {
           [classes.cardShift]: !this.state.drawerOpen
         })}>
           <CardContent>
